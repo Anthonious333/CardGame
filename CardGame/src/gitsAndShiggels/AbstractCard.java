@@ -1,6 +1,8 @@
 package gitsAndShiggels;
 
-public class AbstractCard {
+import javafx.scene.control.Button;
+
+public class AbstractCard extends Button{
 
 	private int location, cardNumber, phase, attack, defence;
 	

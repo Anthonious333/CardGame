@@ -12,9 +12,12 @@ import javafx.stage.Stage;
 public class CardGame extends Application {
 	
 	static final int GAP = 15;
+	static Scene scene;
+	public Stage newStage;
 
 	@Override
 	public void start(Stage myStage) throws Exception {
+		newStage = myStage;
 		// TODO Auto-generated method stub
 		GridPane root = new GridPane();
 		root.setHgap(GAP);
@@ -27,18 +30,33 @@ public class CardGame extends Application {
 		root.add(topBlank, 1, 0);
 		Zone zone2 = new Zone();
 		root.add(zone2, 2, 0);
-		Zone zone3 = new Zone(200, 250);
+		Zone zone3 = new Zone();
 		root.add(zone3, 0, 1);
-		Rectangle botBlank = new Rectangle(200, 150, Color.WHITE);
+		Rectangle botBlank = new Rectangle(200, 200, Color.WHITE);
 		root.add(botBlank, 1, 1);
 		Zone zone4 = new Zone();
+		zone4.setText("Zone 4");
+		zone4.setOnAction(event -> changeScene());
 		root.add(zone4, 2, 1);
 		
-		Scene scene = new Scene(root);
+		scene = new Scene(root);
 		
 		myStage.setTitle("Card Game");
 		myStage.setScene(scene);
 		myStage.show();
+	}
+	
+	public void changeScene () { //TODO clean this up with menu class
+		Menu root = new Menu();
+		
+		Scene newScene = new Scene(root);
+		
+		setScene(newScene);
+		
+	}
+	
+	public void setScene (Scene _scene) {
+		newStage.setScene(_scene);
 	}
 
 	public static void main(String[] args) {

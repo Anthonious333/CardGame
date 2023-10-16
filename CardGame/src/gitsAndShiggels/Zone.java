@@ -1,34 +1,23 @@
 package gitsAndShiggels;
 
+import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import simpleIO.Console;
 
 
-public class Zone extends Rectangle{
-	
-	/**TODO make this extend image view and set the default image to the shape that it is, 
-	 * then you can use onMouseClick to open menus. 
-	 * P.S. make constructor ask for image path dont hardcode them. */
+public class Zone extends Button{
 
 	private final int WIDTH = 150;
 	private final int HEIGHT = 200;
-	private final Color color = Color.LIGHTBLUE;
+	private final String color = "-fx-background-color: #ADD8E6; ";
 
 	
 	public Zone () {
-		this.setWidth(WIDTH);
-		this.setHeight(HEIGHT);
-		this.setFill(color);
+		setStyle(color);
+		this.setPrefWidth(WIDTH);
+		this.setPrefHeight(HEIGHT);
 		this.setAccessibleText("yes");
-	}
-	public Zone (int h, int w) {
-		this.setWidth(w);
-		this.setHeight(h);
-		this.setFill(color);
-	}
-	public Zone (int h, int w, Color color) {
-		this.setWidth(w);
-		this.setHeight(h);
-		this.setFill(color);
+		this.setOnAction(event -> Console.print("worked"));
+		this.setText("Text");
 	}
 }

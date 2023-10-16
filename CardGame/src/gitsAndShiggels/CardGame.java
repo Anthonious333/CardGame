@@ -3,6 +3,7 @@ package gitsAndShiggels;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -12,8 +13,8 @@ import javafx.stage.Stage;
 public class CardGame extends Application {
 	
 	static final int GAP = 15;
-	static Scene scene;
-	public Stage newStage;
+	Scene scene;
+	static Stage newStage;
 
 	@Override
 	public void start(Stage myStage) throws Exception {
@@ -46,11 +47,12 @@ public class CardGame extends Application {
 		myStage.show();
 	}
 	
-	public void changeScene () { //TODO clean this up with menu class
-		Menu root = new Menu();
+
+	public void changeScene () {
+		Button[] btnArray = {new Button(),new Button(), new Button()};
+		Menu root = new Menu(btnArray, newStage.getScene());
 		
 		Scene newScene = new Scene(root);
-		
 		setScene(newScene);
 		
 	}

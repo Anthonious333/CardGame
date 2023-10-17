@@ -51,10 +51,34 @@ public class CardGame extends Application {
 	
 
 	public void changeScene () {
-		Button[] btnArray = {new Button(),new Button(), new Button()};
-		Image buddyPicture = new Image(getClass().getResource("/images/buddy.png").toString());
-		ImageView imgBuddy = new ImageView(buddyPicture);
-		btnArray[0].setGraphic(imgBuddy);
+		Button[] btnArray = {
+				new Button(),
+				new Button(),
+				new Button(), 
+				new Button(),
+				new Button(),
+				new Button(), 
+				new Button(), 
+				new Button(), 
+				new Button(), 
+				new Button(), 
+				new Button(), 
+				new Button("last"),
+							new Button(),
+							new Button(),
+							new Button(), 
+							new Button(),
+							new Button(),
+							new Button(), 
+							new Button(), 
+							new Button(), 
+							new Button(), 
+							new Button(), 
+							new Button(), 
+							new Button("last")};
+//		Image buddyPicture = new Image(getClass().getResource("/images/buddy.png").toString());
+//		ImageView imgBuddy = new ImageView(buddyPicture);
+//		btnArray[0].setGraphic(imgBuddy);
 		Menu root = new Menu(btnArray, newStage.getScene());
 		
 		Scene newScene = new Scene(root);

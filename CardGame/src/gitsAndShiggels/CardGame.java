@@ -79,7 +79,7 @@ public class CardGame extends Application {
 //		Image buddyPicture = new Image(getClass().getResource("/images/buddy.png").toString());
 //		ImageView imgBuddy = new ImageView(buddyPicture);
 //		btnArray[0].setGraphic(imgBuddy);
-		Menu root = new Menu(btnArray, newStage.getScene());
+		Menu   root = new Menu(btnArray, newStage.getScene());
 		
 		Scene newScene = new Scene(root);
 		setScene(newScene);

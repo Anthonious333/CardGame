@@ -11,12 +11,21 @@ public class Menu extends GridPane{
 	Button[] options;
 	Scene oldScene;
 	int startPoint, pointOffset = 10;
-	boolean next = false;
+	boolean next = false, back = true;
 	
 	public Menu (Button[] options, Scene oldScene) {
 		this.options = options;
 		this.oldScene = oldScene;
 		this.startPoint = 0;
+		generateMenu();
+	}
+	
+	public Menu (Button[] options, Scene oldScene, int startPoint, int pointOffset, boolean back) {
+		this.options = options;
+		this.oldScene = oldScene;
+		this.startPoint = startPoint;
+		this.pointOffset = pointOffset;
+		this.back = back;
 		generateMenu();
 	}
 	
@@ -34,9 +43,10 @@ public class Menu extends GridPane{
 				next = true;
 			}
 		}
-		
-		this.add(btnBack, options.length, 0);
-		btnBack.setOnAction(event -> back(oldScene));
+		if (back) {
+			this.add(btnBack, options.length, 0);
+			btnBack.setOnAction(event -> back(oldScene));			
+		}
 		if (next) { 			
 			this.add(btnNext, options.length + 1, 0);
 			btnNext.setOnAction(event -> next());

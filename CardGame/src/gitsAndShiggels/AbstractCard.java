@@ -12,5 +12,10 @@ public class AbstractCard extends Button{
 		this.phase = phase;
 		this.attack = attack;
 		this.defence = defence; 
+		this.setOnAction(event -> openOptionMenu());
+	}
+	
+	public void openOptionMenu () {
+		
 	}
 }

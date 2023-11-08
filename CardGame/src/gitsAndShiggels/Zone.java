@@ -12,12 +12,14 @@ public class Zone extends Button{
 	private final String color = "-fx-background-color: #ADD8E6; ";
 
 	
-	public Zone () {
+	public Zone (String txtOnButton) {
 		setStyle(color);
 		this.setPrefWidth(WIDTH);
 		this.setPrefHeight(HEIGHT);
 		this.setAccessibleText("yes");
 		this.setOnAction(event -> Console.print("worked"));
-		this.setText("Text");
+		this.setText(txtOnButton);
 	}
+
+	
 }

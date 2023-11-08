@@ -1,5 +1,7 @@
 package gitsAndShiggels;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -17,30 +19,37 @@ public class CardGame extends Application {
 	static final int GAP = 15;
 	Scene scene;
 	static Stage newStage;
+	public static ArrayList<AbstractCard> 
+		futurePile = new ArrayList<AbstractCard>(),
+		Deck = new ArrayList<AbstractCard>(),
+		extraPile = new ArrayList<AbstractCard>(),
+		discardPile = new ArrayList<AbstractCard>();
 
 	@Override
 	public void start(Stage myStage) throws Exception {
 		newStage = myStage;
-		// TODO Auto-generated method stub
 		GridPane root = new GridPane();
 		root.setHgap(GAP);
 		root.setVgap(GAP);
 		root.setPadding(new Insets(GAP, GAP, GAP, GAP));
-		
-		Zone zone1 = new Zone();
-		root.add(zone1, 0, 0);
+				
+		Zone zoneFuture = new Zone("Future");
+		root.add(zoneFuture, 0, 0);
 		Rectangle topBlank = new Rectangle(200, 200, Color.WHITE);
 		root.add(topBlank, 1, 0);
-		Zone zone2 = new Zone();
-		root.add(zone2, 2, 0);
-		Zone zone3 = new Zone();
-		root.add(zone3, 0, 1);
+		Zone zoneDeck = new Zone("Deck");
+		root.add(zoneDeck, 2, 0);
+		Zone zoneExtra = new Zone("Extra");
+		root.add(zoneExtra, 0, 1);
 		Rectangle botBlank = new Rectangle(200, 200, Color.WHITE);
 		root.add(botBlank, 1, 1);
-		Zone zone4 = new Zone();
-		zone4.setText("Zone 4");
-		zone4.setOnAction(event -> changeScene());
-		root.add(zone4, 2, 1);
+		Zone zoneDiscard = new Zone("Discard");
+		root.add(zoneDiscard, 2, 1);
+		
+		zoneFuture.setOnAction(event -> changeScene(futurePile));
+		zoneDeck.setOnAction(event -> changeScene(Deck));
+		zoneExtra.setOnAction(event -> changeScene(extraPile));
+		zoneDiscard.setOnAction(event -> changeScene(discardPile));
 		
 		scene = new Scene(root);
 		
@@ -50,39 +59,14 @@ public class CardGame extends Application {
 	}
 	
 
-	public void changeScene () {
-		Button[] btnArray = {
-				new Button(),
-				new Button(),
-				new Button(), 
-				new Button(),
-				new Button(),
-				new Button(), 
-				new Button(), 
-				new Button(), 
-				new Button(), 
-				new Button(), 
-				new Button(), 
-				new Button("last"),
-							new Button(),
-							new Button(),
-							new Button(), 
-							new Button(),
-							new Button(),
-							new Button(), 
-							new Button(), 
-							new Button(), 
-							new Button(), 
-							new Button(), 
-							new Button(), 
-							new Button("last")};
-//		Image buddyPicture = new Image(getClass().getResource("/images/buddy.png").toString());
-//		ImageView imgBuddy = new ImageView(buddyPicture);
-//		btnArray[0].setGraphic(imgBuddy);
-		Menu   root = new Menu(btnArray, newStage.getScene());
+	public void changeScene (ArrayList<AbstractCard> zoneToBe) {
+		Menu root = new Menu(zoneToBe, newStage.getScene());
 		
 		Scene newScene = new Scene(root);
 		setScene(newScene);
+	}
+	
+	public void cardClicked (AbstractCard c) {
 		
 	}
 	
@@ -90,9 +74,10 @@ public class CardGame extends Application {
 		newStage.setScene(_scene);
 	}
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public void main(String[] args) {
 		launch(args);
 	}
+	
+	
 
 }

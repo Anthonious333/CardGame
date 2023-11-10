@@ -13,9 +13,9 @@ import javafx.stage.Stage;
 
 public class CardGame extends Application {
 	
-	static final int GAP = 15;
 	Scene scene;
 	static Stage newStage;
+	static final int GAP = 15;
 	public static ArrayList<AbstractCard> 
 		futurePile = new ArrayList<AbstractCard>(),
 		Deck = new ArrayList<AbstractCard>(),
@@ -71,7 +71,7 @@ public class CardGame extends Application {
 		newStage.setScene(_scene);
 	}
 
-	public void main(String[] args) {
+	public static void main(String[] args) {
 		launch(args);
 	}
 	

@@ -20,6 +20,4 @@ public class Zone extends Button{
 		this.setOnAction(event -> Console.print("worked"));
 		this.setText(txtOnButton);
 	}
-
-	
 }

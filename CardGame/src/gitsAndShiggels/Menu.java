@@ -53,10 +53,6 @@ public class Menu extends GridPane{
 		CardGame.newStage.setScene(oldScene);
 	}
 	
-	public void play (Button card) {
-		((AbstractCard)card).move(CardGame.discardPile, this.options);
-	}
-	
 	public void next () {
 		Menu root = new Menu(options, CardGame.newStage.getScene(), startPoint + pointOffset);
 		Scene scene = new Scene(root);

@@ -21,5 +21,6 @@ public class AbstractCard extends Button{
 	public void move (ArrayList<AbstractCard> placeToBe) {
 		location.remove(this);
 		placeToBe.add(this);
+		location = placeToBe;
 	}
 }

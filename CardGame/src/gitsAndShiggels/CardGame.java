@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.GridPane;
@@ -30,6 +31,8 @@ public class CardGame extends Application {
 		discardPile = new ArrayList<AbstractCard>();
 	
 	ListView<AbstractCard> handShown;
+	
+	
 
 	@Override
 	public void start(Stage myStage) throws Exception {
@@ -82,23 +85,33 @@ public class CardGame extends Application {
 		selectedCard = c;
 	}
 	
-	public void selectZone (ArrayList<AbstractCard> a) {
-		if (selectedCard != null) {
-			selectedCard.move(a);
-			Console.print("zone");
-			selectedCard = null;
-			updateHand();
-		} else {
-			changeScene(a);
-		}
-	}
-	
-	public void changeScene (ArrayList<AbstractCard> zoneToBe) {
-		Menu root = new Menu(zoneToBe, newStage.getScene());
+	public void selectZone (ArrayList<AbstractCard> zone) {
+		ArrayList<Button> list = new ArrayList<Button>();
 		
+		if (zone == Deck) {
+			Button btnDraw = new Button("Draw");
+			btnDraw.setOnAction(event -> draw());
+			list.add(btnDraw);
+		}
+		
+		if (selectedCard != null) {
+			Button btnMove = new Button("Move");
+			btnMove.setOnAction(event -> move(zone));
+			list.add(btnMove);
+		}
+		
+		//TODO make it so when you select something you go back to original scene
+		Menu root = new Menu(list, newStage.getScene());
 		Scene newScene = new Scene(root);
 		setScene(newScene);
 	}
+	
+//	public void changeScene (ArrayList<AbstractCard> zoneToBe) {
+//		Menu root = new Menu(zoneToBe, newStage.getScene());
+//		
+//		Scene newScene = new Scene(root);
+//		setScene(newScene);
+//	}
 	
 	public void updateHand() {
 		if (handShown != null) {
@@ -113,6 +126,18 @@ public class CardGame extends Application {
 	public void setScene (Scene _scene) {
 		newStage.setScene(_scene);
 	}
+	
+	public void draw() {
+		if (Deck.isEmpty()) {
+			//TODO make discard shuffle into deck
+		}
+		Deck.get(0).move(hand);
+	}
+	
+	public void move(ArrayList<AbstractCard> a) {
+		selectedCard.move(a);
+	}
+	
 
 	public static void main(String[] args) {
 		launch(args);

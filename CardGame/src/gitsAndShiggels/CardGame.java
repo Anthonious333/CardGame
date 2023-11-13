@@ -24,7 +24,7 @@ public class CardGame extends Application {
 	static final int GAP = 15;
 	AbstractCard selectedCard;
 	public static ArrayList<AbstractCard> 
-		futurePile = new ArrayList<AbstractCard>(),
+		fate = new ArrayList<AbstractCard>(),
 		Deck = new ArrayList<AbstractCard>(),
 		extraPile = new ArrayList<AbstractCard>(),
 		hand = new ArrayList<AbstractCard>(),
@@ -32,7 +32,7 @@ public class CardGame extends Application {
 	
 	ListView<AbstractCard> handShown;
 	
-	
+	Button back = new Button("Back");
 
 	@Override
 	public void start(Stage myStage) throws Exception {
@@ -42,8 +42,8 @@ public class CardGame extends Application {
 		root.setVgap(GAP);
 		root.setPadding(new Insets(GAP, GAP, GAP, GAP));
 				
-		Zone zoneFuture = new Zone("Future");
-		root.add(zoneFuture, 0, 0);
+		Zone zoneFate = new Zone("Fate");
+		root.add(zoneFate, 0, 0);
 		Rectangle topBlank = new Rectangle(200, 200, Color.WHITE);
 		root.add(topBlank, 1, 0);
 		Zone zoneDeck = new Zone("Deck");
@@ -69,7 +69,7 @@ public class CardGame extends Application {
 		updateHand();
 		root.add(handShown, 0, 2, 3, 1);
 		
-		zoneFuture.setOnAction(event -> selectZone(futurePile));
+		zoneFate.setOnAction(event -> selectZone(fate));
 		zoneDeck.setOnAction(event -> selectZone(Deck));
 		zoneExtra.setOnAction(event -> selectZone(extraPile));
 		zoneDiscard.setOnAction(event -> selectZone(discardPile));
@@ -90,28 +90,42 @@ public class CardGame extends Application {
 		
 		if (zone == Deck) {
 			Button btnDraw = new Button("Draw");
-			btnDraw.setOnAction(event -> draw());
+			btnDraw.setOnAction(event -> {	
+				draw();
+				setScene(this.scene);
+			});
 			list.add(btnDraw);
 		}
 		
 		if (selectedCard != null) {
 			Button btnMove = new Button("Move");
-			btnMove.setOnAction(event -> move(zone));
+			btnMove.setOnAction(event -> {
+				move(zone);
+				setScene(this.scene);
+			});
 			list.add(btnMove);
 		}
 		
+		if (!zone.isEmpty()) {
+			Button btnOpen = new Button("Open");
+			btnOpen.setOnAction(event -> {
+				open(zone);
+			});
+			list.add(btnOpen);
+		}
+		
+		back.setOnAction(event -> setScene(this.scene));
+		list.add(back);
+		
 		//TODO make it so when you select something you go back to original scene
-		Menu root = new Menu(list, newStage.getScene());
+		ListView<Button> root = new ListView<Button>();
+		for (Button b : list) {
+			root.getItems().add(b);
+		}
+		
 		Scene newScene = new Scene(root);
 		setScene(newScene);
 	}
-	
-//	public void changeScene (ArrayList<AbstractCard> zoneToBe) {
-//		Menu root = new Menu(zoneToBe, newStage.getScene());
-//		
-//		Scene newScene = new Scene(root);
-//		setScene(newScene);
-//	}
 	
 	public void updateHand() {
 		if (handShown != null) {
@@ -138,6 +152,12 @@ public class CardGame extends Application {
 		selectedCard.move(a);
 	}
 	
+	public void open (ArrayList<AbstractCard> toOpen) {
+		Menu root = new Menu(toOpen, this.scene);
+		
+		Scene newScene = new Scene(root);
+		setScene(newScene);
+	}
 
 	public static void main(String[] args) {
 		launch(args);

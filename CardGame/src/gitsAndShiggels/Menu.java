@@ -12,21 +12,21 @@ public class Menu extends GridPane{
 	Button btnNext = new Button("Next");
 	
 	//this is both the options provided when playing a card and the options of cards to select when you are looking in a pile
-	ArrayList<Button> options;
+	ArrayList<AbstractCard> options;
 	
 	Scene oldScene;
 	int startPoint, pointOffset = 10;
 	boolean next = false, back = true;
 	
-	public Menu (ArrayList<Button> options, Scene oldScene, int startPoint) {
+	public Menu (ArrayList<AbstractCard> options, Scene oldScene, int startPoint) {
 		this.options = options;
 		this.oldScene = oldScene;
 		this.startPoint = startPoint;
 		generateMenu();
 	}
 	
-	public Menu (ArrayList<Button> options, Scene oldScene) {
-		this.options = options;
+	public Menu (ArrayList<AbstractCard> toOpen, Scene oldScene) {
+		this.options = toOpen;
 		this.oldScene = oldScene;
 		this.startPoint = 0;
 		generateMenu();

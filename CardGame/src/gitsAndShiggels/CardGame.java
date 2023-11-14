@@ -2,6 +2,7 @@ package gitsAndShiggels;
 
 import java.util.ArrayList;
 
+import gitsAndShiggels.WrathCards.Gorg;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -17,6 +18,15 @@ import simpleIO.Console;
 
 
 public class CardGame extends Application {
+	
+	//public colors
+	public static final String lightBlue = "-fx-background-color: #ADD8E6; ";
+	public static final String red = "-fx-background-color: #E9967A; ";
+	public static final String yellow = "-fx-background-color: #F0E68C; ";
+	public static final String purple = "-fx-background-color: #DA70D6; ";
+	public static final String white = "-fx-background-color: #F8F8FF; ";
+
+
 	
 	// TODO add more output ie text to show when something like a card moves or maybe make it an animation
 	Scene scene;
@@ -56,8 +66,8 @@ public class CardGame extends Application {
 		root.add(zoneDiscard, 2, 1);
 		
 		//testing
-		for (int i = 0; i < 25; i++) {
-			AbstractCard c = new AbstractCard(i + "", hand);
+		for (int i = 0; i < 1; i++) {
+			AbstractCard c = new Gorg(hand);
 			c.setOnAction(event -> selectCard(c));
 			hand.add(c);
 		}
@@ -117,12 +127,11 @@ public class CardGame extends Application {
 		back.setOnAction(event -> setScene(this.scene));
 		list.add(back);
 		
-		//TODO make it so when you select something you go back to original scene
 		ListView<Button> root = new ListView<Button>();
 		for (Button b : list) {
 			root.getItems().add(b);
 		}
-		
+				
 		Scene newScene = new Scene(root);
 		setScene(newScene);
 	}
@@ -138,6 +147,7 @@ public class CardGame extends Application {
 	}
 	
 	public void setScene (Scene _scene) {
+		updateHand();
 		newStage.setScene(_scene);
 	}
 	

@@ -9,11 +9,10 @@ public class Zone extends Button{
 
 	private final int WIDTH = 150;
 	private final int HEIGHT = 200;
-	private final String color = "-fx-background-color: #ADD8E6; ";
 
 	
 	public Zone (String txtOnButton) {
-		setStyle(color);
+		setStyle(CardGame.lightBlue);
 		this.setPrefWidth(WIDTH);
 		this.setPrefHeight(HEIGHT);
 		this.setAccessibleText("yes");

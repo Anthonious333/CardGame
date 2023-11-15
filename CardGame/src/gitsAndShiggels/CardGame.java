@@ -21,11 +21,10 @@ public class CardGame extends Application {
 	
 	//public colors
 	public static final String lightBlue = "-fx-background-color: #ADD8E6; ";
-	public static final String red = "-fx-background-color: #E9967A; ";
 	public static final String yellow = "-fx-background-color: #F0E68C; ";
 	public static final String purple = "-fx-background-color: #DA70D6; ";
 	public static final String white = "-fx-background-color: #F8F8FF; ";
-
+	public static final String red = "-fx-background-color: #E9967A; ";
 
 	
 	// TODO add more output ie text to show when something like a card moves or maybe make it an animation
@@ -66,10 +65,10 @@ public class CardGame extends Application {
 		root.add(zoneDiscard, 2, 1);
 		
 		//testing
-		for (int i = 0; i < 1; i++) {
-			AbstractCard c = new Gorg(hand);
+		for (int i = 0; i < 5; i++) {
+			AbstractCard c = new Gorg(Deck);
 			c.setOnAction(event -> selectCard(c));
-			hand.add(c);
+			Deck.add(c);
 		}
 		
 		
@@ -138,7 +137,6 @@ public class CardGame extends Application {
 	
 	public void updateHand() {
 		if (handShown != null) {
-			
 			handShown.getItems().clear();
 		}
 		for (int i = 0; i < hand.size(); i++) {

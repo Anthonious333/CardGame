@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 import gitsAndShiggels.AbstractCard;
 import gitsAndShiggels.Aspects;
+import javafx.scene.control.Button;
 
 public class Gorg extends AbstractCard{
 
 	public Gorg() {
 		super("Gorg", 0, "Troll", "", 2, 4, Aspects.WRATH);
 	}
+
+	
 }

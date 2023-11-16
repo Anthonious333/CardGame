@@ -5,15 +5,12 @@ import java.util.ArrayList;
 import gitsAndShiggels.AbstractCard;
 import gitsAndShiggels.WrathCards.Gorg;
 
-public class testDeck1 extends ArrayList<AbstractCard>{
+public class AbstractDeck extends ArrayList<AbstractCard>{
 
-	public testDeck1 (ArrayList<AbstractCard> deck) {
+	public AbstractDeck () {
 		//ADD CARDS HERE. 
 		//Example:
 //		this.add(new Gorg());
-		
-		
-		setLocation(deck);
 	}
 	
 	public void setLocation(ArrayList<AbstractCard> deck) {

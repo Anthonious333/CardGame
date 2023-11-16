@@ -1,9 +1,13 @@
 package gitsAndShiggels;
 
+import java.util.ArrayList;
+
+import gitsAndShiggels.decks.AbstractDeck;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -19,12 +23,15 @@ public class Board extends GridPane{
 	private Rectangle topBlank;
 	private GridPane botBlank;
 	ListView<AbstractCard> handShown;
+	Player p;
 	
-	public Board (EventHandler<ActionEvent> fate, EventHandler<ActionEvent> deck, EventHandler<ActionEvent> extra, EventHandler<ActionEvent> discard) {
+	public Board (String name, Scene origionalScene, AbstractDeck playersDeck) {
+	p = new Player(name, origionalScene, this, playersDeck);
+		
 	this.setHgap(GAP);
 	this.setVgap(GAP);
 	this.setPadding(new Insets(GAP, GAP, GAP, GAP));
-			
+		
 	zoneFate = new Zone("Fate");
 	zoneDeck = new Zone("Deck");
 	zoneExtra = new Zone("Extra");
@@ -40,14 +47,13 @@ public class Board extends GridPane{
 	botBlank.add(btnHide, 0, 1);
 	this.add(botBlank, 1, 1);
 
-
+	zoneFate.setOnAction(event -> p.selectZone(p.getFate()));
+	zoneDeck.setOnAction(event -> p.selectZone(p.getDeck()));
+	zoneExtra.setOnAction(event -> p.selectZone(p.getExtraPile()));
+	zoneDiscard.setOnAction(event -> p.selectZone(p.getDiscardPile()));
 	
 	this.show();
 	
-	zoneFate.setOnAction(fate);
-	zoneDeck.setOnAction(deck);
-	zoneExtra.setOnAction(extra);
-	zoneDiscard.setOnAction(discard);
 	btnHide.setOnAction(event -> hide());
 	btnShow.setOnAction(event -> show());
 	}
@@ -80,4 +86,15 @@ public class Board extends GridPane{
 		this.add(topBlank, 1, 0);
 		this.add(handShown, 0, 2, 3, 1);
 	}
+	
+	public void updateHand() {
+		if (handShown != null) {
+			handShown.getItems().clear();
+		}
+		for (int i = 0; i < p.getHand().size(); i++) {
+			handShown.getItems().add(p.getHand().get(i));
+		}
+	}
+	
+	
 }

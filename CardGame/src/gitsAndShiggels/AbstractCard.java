@@ -78,4 +78,6 @@ public class AbstractCard extends Button{
 	public void setLocation(ArrayList<AbstractCard> location) {
 		this.location = location;
 	}
+	
+
 }

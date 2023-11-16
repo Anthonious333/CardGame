@@ -23,14 +23,13 @@ public class AbstractCard extends Button{
 	//TODO remake this whole class and use it insted of buttons where i use buttons in other classes
 	//TODO make everything happen inside the CardGame not anywhere else. ie set on action method and setting should be in CardGame.
 	
-	public AbstractCard (String name, int form, String clan, String abilities, int power, int health, ArrayList<AbstractCard> location, Aspects aspect) {
+	public AbstractCard (String name, int form, String clan, String abilities, int power, int health, Aspects aspect) {
 		this.name = name;
 		this.form = form;
 		this.clan = clan;
 		this.abilities = abilities;
 		this.power = power; 
 		this.health = health;
-		this.location = location;
 		this.setPrefSize(150, 200);
 		this.setGraphic(genCardGraphic());
 		this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -74,5 +73,9 @@ public class AbstractCard extends Button{
 		location.remove(this);
 		placeToBe.add(this);
 		location = placeToBe;
+	}
+	
+	public void setLocation(ArrayList<AbstractCard> location) {
+		this.location = location;
 	}
 }

@@ -7,7 +7,7 @@ import gitsAndShiggels.Aspects;
 
 public class Gorg extends AbstractCard{
 
-	public Gorg(ArrayList<AbstractCard> location) {
-		super("Gorg", 0, "Troll", "", 2, 4, location, Aspects.WRATH);
+	public Gorg() {
+		super("Gorg", 0, "Troll", "", 2, 4, Aspects.WRATH);
 	}
 }

@@ -28,17 +28,12 @@ public class CardGame extends Application {
 
 	
 	// TODO add more output ie text to show when something like a card moves or maybe make it an animation
+	//TODO make a "makeCard" method that makes the card and tells it where it is in one motion so you can make card during combat super easy
 	Scene scene;
 	static Stage newStage;
-	static final int GAP = 15;
+//	static final int GAP = 15;
 	AbstractCard selectedCard;
-	public static ArrayList<AbstractCard> 
-		fate = new ArrayList<AbstractCard>(),
-		Deck = new ArrayList<AbstractCard>(),
-		extraPile = new ArrayList<AbstractCard>(),
-		hand = new ArrayList<AbstractCard>(),
-		discardPile = new ArrayList<AbstractCard>();
-	
+
 	ListView<AbstractCard> handShown;
 	
 	Button back = new Button("Back");
@@ -46,43 +41,24 @@ public class CardGame extends Application {
 	@Override
 	public void start(Stage myStage) throws Exception {
 		newStage = myStage;
+		Player p = new Player();
+		Board brd1 = new Board(
+				event -> selectZone(p.getFate()), 
+				event -> selectZone(p.getDeck()), 
+				event -> selectZone(p.getExtraPile()), 
+				event -> selectZone(p.getDiscardPile()));
+		
+		Player p2 = new Player();
+		Board brd2 = new Board(
+				event -> selectZone(p2.getFate()), 
+				event -> selectZone(p2.getDeck()), 
+				event -> selectZone(p2.getExtraPile()), 
+				event -> selectZone(p2.getDiscardPile()));
+		brd2.hide();
+		//TODO populate deck with the testDeck you made.
 		GridPane root = new GridPane();
-		root.setHgap(GAP);
-		root.setVgap(GAP);
-		root.setPadding(new Insets(GAP, GAP, GAP, GAP));
-				
-		Zone zoneFate = new Zone("Fate");
-		root.add(zoneFate, 0, 0);
-		Rectangle topBlank = new Rectangle(200, 200, Color.WHITE);
-		root.add(topBlank, 1, 0);
-		Zone zoneDeck = new Zone("Deck");
-		root.add(zoneDeck, 2, 0);
-		Zone zoneExtra = new Zone("Extra");
-		root.add(zoneExtra, 0, 1);
-		Rectangle botBlank = new Rectangle(200, 200, Color.WHITE);
-		root.add(botBlank, 1, 1);
-		Zone zoneDiscard = new Zone("Discard");
-		root.add(zoneDiscard, 2, 1);
-		
-		//testing
-		for (int i = 0; i < 5; i++) {
-			AbstractCard c = new Gorg(Deck);
-			c.setOnAction(event -> selectCard(c));
-			Deck.add(c);
-		}
-		
-		
-		handShown = new ListView<AbstractCard>();
-		handShown.setOrientation(Orientation.HORIZONTAL);
-		handShown.setPrefSize(150, 221);
-		updateHand();
-		root.add(handShown, 0, 2, 3, 1);
-		
-		zoneFate.setOnAction(event -> selectZone(fate));
-		zoneDeck.setOnAction(event -> selectZone(Deck));
-		zoneExtra.setOnAction(event -> selectZone(extraPile));
-		zoneDiscard.setOnAction(event -> selectZone(discardPile));
-		
+		root.add(brd1, 0, 0);
+		root.add(brd2, 1, 0);
 		scene = new Scene(root);
 		
 		myStage.setTitle("Card Game");
@@ -97,7 +73,7 @@ public class CardGame extends Application {
 	public void selectZone (ArrayList<AbstractCard> zone) {
 		ArrayList<Button> list = new ArrayList<Button>();
 		
-		if (zone == Deck) {
+		if (zone == AbstractDeck) {
 			Button btnDraw = new Button("Draw");
 			btnDraw.setOnAction(event -> {	
 				draw();
@@ -150,10 +126,10 @@ public class CardGame extends Application {
 	}
 	
 	public void draw() {
-		if (Deck.isEmpty()) {
+		if (AbstractDeck.isEmpty()) {
 			//TODO make discard shuffle into deck
 		}
-		Deck.get(0).move(hand);
+		AbstractDeck.get(0).move(hand);
 	}
 	
 	public void move(ArrayList<AbstractCard> a) {

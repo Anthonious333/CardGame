@@ -20,8 +20,6 @@ public class AbstractCard extends Button{
 	private String name, clan, abilities;
 	ArrayList<AbstractCard> location;
 	
-	//TODO remake this whole class and use it insted of buttons where i use buttons in other classes
-	//TODO make everything happen inside the CardGame not anywhere else. ie set on action method and setting should be in CardGame.
 	
 	public AbstractCard (String name, int form, String clan, String abilities, int power, int health, Aspects aspect) {
 		this.name = name;

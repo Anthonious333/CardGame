@@ -3,7 +3,7 @@ package gitsAndShiggels;
 import java.util.ArrayList;
 
 import gitsAndShiggels.WrathCards.Gorg;
-import gitsAndShiggels.decks.testDeck1;
+import gitsAndShiggels.decks.TestDeck1;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -30,8 +30,10 @@ public class CardGame extends Application {
 	
 	// TODO add more output ie text to show when something like a card moves or maybe make it an animation
 	//TODO make a "makeCard" method that makes the card and tells it where it is in one motion so you can make card during combat super easy
-	Scene scene;
+	static Scene scene;
 	static Stage newStage;
+	TestDeck1 player1Deck = new TestDeck1();
+	TestDeck1 player2Deck = new TestDeck1();
 
 	ListView<AbstractCard> handShown;
 	
@@ -39,8 +41,9 @@ public class CardGame extends Application {
 	@Override
 	public void start(Stage myStage) throws Exception {
 		newStage = myStage;
-		Board brd1 = new Board("Player 1", this.scene, new TestDeck1()); //TODO fix deck thing just to padd player deck to itself when it is made.
-		Board brd2 = new Board("Player 2", this.scene, new TestDeck1());
+		Board brd1 = new Board("Player 1", player1Deck); 
+		Board brd2 = new Board("Player 2", player2Deck);
+
 		brd2.hide();
 		
 		GridPane root = new GridPane();
@@ -51,6 +54,11 @@ public class CardGame extends Application {
 		myStage.setTitle("Card Game");
 		myStage.setScene(scene);
 		myStage.show();
+	}
+	
+	public static void setScene() {
+		newStage.setScene(scene);
+		
 	}
 	
 	public static void main(String[] args) {

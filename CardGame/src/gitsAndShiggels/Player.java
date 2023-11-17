@@ -3,6 +3,8 @@ package gitsAndShiggels;
 import java.util.ArrayList;
 
 import gitsAndShiggels.decks.AbstractDeck;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -21,12 +23,12 @@ public class Player {
 	hand = new ArrayList<AbstractCard>(),
 	discardPile = new ArrayList<AbstractCard>();
 	
-	public Player(String name, Scene origionalScene, Board brdSuper, AbstractDeck playersDeck) {
+	public Player(String name, Board brdSuper, AbstractDeck playersDeck) {
 		this.name = name;
-		this.origionalScene = origionalScene;
 		this.brdSuper = brdSuper;
 		this.Deck = playersDeck;
-		
+		playersDeck.setLocation(Deck);
+		setCardActions();
 	}
 	
 	public void selectZone (ArrayList<AbstractCard> zone) {
@@ -37,7 +39,8 @@ public class Player {
 			Button btnDraw = new Button("Draw");
 			btnDraw.setOnAction(event -> {	
 				draw();
-				setScene(origionalScene);
+				CardGame.setScene();
+				brdSuper.updateHand();
 			});
 			list.add(btnDraw);
 		}
@@ -46,7 +49,8 @@ public class Player {
 			Button btnMove = new Button("Move");
 			btnMove.setOnAction(event -> {
 				move(zone);
-				setScene(origionalScene);
+				CardGame.setScene();
+				brdSuper.updateHand();
 			});
 			list.add(btnMove);
 		}
@@ -60,7 +64,7 @@ public class Player {
 		}
 		
 		Button back = new Button("Back");
-		back.setOnAction(event -> setScene(origionalScene));
+		back.setOnAction(event -> CardGame.setScene());
 		list.add(back);
 		
 		ListView<Button> root = new ListView<Button>();
@@ -73,8 +77,8 @@ public class Player {
 	}
 	
 	public void setScene (Scene _scene) {
-		brdSuper.updateHand();
 		CardGame.newStage.setScene(_scene);
+		brdSuper.updateHand();
 	}
 	
 	public void selectCard (AbstractCard c) {
@@ -93,10 +97,16 @@ public class Player {
 	}
 	
 	public void open (ArrayList<AbstractCard> toOpen) {
-		Menu root = new Menu(toOpen, origionalScene);
+		Menu root = new Menu(toOpen, (event -> CardGame.setScene()));
 		
 		Scene newScene = new Scene(root);
 		setScene(newScene);
+	}
+	
+	public void setCardActions () {
+		for (AbstractCard c : Deck) {
+			c.setOnAction(event -> selectCard(c));
+		}
 	}
 
 	public ArrayList<AbstractCard> getFate() {

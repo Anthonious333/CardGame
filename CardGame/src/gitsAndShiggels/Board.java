@@ -25,8 +25,8 @@ public class Board extends GridPane{
 	ListView<AbstractCard> handShown;
 	Player p;
 	
-	public Board (String name, Scene origionalScene, AbstractDeck playersDeck) {
-	p = new Player(name, origionalScene, this, playersDeck);
+	public Board (String name, AbstractDeck playerDeck) {
+	p = new Player(name, this, playerDeck);
 		
 	this.setHgap(GAP);
 	this.setVgap(GAP);

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import gitsAndShiggels.AbstractCard;
 import gitsAndShiggels.WrathCards.Gorg;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class AbstractDeck extends ArrayList<AbstractCard>{
 
@@ -18,4 +20,6 @@ public class AbstractDeck extends ArrayList<AbstractCard>{
 			c.setLocation(deck);
 		}
 	}
+	
+
 }

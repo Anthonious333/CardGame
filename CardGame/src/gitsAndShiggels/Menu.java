@@ -2,6 +2,8 @@ package gitsAndShiggels;
 
 import java.util.ArrayList;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -14,18 +16,18 @@ public class Menu extends GridPane{
 	//this is both the options provided when playing a card and the options of cards to select when you are looking in a pile
 	ArrayList<AbstractCard> options;
 	
-	Scene oldScene;
+	EventHandler<ActionEvent> oldScene;
 	int startPoint, pointOffset = 10;
 	boolean next = false, back = true;
 	
-	public Menu (ArrayList<AbstractCard> options, Scene oldScene, int startPoint) {
+	public Menu (ArrayList<AbstractCard> options, EventHandler<ActionEvent> oldScene, int startPoint) {
 		this.options = options;
 		this.oldScene = oldScene;
 		this.startPoint = startPoint;
 		generateMenu();
 	}
 	
-	public Menu (ArrayList<AbstractCard> toOpen, Scene oldScene) {
+	public Menu (ArrayList<AbstractCard> toOpen, EventHandler<ActionEvent> oldScene) {
 		this.options = toOpen;
 		this.oldScene = oldScene;
 		this.startPoint = 0;
@@ -41,7 +43,7 @@ public class Menu extends GridPane{
 		}
 		if (back) {
 			this.add(btnBack, options.size(), 0);
-			btnBack.setOnAction(event -> back(oldScene));			
+			btnBack.setOnAction(oldScene);			
 		}
 		if (next) { 			
 			this.add(btnNext, options.size() + 1, 0);
@@ -54,7 +56,7 @@ public class Menu extends GridPane{
 	}
 	
 	public void next () {
-		Menu root = new Menu(options, CardGame.newStage.getScene(), startPoint + pointOffset);
+		Menu root = new Menu(options, oldScene, startPoint + pointOffset);
 		Scene scene = new Scene(root);
 		CardGame.newStage.setScene(scene);
 	}

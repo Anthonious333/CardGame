@@ -3,11 +3,12 @@ package gitsAndShiggels;
 import java.util.ArrayList;
 
 import gitsAndShiggels.CardGameEnums.Aspects;
+import gitsAndShiggels.CardGameEnums.CardType;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
-public class AbstractIdealCard extends AbstractCard{
+public abstract class AbstractIdealCard extends AbstractCard{
 	
 	private int power, health;
 	
@@ -21,6 +22,7 @@ public class AbstractIdealCard extends AbstractCard{
 		this.setPrefSize(150, 200);
 		this.setGraphic(genCardGraphic());
 		this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		this.type = CardType.IDEAL;
 		
 		if (aspect == Aspects.WRATH) {
 			this.setStyle(CardGame.red);
@@ -32,7 +34,10 @@ public class AbstractIdealCard extends AbstractCard{
 			this.setStyle(CardGame.white);
 		}
 	}
-		
+	
+	public abstract void play();
+
+	
 	public AnchorPane genCardGraphic() {
 		
 		Label txtName = new Label(this.name);

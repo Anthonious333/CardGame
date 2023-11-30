@@ -19,4 +19,9 @@ public enum Phases {
 	ENDTURNPHASE
 }
 
+public enum CardType {
+	ACTION,
+	IDEAL
+}
+
 }

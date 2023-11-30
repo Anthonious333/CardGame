@@ -21,7 +21,7 @@ public class Board extends GridPane{
 //	final EventHandler<ActionEvent> FATE, DECK, EXTRA, DISCARD;
 	private Zone zoneFate, zoneDeck, zoneExtra, zoneDiscard, zoneIdeal;
 	private Rectangle topBlank;
-	private GridPane botBlank;
+	private GridPane botBlank, btnBar;
 	private PhaseBar phases;
 	ListView<AbstractCard> handShown;
 	Player p;
@@ -47,9 +47,12 @@ public class Board extends GridPane{
 	Button btnHide = new Button("Hide");
 	Button btnShow = new Button("Show");
 	Button btnNextPhase = new Button("Next Phase");
+	Button btnPlay = new Button("Play");
+	btnBar = new GridPane();
 	botBlank.add(btnShow, 0, 0);
 	botBlank.add(btnHide, 0, 1);
-	botBlank.add(btnNextPhase, 0, 2);
+	btnBar.add(btnNextPhase, 0, 0);
+	btnBar.add(btnPlay, 1, 0);
 	this.add(botBlank, 1, 1);
 
 	zoneFate.setOnAction(event -> p.selectZone(p.getFate()));
@@ -61,9 +64,8 @@ public class Board extends GridPane{
 	
 	btnHide.setOnAction(event -> hide());
 	btnShow.setOnAction(event -> show());
-	btnNextPhase.setOnAction(event -> {
-		p.nextPhase(phases.nextPhase());
-	});
+	btnNextPhase.setOnAction(event -> p.nextPhase(phases.nextPhase()));
+	btnPlay.setOnAction(event -> p.play());
 	}
 	
 	public void disable() {
@@ -93,7 +95,8 @@ public class Board extends GridPane{
 		this.add(zoneDiscard, 2, 1);
 		this.add(topBlank, 1, 0);
 		this.add(phases, 0, 2, 3, 1);
-		this.add(handShown, 0, 3, 3, 1);
+		this.add(btnBar, 0, 3, 3, 1);
+		this.add(handShown, 0, 4, 3, 1);
 	}
 	
 	public void updateHand() {

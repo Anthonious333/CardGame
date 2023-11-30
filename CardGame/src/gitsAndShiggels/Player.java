@@ -2,6 +2,7 @@ package gitsAndShiggels;
 
 import java.util.ArrayList;
 
+import gitsAndShiggels.CardGameEnums.CardType;
 import gitsAndShiggels.CardGameEnums.Phases;
 import gitsAndShiggels.decks.AbstractDeck;
 import javafx.event.ActionEvent;
@@ -104,6 +105,22 @@ public class Player {
 		
 		Scene newScene = new Scene(root);
 		setScene(newScene);
+	}
+	
+	//TODO rn this only play the card it has no restrictions to when you can play ideals
+	public void play() {
+		if (selectedCard != null && selectedCard.canPlay()) {
+			if (selectedCard.getLocation() == hand && selectedCard.getType() == CardType.ACTION ) {
+				selectedCard.move(discardPile);
+				selectedCard.play();
+			} else if (selectedCard.getLocation() == fate && selectedCard.getType() == CardType.IDEAL){
+				selectedCard.move(ideal);
+				selectedCard.play();
+			} else {
+				System.out.print("no play");
+
+			}
+		} 
 	}
 	
 	public void setCardActions () {

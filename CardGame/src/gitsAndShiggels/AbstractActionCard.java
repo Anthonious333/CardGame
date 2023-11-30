@@ -1,12 +1,13 @@
 package gitsAndShiggels;
 
 import gitsAndShiggels.CardGameEnums.Aspects;
+import gitsAndShiggels.CardGameEnums.CardType;
 import gitsAndShiggels.CardGameEnums.Speeds;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
-public class AbstractActionCard extends AbstractCard{
+public abstract class AbstractActionCard extends AbstractCard{
 
 	private Speeds speed;
 	private int actionCost;
@@ -21,6 +22,7 @@ public class AbstractActionCard extends AbstractCard{
 		this.setPrefSize(150, 200);
 		this.setGraphic(genCardGraphic());
 		this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		this.type = CardType.ACTION;
 		
 		if (aspect == Aspects.WRATH) {
 			this.setStyle(CardGame.red);
@@ -32,6 +34,9 @@ public class AbstractActionCard extends AbstractCard{
 			this.setStyle(CardGame.white);
 		}
 	}
+	
+	public abstract void play();
+
 		
 	public AnchorPane genCardGraphic() {
 		Label txtName = new Label(this.name);

@@ -26,6 +26,7 @@ public class CardGame extends Application {
 	public static final String purple = "-fx-background-color: #DA70D6; ";
 	public static final String white = "-fx-background-color: #F8F8FF; ";
 	public static final String red = "-fx-background-color: #E9967A; ";
+	public static final String grey = "-fx-background-color: #808080; ";
 
 	
 	// TODO add more output ie text to show when something like a card moves or maybe make it an animation

@@ -11,4 +11,12 @@ public enum Speeds {
 	SLOW
 }
 
+public enum Phases {
+	STARTTURNPHASE,
+	DRAWSTEP,
+	REGENERATIONPHASE,
+	ACTIONSTEP, 
+	ENDTURNPHASE
+}
+
 }

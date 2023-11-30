@@ -30,5 +30,7 @@ public class AbstractCard extends Button{
 		this.location = location;
 	}
 	
-
+	public ArrayList<AbstractCard> getLocation() {
+		return location;
+	}
 }

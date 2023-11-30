@@ -2,6 +2,7 @@ package gitsAndShiggels;
 
 import java.util.ArrayList;
 
+import gitsAndShiggels.CardGameEnums.Phases;
 import gitsAndShiggels.decks.AbstractDeck;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,7 +22,9 @@ public class Player {
 	Deck = new AbstractDeck(),
 	extraPile = new ArrayList<AbstractCard>(),
 	hand = new ArrayList<AbstractCard>(),
-	discardPile = new ArrayList<AbstractCard>();
+	discardPile = new ArrayList<AbstractCard>(), 
+	ideal = new ArrayList<AbstractCard>();
+	
 	
 	public Player(String name, Board brdSuper, AbstractDeck playersDeck) {
 		this.name = name;
@@ -108,6 +111,10 @@ public class Player {
 			c.setOnAction(event -> selectCard(c));
 		}
 	}
+	
+	public void nextPhase(Phases phase) {
+		//TODO call card onNextPhase
+	}
 
 	public ArrayList<AbstractCard> getFate() {
 		return fate;
@@ -147,6 +154,14 @@ public class Player {
 
 	public void setDiscardPile(ArrayList<AbstractCard> discardPile) {
 		this.discardPile = discardPile;
+	}
+
+	public ArrayList<AbstractCard> getIdeal() {
+		return ideal;
+	}
+
+	public void setIdeal(ArrayList<AbstractCard> ideal) {
+		this.ideal = ideal;
 	}
 	
 }

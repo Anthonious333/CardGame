@@ -51,9 +51,7 @@ public class CardGame extends Application {
 		
 		brd1.p.setOpponent(brd2.p);
 		brd2.p.setOpponent(brd1.p);
-		
-		brd2.hide();
-		
+				
 		GridPane root = new GridPane();
 		root.add(brd1, 0, 0);
 		root.add(brd2, 1, 0);

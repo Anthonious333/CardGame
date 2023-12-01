@@ -107,7 +107,8 @@ public class Player {
 			//TODO make discard shuffle into deck
 		}
 		for (int i = 0; i < amount; i++) {
-			Deck.get(0).move(hand);			
+			selectedCard = Deck.get(0);
+			selectedCard.move(hand);
 		}
 	}
 	
@@ -132,14 +133,18 @@ public class Player {
 		if (selectedCard != null && selectedCard.canPlay() && selectedCard.getLocation() == hand && selectedCard.getType() == CardType.ACTION) {
 			selectedCard.move(discardPile);
 			selectedCard.play();
+			selectedCard = null;
 			brdSuper.updateHand();
+			updateButtonBar();
 		} 
 	}
 	
 	public void discard() {
-		if (selectedCard != null && selectedCard.canDiscard && selectedCard.getLocation() == hand && selectedCard.getType() == CardType.IDEAL) {
+		if (selectedCard != null && selectedCard.canDiscard && selectedCard.getLocation() == hand && selectedCard.getType() == CardType.ACTION) {
 			selectedCard.move(discardPile);
+			selectedCard = null;
 			brdSuper.updateHand();
+			updateButtonBar();
 		}
 	}
 	
@@ -150,8 +155,10 @@ public class Player {
 		}
 		for (AbstractCard c : fate) {
 			c.setOnAction(event -> {
-				c.move(ideal);
-				CardGame.setScene();
+				if (ideal.isEmpty()) {
+					c.move(ideal);
+					CardGame.setScene();					
+				}
 			});
 			c.setPlayer(this);
 		}
@@ -180,7 +187,9 @@ public class Player {
 	}
 	
 	public void selectIdeal() {
-		open(fate, false);
+		if (ideal.isEmpty()) {
+			open(fate, false);			
+		}
 	}
 
 	public ArrayList<AbstractCard> getFate() {

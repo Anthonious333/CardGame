@@ -65,11 +65,15 @@ public class Board extends GridPane{
 	zoneIdeal.setOnAction(event -> p.selectZone(p.getIdeal()));
 	
 	btnHide.setOnAction(event -> hide());
-	btnShow.setOnAction(event -> show());
+	btnShow.setOnAction(event -> {
+		show();
+		p.selectIdeal();
+	});
 	btnNextPhase.setOnAction(event -> p.nextPhase(phases.nextPhase()));
 	btnPlay.setOnAction(event -> p.play());
 	btnDiscard.setOnAction(event -> p.discard());
 	
+	this.hide();
 	}
 	
 	public void disable() {

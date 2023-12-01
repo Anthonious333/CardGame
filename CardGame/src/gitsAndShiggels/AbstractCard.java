@@ -21,7 +21,8 @@ public abstract class AbstractCard extends Button{
 	protected String name, clan, abilities;
 	ArrayList<AbstractCard> location;
 	protected CardType type;
-	protected boolean canPlay;
+	protected boolean canPlay, canDiscard;
+	private Player player;
 
 	public void move (ArrayList<AbstractCard> placeToBe) {
 		location.remove(this);
@@ -31,6 +32,30 @@ public abstract class AbstractCard extends Button{
 	
 	public abstract void play();
 	
+	public void atTurnStart() {
+		
+	}
+	
+	public void atDrawStep() {
+		
+	}
+	
+	public void atRegenStep() {
+		
+	}
+	
+	public void atActionStart() {
+		
+	}
+	
+	public void atActionEnd() {
+		
+	}
+	
+	public void atEndOfTurn() {
+		
+	}
+	
 	public void setLocation(ArrayList<AbstractCard> location) {
 		this.location = location;
 	}
@@ -39,11 +64,23 @@ public abstract class AbstractCard extends Button{
 		return location;
 	}
 	
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+	
 	public CardType getType() {
 		return this.type;
 	}
 
 	public boolean canPlay() {
 		return canPlay;
+	}
+	
+	public boolean canDiscard() {
+		return canDiscard;
 	}
 }

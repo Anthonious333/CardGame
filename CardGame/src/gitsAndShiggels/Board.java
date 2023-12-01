@@ -16,18 +16,18 @@ import javafx.scene.shape.Rectangle;
 
 public class Board extends GridPane{
 
-	static final int GAP = 15;
+	static final int GAP = 20;
 	
 //	final EventHandler<ActionEvent> FATE, DECK, EXTRA, DISCARD;
 	private Zone zoneFate, zoneDeck, zoneExtra, zoneDiscard, zoneIdeal;
 	private Rectangle topBlank;
-	private GridPane botBlank, btnBar;
+	private GridPane btnBar;
 	private PhaseBar phases;
+	private Button btnShow;
 	ListView<AbstractCard> handShown;
 	Player p;
 	
-	public Board (String name, AbstractDeck playerDeck) {
-	p = new Player(name, this, playerDeck);
+	public Board (String name, AbstractDeck playerDeck, AbstractDeck playerIdeals) {
 		
 	this.setHgap(GAP);
 	this.setVgap(GAP);
@@ -42,30 +42,34 @@ public class Board extends GridPane{
 	handShown.setOrientation(Orientation.HORIZONTAL);
 	handShown.setPrefSize(150, 221);
 	topBlank = new Rectangle(200, 200, Color.WHITE);
-	botBlank = new GridPane();
 	phases = new PhaseBar();
+	btnShow = new Button("Show");
 	Button btnHide = new Button("Hide");
-	Button btnShow = new Button("Show");
 	Button btnNextPhase = new Button("Next Phase");
 	Button btnPlay = new Button("Play");
+	Button btnDiscard = new Button("Discard");
 	btnBar = new GridPane();
-	botBlank.add(btnShow, 0, 0);
-	botBlank.add(btnHide, 0, 1);
-	btnBar.add(btnNextPhase, 0, 0);
-	btnBar.add(btnPlay, 1, 0);
-	this.add(botBlank, 1, 1);
+	btnBar.add(btnHide, 0, 0);
+	btnBar.add(btnNextPhase, 1, 0);
+	btnBar.add(btnPlay, 2, 0);
+	btnBar.add(btnDiscard, 3, 0);
 
+	this.show();
+	
+	p = new Player(name, this, playerDeck, playerIdeals);
+	
 	zoneFate.setOnAction(event -> p.selectZone(p.getFate()));
 	zoneDeck.setOnAction(event -> p.selectZone(p.getDeck()));
 	zoneExtra.setOnAction(event -> p.selectZone(p.getExtraPile()));
 	zoneDiscard.setOnAction(event -> p.selectZone(p.getDiscardPile()));
-	
-	this.show();
+	zoneIdeal.setOnAction(event -> p.selectZone(p.getIdeal()));
 	
 	btnHide.setOnAction(event -> hide());
 	btnShow.setOnAction(event -> show());
 	btnNextPhase.setOnAction(event -> p.nextPhase(phases.nextPhase()));
 	btnPlay.setOnAction(event -> p.play());
+	btnDiscard.setOnAction(event -> p.discard());
+	
 	}
 	
 	public void disable() {
@@ -84,7 +88,7 @@ public class Board extends GridPane{
 	
 	public void hide() {
 		this.getChildren().clear();
-		this.add(botBlank, 1, 1);
+		this.add(btnShow, 0, 0);
 
 	}
 	
@@ -93,7 +97,7 @@ public class Board extends GridPane{
 		this.add(zoneDeck, 2, 0);
 		this.add(zoneExtra, 0, 1);
 		this.add(zoneDiscard, 2, 1);
-		this.add(topBlank, 1, 0);
+		this.add(zoneIdeal, 1, 0);
 		this.add(phases, 0, 2, 3, 1);
 		this.add(btnBar, 0, 3, 3, 1);
 		this.add(handShown, 0, 4, 3, 1);

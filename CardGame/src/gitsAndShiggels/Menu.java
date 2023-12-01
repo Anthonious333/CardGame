@@ -20,18 +20,20 @@ public class Menu extends GridPane{
 	int startPoint, pointOffset = 10;
 	boolean next = false, back = true;
 	
-	public Menu (ArrayList<AbstractCard> options, EventHandler<ActionEvent> oldScene, int startPoint) {
+	public Menu (ArrayList<AbstractCard> options, EventHandler<ActionEvent> oldScene, int startPoint, boolean back) {
 		this.options = options;
 		this.oldScene = oldScene;
 		this.startPoint = startPoint;
+		this.back = back;
 		generateMenu();
 	}
 	
-	public Menu (ArrayList<AbstractCard> toOpen, EventHandler<ActionEvent> oldScene) {
-		this.options = toOpen;
-		this.oldScene = oldScene;
-		this.startPoint = 0;
-		generateMenu();
+	public Menu (ArrayList<AbstractCard> options, EventHandler<ActionEvent> oldScene) {
+		this(options, oldScene, 0, true);
+	}
+	
+	public Menu (ArrayList<AbstractCard> options, EventHandler<ActionEvent> oldScene, boolean back) {
+		this(options, oldScene, 0, back);
 	}
 	
 	public void generateMenu () {
@@ -56,7 +58,7 @@ public class Menu extends GridPane{
 	}
 	
 	public void next () {
-		Menu root = new Menu(options, oldScene, startPoint + pointOffset);
+		Menu root = new Menu(options, oldScene, startPoint + pointOffset, true);
 		Scene scene = new Scene(root);
 		CardGame.newStage.setScene(scene);
 	}

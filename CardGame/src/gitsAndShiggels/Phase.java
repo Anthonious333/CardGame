@@ -8,7 +8,7 @@ import javafx.scene.shape.Shape;
 
 public class Phase extends StackPane{
 	public Phase(String text) {
-		Rectangle r = new Rectangle(84, 75, Color.WHITE);
+		Rectangle r = new Rectangle(75, 75, Color.WHITE);
 		Label l = new Label(text);
 		this.getChildren().add(r);
 		this.getChildren().add(l);

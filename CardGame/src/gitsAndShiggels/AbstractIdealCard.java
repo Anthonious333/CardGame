@@ -23,6 +23,9 @@ public abstract class AbstractIdealCard extends AbstractCard{
 		this.setGraphic(genCardGraphic());
 		this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		this.type = CardType.IDEAL;
+		this.canPlay = true;
+		this.canDiscard = true;
+
 		
 		if (aspect == Aspects.WRATH) {
 			this.setStyle(CardGame.red);

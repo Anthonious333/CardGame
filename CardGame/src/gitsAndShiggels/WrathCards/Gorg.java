@@ -11,7 +11,6 @@ public class Gorg extends AbstractIdealCard{
 
 	public Gorg() {
 		super("Gorg", 0, "", "Troll", 2, 4, Aspects.WRATH);
-		this.canPlay = true;
 	}
 
 	@Override

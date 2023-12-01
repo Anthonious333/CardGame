@@ -7,9 +7,11 @@ import gitsAndShiggels.CardGameEnums.Phases;
 import gitsAndShiggels.decks.AbstractDeck;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
 
 public class Player {
 	
@@ -17,6 +19,9 @@ public class Player {
 	private Board brdSuper;
 	private Scene origionalScene;
 	private AbstractCard selectedCard;
+	private Phases currentPhase;
+	private GridPane boardBtnBar;
+	private Player opponent;
 
 	private ArrayList<AbstractCard> 
 	fate = new ArrayList<AbstractCard>(),
@@ -27,12 +32,15 @@ public class Player {
 	ideal = new ArrayList<AbstractCard>();
 	
 	
-	public Player(String name, Board brdSuper, AbstractDeck playersDeck) {
+	public Player(String name, Board brdSuper, AbstractDeck playersDeck, AbstractDeck playersIdeals) {
 		this.name = name;
 		this.brdSuper = brdSuper;
 		this.Deck = playersDeck;
 		playersDeck.setLocation(Deck);
-		setCardActions();
+		this.fate = playersIdeals;
+		playersIdeals.setLocation(fate);
+		boardBtnBar = ((GridPane) brdSuper.getChildren().get(6));
+		setCardsUp();
 	}
 	
 	public void selectZone (ArrayList<AbstractCard> zone) {
@@ -87,13 +95,20 @@ public class Player {
 	
 	public void selectCard (AbstractCard c) {
 		selectedCard = c;
+		updateButtonBar();
 	}
 	
 	public void draw() {
+		draw(1);
+	}
+	
+	public void draw(int amount) {
 		if (Deck.isEmpty()) {
 			//TODO make discard shuffle into deck
 		}
-		Deck.get(0).move(hand);
+		for (int i = 0; i < amount; i++) {
+			Deck.get(0).move(hand);			
+		}
 	}
 	
 	public void move(ArrayList<AbstractCard> a) {
@@ -101,36 +116,71 @@ public class Player {
 	}
 	
 	public void open (ArrayList<AbstractCard> toOpen) {
-		Menu root = new Menu(toOpen, (event -> CardGame.setScene()));
+		open(toOpen, true);
+	}
+	
+	public void open (ArrayList<AbstractCard> toOpen, boolean back) {
+		Menu root = new Menu(toOpen, (event -> CardGame.setScene()), back);
 		
 		Scene newScene = new Scene(root);
 		setScene(newScene);
 	}
 	
 	//TODO rn this only play the card it has no restrictions to when you can play ideals
+	
 	public void play() {
-		if (selectedCard != null && selectedCard.canPlay()) {
-			if (selectedCard.getLocation() == hand && selectedCard.getType() == CardType.ACTION ) {
-				selectedCard.move(discardPile);
-				selectedCard.play();
-			} else if (selectedCard.getLocation() == fate && selectedCard.getType() == CardType.IDEAL){
-				selectedCard.move(ideal);
-				selectedCard.play();
-			} else {
-				System.out.print("no play");
-
-			}
+		if (selectedCard != null && selectedCard.canPlay() && selectedCard.getLocation() == hand && selectedCard.getType() == CardType.ACTION) {
+			selectedCard.move(discardPile);
+			selectedCard.play();
+			brdSuper.updateHand();
 		} 
 	}
 	
-	public void setCardActions () {
-		for (AbstractCard c : Deck) {
-			c.setOnAction(event -> selectCard(c));
+	public void discard() {
+		if (selectedCard != null && selectedCard.canDiscard && selectedCard.getLocation() == hand && selectedCard.getType() == CardType.IDEAL) {
+			selectedCard.move(discardPile);
+			brdSuper.updateHand();
 		}
 	}
 	
+	public void setCardsUp () {
+		for (AbstractCard c : Deck) {
+			c.setOnAction(event -> selectCard(c));
+			c.setPlayer(this);
+		}
+		for (AbstractCard c : fate) {
+			c.setOnAction(event -> {
+				c.move(ideal);
+				CardGame.setScene();
+			});
+			c.setPlayer(this);
+		}
+	}
+	
+	//TODO ask what happens if two there are two objects the override a method and that method is called at the same time
 	public void nextPhase(Phases phase) {
 		//TODO call card onNextPhase
+		this.currentPhase = phase;
+		updateButtonBar();
+	}
+	
+	public void updateButtonBar() {
+		//play button
+		if (this.currentPhase == Phases.ACTIONSTEP && this.selectedCard != null && this.selectedCard.canPlay) {
+			boardBtnBar.getChildren().get(2).setDisable(false);	
+		} else {
+			boardBtnBar.getChildren().get(2).setDisable(true);	
+		}
+		
+		if (this.currentPhase == Phases.ACTIONSTEP && this.selectedCard != null && this.selectedCard.canDiscard) {
+			boardBtnBar.getChildren().get(3).setDisable(false);;			
+		} else {
+			boardBtnBar.getChildren().get(3).setDisable(true);;			
+		}
+	}
+	
+	public void selectIdeal() {
+		open(fate, false);
 	}
 
 	public ArrayList<AbstractCard> getFate() {
@@ -179,6 +229,14 @@ public class Player {
 
 	public void setIdeal(ArrayList<AbstractCard> ideal) {
 		this.ideal = ideal;
+	}
+
+	public Player getOpponent() {
+		return opponent;
+	}
+
+	public void setOpponent(Player opponent) {
+		this.opponent = opponent;
 	}
 	
 }

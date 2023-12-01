@@ -23,6 +23,8 @@ public abstract class AbstractActionCard extends AbstractCard{
 		this.setGraphic(genCardGraphic());
 		this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		this.type = CardType.ACTION;
+		this.canPlay = true;
+		this.canDiscard = true;
 		
 		if (aspect == Aspects.WRATH) {
 			this.setStyle(CardGame.red);
@@ -71,10 +73,11 @@ public abstract class AbstractActionCard extends AbstractCard{
 		card.setBottomAnchor(txtAbilities, 12.0);
 		card.setBottomAnchor(lblSpeed, 0.0);
 		card.setBottomAnchor(lblActionCost, 0.0);
+		card.setLeftAnchor(lblActionCost, 28.0);
 		card.setBottomAnchor(txtClan, 0.0);
 		card.setLeftAnchor(txtAbilities, 12.0);
-		card.setLeftAnchor(lblSpeed, 12.0);
-		card.setLeftAnchor(txtClan, 12.0);
+		card.setLeftAnchor(lblSpeed, 0.0);
+		card.setLeftAnchor(txtClan, 38.0);
 		
 
 		

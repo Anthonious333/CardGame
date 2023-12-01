@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import gitsAndShiggels.WrathCards.Gorg;
 import gitsAndShiggels.decks.TestDeck1;
+import gitsAndShiggels.decks.TestDeck1Ideals;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -35,6 +36,9 @@ public class CardGame extends Application {
 	static Stage newStage;
 	TestDeck1 player1Deck = new TestDeck1();
 	TestDeck1 player2Deck = new TestDeck1();
+	
+	TestDeck1Ideals player1Ideals = new TestDeck1Ideals();
+	TestDeck1Ideals player2Ideals = new TestDeck1Ideals();
 
 	ListView<AbstractCard> handShown;
 	
@@ -42,9 +46,12 @@ public class CardGame extends Application {
 	@Override
 	public void start(Stage myStage) throws Exception {
 		newStage = myStage;
-		Board brd1 = new Board("Player 1", player1Deck); 
-		Board brd2 = new Board("Player 2", player2Deck);
-
+		Board brd1 = new Board("Player 1", player1Deck, player1Ideals); 
+		Board brd2 = new Board("Player 2", player2Deck, player2Ideals);
+		
+		brd1.p.setOpponent(brd2.p);
+		brd2.p.setOpponent(brd1.p);
+		
 		brd2.hide();
 		
 		GridPane root = new GridPane();
@@ -55,6 +62,7 @@ public class CardGame extends Application {
 		myStage.setTitle("Card Game");
 		myStage.setScene(scene);
 		myStage.show();
+
 	}
 	
 	public static void setScene() {

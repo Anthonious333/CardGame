@@ -30,9 +30,9 @@ public abstract class AbstractActionCard extends AbstractCard{
 			this.setStyle(CardGame.red);
 		} else if (aspect == Aspects.SHREWD) {
 			this.setStyle(CardGame.yellow);
-		}else if (aspect == Aspects.MEEK) {
+		} else if (aspect == Aspects.MEEK) {
 			this.setStyle(CardGame.purple);
-		}else {
+		} else {
 			this.setStyle(CardGame.white);
 		}
 	}
@@ -78,8 +78,6 @@ public abstract class AbstractActionCard extends AbstractCard{
 		card.setLeftAnchor(txtAbilities, 12.0);
 		card.setLeftAnchor(lblSpeed, 0.0);
 		card.setLeftAnchor(txtClan, 38.0);
-		
-
 		
 		return card;
 	}

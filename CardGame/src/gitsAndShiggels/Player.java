@@ -10,6 +10,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 
@@ -41,6 +43,7 @@ public class Player {
 		playersIdeals.setLocation(fate);
 		boardBtnBar = ((GridPane) brdSuper.getChildren().get(6));
 		setCardsUp();
+		
 	}
 	
 	public void selectZone (ArrayList<AbstractCard> zone) {
@@ -95,7 +98,7 @@ public class Player {
 	
 	public void selectCard (AbstractCard c) {
 		selectedCard = c;
-		updateButtonBar();
+		updateGraphics();
 	}
 	
 	public void draw() {
@@ -135,7 +138,7 @@ public class Player {
 			selectedCard.play();
 			selectedCard = null;
 			brdSuper.updateHand();
-			updateButtonBar();
+			updateGraphics();
 		} 
 	}
 	
@@ -144,7 +147,7 @@ public class Player {
 			selectedCard.move(discardPile);
 			selectedCard = null;
 			brdSuper.updateHand();
-			updateButtonBar();
+			updateGraphics();
 		}
 	}
 	
@@ -155,8 +158,9 @@ public class Player {
 		}
 		for (AbstractCard c : fate) {
 			c.setOnAction(event -> {
-				if (ideal.isEmpty()) {
+				if (ideal.isEmpty() && !((AbstractIdealCard) c).isDead()) {
 					c.move(ideal);
+					updateGraphics();
 					CardGame.setScene();					
 				}
 			});
@@ -168,10 +172,10 @@ public class Player {
 	public void nextPhase(Phases phase) {
 		//TODO call card onNextPhase
 		this.currentPhase = phase;
-		updateButtonBar();
+		updateGraphics();
 	}
 	
-	public void updateButtonBar() {
+	public void updateGraphics() {
 		//play button
 		if (this.currentPhase == Phases.ACTIONSTEP && this.selectedCard != null && this.selectedCard.canPlay) {
 			boardBtnBar.getChildren().get(2).setDisable(false);	
@@ -183,6 +187,10 @@ public class Player {
 			boardBtnBar.getChildren().get(3).setDisable(false);;			
 		} else {
 			boardBtnBar.getChildren().get(3).setDisable(true);;			
+		}
+		if (!ideal.isEmpty()) {
+			((Zone) brdSuper.getChildren().get(5)).setGraphic(ideal.get(0).getGraphic());
+			((Zone) brdSuper.getChildren().get(5)).setStyle(ideal.get(0).getStyle());
 		}
 	}
 	

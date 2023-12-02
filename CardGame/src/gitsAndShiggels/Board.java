@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -38,6 +39,7 @@ public class Board extends GridPane{
 	zoneExtra = new Zone("Extra");
 	zoneDiscard = new Zone("Discard");
 	zoneIdeal = new Zone("Ideal");
+	zoneIdeal.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 	handShown = new ListView<AbstractCard>();
 	handShown.setOrientation(Orientation.HORIZONTAL);
 	handShown.setPrefSize(150, 221);
@@ -62,7 +64,6 @@ public class Board extends GridPane{
 	zoneDeck.setOnAction(event -> p.selectZone(p.getDeck()));
 	zoneExtra.setOnAction(event -> p.selectZone(p.getExtraPile()));
 	zoneDiscard.setOnAction(event -> p.selectZone(p.getDiscardPile()));
-	zoneIdeal.setOnAction(event -> p.selectZone(p.getIdeal()));
 	
 	btnHide.setOnAction(event -> hide());
 	btnShow.setOnAction(event -> {

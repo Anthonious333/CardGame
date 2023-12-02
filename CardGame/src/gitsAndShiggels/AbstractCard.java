@@ -16,9 +16,9 @@ public abstract class AbstractCard extends Button{
 	
 //https://stackoverflow.com/questions/27295505/javafx-button-with-multiple-text-lines
 
-	protected int form;
+	protected int form, currentForm;
 	protected final int FONT = 12;
-	protected String name, clan, abilities;
+	protected String name, clan, abilities, currentName, currentClan, currentAbilities;
 	ArrayList<AbstractCard> location;
 	protected CardType type;
 	protected boolean canPlay, canDiscard;
@@ -31,7 +31,7 @@ public abstract class AbstractCard extends Button{
 	}
 	
 	public abstract void play();
-	
+		
 	public void atTurnStart() {
 		
 	}

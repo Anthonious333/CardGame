@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import gitsAndShiggels.CardGameEnums.CardType;
 import gitsAndShiggels.CardGameEnums.Phases;
 import gitsAndShiggels.decks.AbstractDeck;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -156,6 +157,10 @@ public class Player {
 			c.setOnAction(event -> selectCard(c));
 			c.setPlayer(this);
 		}
+		if (Deck.size() < 20 || Deck.size() > 30) {
+			System.out.print(name + "Deck size not between 20-30. Size:" + Deck.size() + "\n");
+			Platform.exit();
+		}
 		for (AbstractCard c : fate) {
 			c.setOnAction(event -> {
 				if (ideal.isEmpty() && !((AbstractIdealCard) c).isDead()) {
@@ -165,6 +170,10 @@ public class Player {
 				}
 			});
 			c.setPlayer(this);
+		}
+		if (fate.size() < 20 || fate.size() > 30) {
+			System.out.print(name + "Fate size not between 0-4. Size:" + fate.size() + "\n");
+			Platform.exit();
 		}
 	}
 	

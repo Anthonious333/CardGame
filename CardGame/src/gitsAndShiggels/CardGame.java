@@ -31,7 +31,6 @@ public class CardGame extends Application {
 
 	
 	// TODO add more output ie text to show when something like a card moves or maybe make it an animation
-	//TODO make the deaks cheak if they are the right size.
 	//TODO do all the things for grades ie cant play some card at some times
 	//TODO fix ideals zone on action, its just the default rn
 	//TODO make a face down pile in each zone by giving cards a isFaceDown property that is ckeacked when making a menu and a "Face Down" button to open that menu (the back button sould lead to the board not the last menu)

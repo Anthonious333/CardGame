@@ -15,10 +15,9 @@ public class TestDeck1 extends AbstractDeck{
 		//Example:
 		this.add(new PotOfGreed());
 		this.add(new SakeOfLife());
-		this.add(new blankCard());
-		this.add(new blankCard());
-		this.add(new blankCard());
-		this.add(new blankCard());
+		for (int i = 0; i < 20; i++) {
+			this.add(new blankCard());
+		}
 	}
 	
 }

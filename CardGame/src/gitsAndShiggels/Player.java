@@ -157,7 +157,7 @@ public class Player {
 			c.setOnAction(event -> selectCard(c));
 			c.setPlayer(this);
 		}
-		if (Deck.size() < 20 || Deck.size() > 30) {
+		if (Deck.size() <= 20 || Deck.size() >= 30) {
 			System.out.print(name + "Deck size not between 20-30. Size:" + Deck.size() + "\n");
 			Platform.exit();
 		}
@@ -171,8 +171,8 @@ public class Player {
 			});
 			c.setPlayer(this);
 		}
-		if (fate.size() < 20 || fate.size() > 30) {
-			System.out.print(name + "Fate size not between 0-4. Size:" + fate.size() + "\n");
+		if (fate.size() < 1 || fate.size() > 4) {
+			System.out.print(name + "Fate size not between 1-4. Size:" + fate.size() + "\n");
 			Platform.exit();
 		}
 	}

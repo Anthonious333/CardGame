@@ -28,6 +28,12 @@ public class CardGame extends Application {
 	public static final String white = "-fx-background-color: #F8F8FF; ";
 	public static final String red = "-fx-background-color: #E9967A; ";
 	public static final String grey = "-fx-background-color: #808080; ";
+	public static final int MAX_DECK_SIZE = 30;
+	public static final int MIN_DECK_SIZE = 1;//20
+	public static final int MAX_FATE_SIZE = 4;
+	public static final int MIN_FATE_SIZE = 1;
+
+	
 
 	
 	// TODO add more output ie text to show when something like a card moves or maybe make it an animation

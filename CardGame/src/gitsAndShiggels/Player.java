@@ -157,7 +157,11 @@ public class Player {
 			c.setOnAction(event -> selectCard(c));
 			c.setPlayer(this);
 		}
+<<<<<<< HEAD
 		if (Deck.size() < CardGame.MIN_DECK_SIZE || Deck.size() > CardGame.MAX_DECK_SIZE) {
+=======
+		if (Deck.size() <= 20 || Deck.size() >= 30) {
+>>>>>>> branch 'master' of https://github.com/Anthonious333/CardGame.git
 			System.out.print(name + "Deck size not between 20-30. Size:" + Deck.size() + "\n");
 			Platform.exit();
 		}
@@ -171,8 +175,13 @@ public class Player {
 			});
 			c.setPlayer(this);
 		}
+<<<<<<< HEAD
 		if (fate.size() < CardGame.MIN_FATE_SIZE || fate.size() > CardGame.MAX_FATE_SIZE) {
 			System.out.print(name + "Fate size not between 0-4. Size:" + fate.size() + "\n");
+=======
+		if (fate.size() < 1 || fate.size() > 4) {
+			System.out.print(name + "Fate size not between 1-4. Size:" + fate.size() + "\n");
+>>>>>>> branch 'master' of https://github.com/Anthonious333/CardGame.git
 			Platform.exit();
 		}
 	}

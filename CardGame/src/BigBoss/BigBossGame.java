@@ -12,8 +12,10 @@ import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,11 +25,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.VLineTo;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -52,6 +56,7 @@ public class BigBossGame extends Application {
 	 */
 	
 	Label title;
+	StackPane titleScreen;
 	
 	//visual variables
 	final int TITLE_GAP = 50;
@@ -66,7 +71,6 @@ public class BigBossGame extends Application {
 	//inner variables
 	int timer = 0;
 	final int TITLE_MOVE_TIME = 100;
-	boolean titleMoveUp = false;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -109,20 +113,25 @@ public class BigBossGame extends Application {
 	    pathTransition.setAutoReverse(true);
 	    pathTransition.play();
 
-	    
-	    StackPane buttons = new StackPane();
+	    titleScreen = new StackPane();
+	    Button btn = new Button("test");
+	    btn.setVisible(false);
+	    btn.setOnAction(event -> backMenu(btn));
 	    
 	    Button btnPlay = new Button("Play");
 	    btnPlay.setPrefSize(BTN_SIZE * 5, BTN_SIZE);
 	    btnPlay.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    buttons.getChildren().addAll(btnPlay);
+	    btnPlay.setOnAction(event -> {
+	    	nextManu(btn);
+	    });
+	    titleScreen.getChildren().addAll(btnPlay);
 	    
 	    Button btnOptions = new Button("Options");
 	    btnOptions.setPrefSize(BTN_SIZE * 5, BTN_SIZE);
 	    StackPane.setMargin(btnOptions, new Insets(158, 158, 158, 158));
 	    StackPane.setAlignment(btnOptions, Pos.BOTTOM_CENTER);
 	    btnOptions.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    buttons.getChildren().addAll(btnOptions);
+	    titleScreen.getChildren().addAll(btnOptions);
 	    
 	    Button btnExit = new Button("Exit");
 	    btnExit.setPrefSize(BTN_SIZE * 5, BTN_SIZE);
@@ -130,10 +139,17 @@ public class BigBossGame extends Application {
 	    StackPane.setAlignment(btnExit, Pos.BOTTOM_CENTER);
 	    btnExit.setFont(Font.font(FONT, BTN_FONT_SIZE));
 	    btnExit.setOnAction(event -> Platform.exit());
-	    buttons.getChildren().addAll(btnExit);
+	    titleScreen.getChildren().addAll(btnExit);
+	    
+	    titleScreen.getChildren().add(title);
+	    
+	    //options screen
+	    
+	    
+	    
 	    
 	    //adding all nodes to pane
-	    root.getChildren().addAll(background, background2, title, buttons);
+	    root.getChildren().addAll(background, background2, titleScreen, btn);
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
@@ -141,11 +157,60 @@ public class BigBossGame extends Application {
 	    stage.show();
 	}
 	
+	public void nextManu(Node subject) {
+		subject.setVisible(true);
+		TranslateTransition buttonsTrans2 = new TranslateTransition(Duration.seconds(1.25), titleScreen);
+		buttonsTrans2.setFromY(-100);
+		buttonsTrans2.setToY(1000);
+		buttonsTrans2.setCycleCount(1);
+		buttonsTrans2.setOnFinished(event -> {
+			titleScreen.setLayoutY(1000);
+		});
+		TranslateTransition buttonsTrans1 = new TranslateTransition(Duration.seconds(.75), titleScreen);
+		buttonsTrans1.setFromY(titleScreen.getLayoutY());
+		buttonsTrans1.setToY(-100);
+		buttonsTrans1.setCycleCount(1);
+		buttonsTrans1.setOnFinished(event -> {
+			buttonsTrans2.play();
+		});
+		
+		TranslateTransition newSceneTrans = new TranslateTransition(Duration.seconds(2), subject);
+		newSceneTrans.setFromY(-1000);
+		newSceneTrans.setToY(0);
+		newSceneTrans.setCycleCount(1);
+		newSceneTrans.setOnFinished(event -> {
+			subject.setLayoutY(0);
+		});
+		
+		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans1);
+		parTrans.play();
+	}
+	
+	public void backMenu (Node n) {
+		TranslateTransition buttonsTrans = new TranslateTransition(Duration.seconds(2), titleScreen);
+		buttonsTrans.setFromY(1000);
+		buttonsTrans.setToY(0);
+		buttonsTrans.setCycleCount(1);
+		buttonsTrans.setOnFinished(event -> {
+			titleScreen.setLayoutY(0);
+		});
+		
+		TranslateTransition newSceneTrans = new TranslateTransition(Duration.seconds(2), n);
+		newSceneTrans.setFromY(titleScreen.getLayoutY());
+		newSceneTrans.setToY(-1000);
+		newSceneTrans.setCycleCount(1);
+		newSceneTrans.setOnFinished(event -> {
+			n.setLayoutY(-1000);
+		});
+		
+		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans);
+		parTrans.play();
+	}
+	
 	@Override
 	public void stop() throws Exception {
 		
 	}
-	
 
 	public static void main(String[] args) {
 		launch(args);

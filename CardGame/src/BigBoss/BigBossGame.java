@@ -22,6 +22,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -57,6 +58,7 @@ public class BigBossGame extends Application {
 	StackPane titleScreen;
 	Slider volumeSlider;
 	Save save1 = new Save(), save2 = new Save(), save3 = new Save();
+	TextField txtSaveName;
 	
 	//visual finals
 	final int TITLE_GAP = 50;
@@ -128,6 +130,43 @@ public class BigBossGame extends Application {
 	    pathTransition.setCycleCount(Animation.INDEFINITE);
 	    pathTransition.setAutoReverse(true);
 	    pathTransition.play();
+	    
+	    //charecter selection screen
+	    VBox charSelectScreen = new VBox();
+	    charSelectScreen.setVisible(false);
+	    charSelectScreen.setMaxSize(MENU_WIDTH, MENU_HEIGHT);
+	    
+	    //back button and select button
+	    HBox selectAndBackBtns = new HBox();
+	    Button btnCharSelectScreenSelect= new Button("Select");
+	    btnCharSelectScreenSelect.setDisable(true);
+	    btnCharSelectScreenSelect.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnCharSelectScreenSelect.setOnAction(event -> backMenu(charSelectScreen));
+	    Button btnCharSelectScreenBack = new Button("Back");
+	    btnCharSelectScreenBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnCharSelectScreenBack.setOnAction(event -> backMenu(charSelectScreen));
+	    selectAndBackBtns.getChildren().addAll(btnCharSelectScreenBack, btnCharSelectScreenSelect);
+
+	    HBox saveNamingLine = new HBox();
+	    txtSaveName = new TextField();
+	    txtSaveName.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    txtSaveName.setOnKeyTyped(event -> {
+	    	if (!txtSaveName.getText().equals("")) {
+	    	    btnCharSelectScreenSelect.setDisable(false);
+	    	} else {
+	    	    btnCharSelectScreenSelect.setDisable(true);
+	    	}
+	    });
+	    Label lblName = new Label();
+	    lblName.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    saveNamingLine.getChildren().addAll(lblName, txtSaveName);
+
+	    
+	    
+	    Button selectMrBasic = new Button("Mr. Basic");
+	    selectMrBasic.setFont(Font.font(FONT, MENU_FONT_SIZE));
+
+	    charSelectScreen.getChildren().addAll(selectAndBackBtns, txtSaveName, selectMrBasic);
 
 	    
 	    //Save selection screen
@@ -143,13 +182,19 @@ public class BigBossGame extends Application {
 	    Button btnSave1 = new Button(save1.getName());
 	    btnSave1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSave1.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
+	    btnSave1.setOnAction(event -> {
+	    	if (save1.getIsEmpty()) {
+	    		nextMenu(selectScreen, charSelectScreen);
+	    	} else {
+	    		//TODO
+	    	}
+	    });
 	    VBox.setMargin(btnSave1, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 	    
 	    Button btnSave2 = new Button(save2.getName());
 	    btnSave2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSave2.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
 	    VBox.setMargin(btnSave2, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
-
 	    
 	    Button btnSave3 = new Button(save3.getName());
 	    btnSave3.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -229,7 +274,7 @@ public class BigBossGame extends Application {
 	    titleScreen.getChildren().add(title);
 	    
 	    //adding all nodes to pane
-	    root.getChildren().addAll(background, background2, titleScreen, selectScreen, optionsScreen);
+	    root.getChildren().addAll(background, background2, titleScreen, selectScreen, optionsScreen, charSelectScreen);
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
@@ -298,6 +343,11 @@ public class BigBossGame extends Application {
 	
 	public void changeVolume() {
 		lblVolumeSlider.setText("Volume (" + ((int)volumeSlider.getValue()) + "%)" );
+	}
+	
+	public void selectCharecter (Save save, AbstractCharecter charecter) {
+		save = new Save();
+		//TODO
 	}
 	
 	@Override

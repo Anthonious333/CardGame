@@ -3,13 +3,16 @@ package BigBoss;
 public class Save {
 
 	private String name;
+	private Boolean isEmpty;
 	
 	public Save() {
 		this("Empty Save");
+		isEmpty = true;
 	}
 	
 	public Save(String name) {
 		this.setName(name);
+		isEmpty = false;
 	}
 
 	public String getName() {
@@ -19,4 +22,14 @@ public class Save {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public Boolean getIsEmpty() {
+		return isEmpty;
+	}
+
+	public void setIsEmpty(Boolean isEmpty) {
+		this.isEmpty = isEmpty;
+	}
+	
+	
 }

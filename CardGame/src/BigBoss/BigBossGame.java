@@ -18,13 +18,17 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.HLineTo;
@@ -46,19 +50,15 @@ public class BigBossGame extends Application {
 	 * asks what save you want to use
 	 * if new chose char
 	 * starts game
-	 * 
-	 * options
-	 * volume 
-	 * speedy animations
-	 * ...
-	 * 
-	 * exit
 	 */
 	
 	Label title;
+	Label lblVolumeSlider;
 	StackPane titleScreen;
+	Slider volumeSlider;
+	Save save1 = new Save(), save2 = new Save(), save3 = new Save();
 	
-	//visual variables
+	//visual finals
 	final int TITLE_GAP = 50;
 	final int TITLE_POS = 160;
 	final int IMAGE_GAP = 1126;
@@ -66,11 +66,27 @@ public class BigBossGame extends Application {
 	final String GAME_NAME = "Big Boss";
 	final String FONT = "Comic Sans MS";
 	final int BTN_FONT_SIZE = 50;
-	final int BTN_SIZE = 50;
+	final int BTN_WIDTH = 250;
+	final int BTN_HEIGHT = 50;
+	final int MENU_WIDTH = 400;
+	final int MENU_HEIGHT = 500;
+	final int MENU_FONT_SIZE = 30;
+	final int CHECK_BOX_SIZE = 50;
+	final int MENU_GAP = 10;
+	final int SELECT_BTN_WIDTH = 400;
+	final int SELECT_BTN_HEIGHT = 150;
+
+
+	//inner finals
+	final int TITLE_MOVE_TIME = 100;
+	final double SLOW_ANIMATION_SPEED = 1;
+	final double FAST_ANIMATION_SPEED = 0.25;
+	
 	
 	//inner variables
 	int timer = 0;
-	final int TITLE_MOVE_TIME = 100;
+	double animationSpeedMultiplyer = SLOW_ANIMATION_SPEED;
+	
 	
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -105,7 +121,7 @@ public class BigBossGame extends Application {
 	    path.getElements().add (new MoveTo (TITLE_POS, 70));
 	    path.getElements().add (new LineTo (TITLE_POS + 100, 30));
 	    PathTransition pathTransition = new PathTransition();
-	    pathTransition.setDuration(Duration.millis(1000));
+	    pathTransition.setDuration(Duration.seconds(1 * animationSpeedMultiplyer));
 	    pathTransition.setNode(title);
 	    pathTransition.setPath(path);
 	    pathTransition.setOrientation(OrientationType.NONE);
@@ -113,29 +129,98 @@ public class BigBossGame extends Application {
 	    pathTransition.setAutoReverse(true);
 	    pathTransition.play();
 
+	    
+	    //Save selection screen
+	    VBox selectScreen = new VBox();
+	    selectScreen.setVisible(false);
+	    selectScreen.setMaxSize(MENU_WIDTH, MENU_HEIGHT);
+	    
+	    //back button
+	    Button btnSelectScreenBack = new Button("Back");
+	    btnSelectScreenBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnSelectScreenBack.setOnAction(event -> backMenu(selectScreen));
+	    
+	    Button btnSave1 = new Button(save1.getName());
+	    btnSave1.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnSave1.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
+	    VBox.setMargin(btnSave1, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+	    
+	    Button btnSave2 = new Button(save2.getName());
+	    btnSave2.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnSave2.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
+	    VBox.setMargin(btnSave2, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+
+	    
+	    Button btnSave3 = new Button(save3.getName());
+	    btnSave3.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnSave3.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
+	    VBox.setMargin(btnSave3, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+
+	    
+	    selectScreen.getChildren().addAll(btnSelectScreenBack, btnSave1, btnSave2, btnSave3);
+	    
+	    
+	    
+	    
+	    //options screen
+	    VBox optionsScreen = new VBox();
+	    optionsScreen.setVisible(false);
+	    optionsScreen.setMaxSize(MENU_WIDTH, MENU_HEIGHT);
+	    
+	    //back button
+	    Button btnOptionsScreenBack = new Button("Back");
+	    btnOptionsScreenBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnOptionsScreenBack.setOnAction(event -> backMenu(optionsScreen));
+	    
+	    //fast animations option
+	    HBox fastAnimationsOption = new HBox();
+	    Label lblSpeedyAnimations = new Label("Speedy Animations");
+	    lblSpeedyAnimations.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    HBox.setMargin(lblSpeedyAnimations, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+	    CheckBox cbFastAnimations = new CheckBox();
+	    cbFastAnimations.setPrefSize(CHECK_BOX_SIZE, CHECK_BOX_SIZE);
+	    cbFastAnimations.setOnAction(event -> changeAnimationSpeed());
+	    HBox.setMargin(cbFastAnimations, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+	    fastAnimationsOption.getChildren().addAll(lblSpeedyAnimations, cbFastAnimations);
+	    
+	    //volume slider
+	    HBox volumeOption = new HBox();
+	    lblVolumeSlider = new Label("Volume (100%)");
+	    lblVolumeSlider.setMaxWidth(225);
+	    lblVolumeSlider.setMinWidth(225);
+	    lblVolumeSlider.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    HBox.setMargin(lblVolumeSlider, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+	    volumeSlider = new Slider(0, 200, 100);
+	    volumeSlider.setOnMouseDragged(event -> changeVolume());
+	    HBox.setMargin(volumeSlider, new Insets(MENU_GAP * 2.5, MENU_GAP, MENU_GAP, MENU_GAP));
+	    volumeOption.getChildren().addAll(lblVolumeSlider, volumeSlider);
+	    
+	    
+	    //adding all to the options screen
+	    optionsScreen.getChildren().addAll(btnOptionsScreenBack, fastAnimationsOption, volumeOption);
+	    
+	    
+	    
+	    //titleScreen
 	    titleScreen = new StackPane();
-	    Button btn = new Button("test");
-	    btn.setVisible(false);
-	    btn.setOnAction(event -> backMenu(btn));
 	    
 	    Button btnPlay = new Button("Play");
-	    btnPlay.setPrefSize(BTN_SIZE * 5, BTN_SIZE);
+	    btnPlay.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
 	    btnPlay.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    btnPlay.setOnAction(event -> {
-	    	nextManu(btn);
-	    });
+	    btnPlay.setOnAction(event -> nextMenu(titleScreen, selectScreen));
 	    titleScreen.getChildren().addAll(btnPlay);
 	    
 	    Button btnOptions = new Button("Options");
-	    btnOptions.setPrefSize(BTN_SIZE * 5, BTN_SIZE);
+	    btnOptions.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
 	    StackPane.setMargin(btnOptions, new Insets(158, 158, 158, 158));
 	    StackPane.setAlignment(btnOptions, Pos.BOTTOM_CENTER);
 	    btnOptions.setFont(Font.font(FONT, BTN_FONT_SIZE));
+	    btnOptions.setOnAction(event -> nextMenu(titleScreen, optionsScreen));
 	    titleScreen.getChildren().addAll(btnOptions);
 	    
 	    Button btnExit = new Button("Exit");
-	    btnExit.setPrefSize(BTN_SIZE * 5, BTN_SIZE);
-	    StackPane.setMargin(btnExit, new Insets(BTN_SIZE, BTN_SIZE, BTN_SIZE, BTN_SIZE));
+	    btnExit.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
+	    StackPane.setMargin(btnExit, new Insets(BTN_HEIGHT, BTN_HEIGHT, BTN_HEIGHT, BTN_HEIGHT));
 	    StackPane.setAlignment(btnExit, Pos.BOTTOM_CENTER);
 	    btnExit.setFont(Font.font(FONT, BTN_FONT_SIZE));
 	    btnExit.setOnAction(event -> Platform.exit());
@@ -143,13 +228,8 @@ public class BigBossGame extends Application {
 	    
 	    titleScreen.getChildren().add(title);
 	    
-	    //options screen
-	    
-	    
-	    
-	    
 	    //adding all nodes to pane
-	    root.getChildren().addAll(background, background2, titleScreen, btn);
+	    root.getChildren().addAll(background, background2, titleScreen, selectScreen, optionsScreen);
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
@@ -157,29 +237,29 @@ public class BigBossGame extends Application {
 	    stage.show();
 	}
 	
-	public void nextManu(Node subject) {
-		subject.setVisible(true);
-		TranslateTransition buttonsTrans2 = new TranslateTransition(Duration.seconds(1.25), titleScreen);
+	public void nextMenu(Node screen, Node newScreen) {
+		newScreen.setVisible(true);
+		TranslateTransition buttonsTrans2 = new TranslateTransition(Duration.seconds(1.25 * animationSpeedMultiplyer), screen);
 		buttonsTrans2.setFromY(-100);
 		buttonsTrans2.setToY(1000);
 		buttonsTrans2.setCycleCount(1);
 		buttonsTrans2.setOnFinished(event -> {
-			titleScreen.setLayoutY(1000);
+			screen.setLayoutY(1000);
 		});
-		TranslateTransition buttonsTrans1 = new TranslateTransition(Duration.seconds(.75), titleScreen);
-		buttonsTrans1.setFromY(titleScreen.getLayoutY());
+		TranslateTransition buttonsTrans1 = new TranslateTransition(Duration.seconds(.75 * animationSpeedMultiplyer), screen);
+		buttonsTrans1.setFromY(0);
 		buttonsTrans1.setToY(-100);
 		buttonsTrans1.setCycleCount(1);
 		buttonsTrans1.setOnFinished(event -> {
 			buttonsTrans2.play();
 		});
 		
-		TranslateTransition newSceneTrans = new TranslateTransition(Duration.seconds(2), subject);
+		TranslateTransition newSceneTrans = new TranslateTransition(Duration.seconds(2 * animationSpeedMultiplyer), newScreen);
 		newSceneTrans.setFromY(-1000);
 		newSceneTrans.setToY(0);
 		newSceneTrans.setCycleCount(1);
 		newSceneTrans.setOnFinished(event -> {
-			subject.setLayoutY(0);
+			newScreen.setLayoutY(0);
 		});
 		
 		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans1);
@@ -187,7 +267,7 @@ public class BigBossGame extends Application {
 	}
 	
 	public void backMenu (Node n) {
-		TranslateTransition buttonsTrans = new TranslateTransition(Duration.seconds(2), titleScreen);
+		TranslateTransition buttonsTrans = new TranslateTransition(Duration.seconds(2 * animationSpeedMultiplyer), titleScreen);
 		buttonsTrans.setFromY(1000);
 		buttonsTrans.setToY(0);
 		buttonsTrans.setCycleCount(1);
@@ -195,7 +275,7 @@ public class BigBossGame extends Application {
 			titleScreen.setLayoutY(0);
 		});
 		
-		TranslateTransition newSceneTrans = new TranslateTransition(Duration.seconds(2), n);
+		TranslateTransition newSceneTrans = new TranslateTransition(Duration.seconds(2 * animationSpeedMultiplyer), n);
 		newSceneTrans.setFromY(titleScreen.getLayoutY());
 		newSceneTrans.setToY(-1000);
 		newSceneTrans.setCycleCount(1);
@@ -205,6 +285,19 @@ public class BigBossGame extends Application {
 		
 		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans);
 		parTrans.play();
+	}
+	
+	public void changeAnimationSpeed () {
+		if (animationSpeedMultiplyer == SLOW_ANIMATION_SPEED) {
+			animationSpeedMultiplyer = FAST_ANIMATION_SPEED;
+		} else {
+			animationSpeedMultiplyer = SLOW_ANIMATION_SPEED;
+
+		}
+	}
+	
+	public void changeVolume() {
+		lblVolumeSlider.setText("Volume (" + ((int)volumeSlider.getValue()) + "%)" );
 	}
 	
 	@Override

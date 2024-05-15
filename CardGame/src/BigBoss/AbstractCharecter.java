@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public abstract class AbstractCharecter {
 
-	protected ArrayList<Stat> stats = new ArrayList<Stat>();
-	protected String name;
+	private ArrayList<Stat> stats = new ArrayList<Stat>();
+	private String name;
 	
 	public AbstractCharecter (String name) {
-		this.name = name;
+		this.setName(name);
 	}
 	
 	public void addStats (Stat...stats) {
@@ -23,5 +23,13 @@ public abstract class AbstractCharecter {
 				this.stats.remove(s);
 			}
 		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -1,8 +1,8 @@
 package BigBoss;
 
-public class mrBasic extends AbstractCharecter{
+public class MrBasic extends AbstractCharecter{
 
-	public mrBasic() {
+	public MrBasic() {
 		super("Mr. Basic");
 		this.addStats(
 				new Stat("ATK", 5), 

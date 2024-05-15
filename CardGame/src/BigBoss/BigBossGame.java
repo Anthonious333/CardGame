@@ -2,6 +2,11 @@ package BigBoss;
 
 
 import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
@@ -55,6 +60,7 @@ public class BigBossGame extends Application {
 	
 	Label title;
 	Label lblVolumeSlider;
+	Label lblShowCharDescription;
 	StackPane titleScreen;
 	Slider volumeSlider;
 	Save save1 = new Save(), save2 = new Save(), save3 = new Save();
@@ -77,16 +83,17 @@ public class BigBossGame extends Application {
 	final int MENU_GAP = 10;
 	final int SELECT_BTN_WIDTH = 400;
 	final int SELECT_BTN_HEIGHT = 150;
+	final int SAVE_NAME_TXT_SIZE = 200;
 
 
 	//inner finals
-	final int TITLE_MOVE_TIME = 100;
 	final double SLOW_ANIMATION_SPEED = 1;
 	final double FAST_ANIMATION_SPEED = 0.25;
 	
 	
 	//inner variables
 	int timer = 0;
+	AbstractCharecter selectedCharecter;
 	double animationSpeedMultiplyer = SLOW_ANIMATION_SPEED;
 	
 	
@@ -132,23 +139,26 @@ public class BigBossGame extends Application {
 	    pathTransition.play();
 	    
 	    //charecter selection screen
+	    
 	    VBox charSelectScreen = new VBox();
-	    charSelectScreen.setVisible(false);
 	    charSelectScreen.setMaxSize(MENU_WIDTH, MENU_HEIGHT);
 	    
 	    //back button and select button
 	    HBox selectAndBackBtns = new HBox();
-	    Button btnCharSelectScreenSelect= new Button("Select");
-	    btnCharSelectScreenSelect.setDisable(true);
-	    btnCharSelectScreenSelect.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    btnCharSelectScreenSelect.setOnAction(event -> backMenu(charSelectScreen));
+	    Label lblName = new Label("Save Name:");
+	    lblName.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    Button btnCharSelectScreenBack = new Button("Back");
 	    btnCharSelectScreenBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnCharSelectScreenBack.setOnAction(event -> backMenu(charSelectScreen));
-	    selectAndBackBtns.getChildren().addAll(btnCharSelectScreenBack, btnCharSelectScreenSelect);
+	    selectAndBackBtns.getChildren().addAll(btnCharSelectScreenBack, lblName);
 
 	    HBox saveNamingLine = new HBox();
+	    Button btnCharSelectScreenSelect= new Button("Select");
+	    btnCharSelectScreenSelect.setDisable(true);
+	    btnCharSelectScreenSelect.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnCharSelectScreenSelect.setOnAction(event -> backMenu(btnCharSelectScreenSelect)); //TODO
 	    txtSaveName = new TextField();
+	    txtSaveName.setPrefWidth(SAVE_NAME_TXT_SIZE);
 	    txtSaveName.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    txtSaveName.setOnKeyTyped(event -> {
 	    	if (!txtSaveName.getText().equals("")) {
@@ -157,17 +167,21 @@ public class BigBossGame extends Application {
 	    	    btnCharSelectScreenSelect.setDisable(true);
 	    	}
 	    });
-	    Label lblName = new Label();
-	    lblName.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    saveNamingLine.getChildren().addAll(lblName, txtSaveName);
+	    saveNamingLine.getChildren().addAll(txtSaveName, btnCharSelectScreenSelect);
 
-	    
 	    
 	    Button selectMrBasic = new Button("Mr. Basic");
+	    selectMrBasic.setOnAction(event -> setSelectedCharecter(new MrBasic()));
 	    selectMrBasic.setFont(Font.font(FONT, MENU_FONT_SIZE));
 
-	    charSelectScreen.getChildren().addAll(selectAndBackBtns, txtSaveName, selectMrBasic);
+	    charSelectScreen.getChildren().addAll(selectAndBackBtns, saveNamingLine, selectMrBasic);
 
+	    HBox charSelectScreenAndDescription = new HBox();
+	    charSelectScreenAndDescription.setVisible(false);
+	    charSelectScreenAndDescription.setMaxSize(MENU_WIDTH * 2, MENU_HEIGHT * 2);
+	    lblShowCharDescription = new Label("");
+	    charSelectScreenAndDescription.getChildren().addAll(charSelectScreen, lblShowCharDescription);
+	    
 	    
 	    //Save selection screen
 	    VBox selectScreen = new VBox();
@@ -184,7 +198,8 @@ public class BigBossGame extends Application {
 	    btnSave1.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
 	    btnSave1.setOnAction(event -> {
 	    	if (save1.getIsEmpty()) {
-	    		nextMenu(selectScreen, charSelectScreen);
+	    		lblShowCharDescription.setText("");
+	    		nextMenu(selectScreen, charSelectScreenAndDescription);
 	    	} else {
 	    		//TODO
 	    	}
@@ -274,7 +289,7 @@ public class BigBossGame extends Application {
 	    titleScreen.getChildren().add(title);
 	    
 	    //adding all nodes to pane
-	    root.getChildren().addAll(background, background2, titleScreen, selectScreen, optionsScreen, charSelectScreen);
+	    root.getChildren().addAll(background, background2, titleScreen, selectScreen, optionsScreen, charSelectScreenAndDescription);
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
@@ -348,6 +363,29 @@ public class BigBossGame extends Application {
 	public void selectCharecter (Save save, AbstractCharecter charecter) {
 		save = new Save();
 		//TODO
+	}
+	
+	public void setSelectedCharecter(AbstractCharecter charecter) {
+		selectedCharecter = charecter;
+		lblShowCharDescription.setText("");
+		FileReader description;
+		BufferedReader descriptionReader;
+		String line;
+		
+		try {
+			description = new FileReader("data/" + charecter.getName() + "Description.txt");
+			descriptionReader = new BufferedReader(description);
+
+			//Continues until file is empty
+			while ((line = descriptionReader.readLine()) != null) {
+				lblShowCharDescription.setText(lblShowCharDescription.getText() + line + "\n");
+			}
+
+		} catch (FileNotFoundException e) {
+			System.out.print("No file was found: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.print("Error reading file: " + e.getMessage());
+		}
 	}
 	
 	@Override

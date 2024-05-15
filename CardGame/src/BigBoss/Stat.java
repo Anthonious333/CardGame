@@ -25,9 +25,9 @@ public class Stat {
 	}
 
 	public void addValue(int value) {
-		if (this.value + value > max) {
+		if (limited && this.value + value > max) {
 			this.value = max;
-		} else if (this.value + value < min) {
+		} else if (limited && this.value + value < min) {
 			this.value = min;
 		} else {
 			this.value += value;

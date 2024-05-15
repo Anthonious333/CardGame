@@ -4,6 +4,7 @@ public class Save {
 
 	private String name;
 	private Boolean isEmpty;
+	private AbstractCharecter charecter;
 	
 	public Save() {
 		this("Empty Save");
@@ -29,6 +30,14 @@ public class Save {
 
 	public void setIsEmpty(Boolean isEmpty) {
 		this.isEmpty = isEmpty;
+	}
+
+	public AbstractCharecter getCharecter() {
+		return charecter;
+	}
+
+	public void setCharecter(AbstractCharecter charecter) {
+		this.charecter = charecter;
 	}
 	
 	

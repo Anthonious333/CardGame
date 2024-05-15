@@ -59,12 +59,18 @@ public class BigBossGame extends Application {
 	 */
 	
 	Label title;
+	Button btnSave1;
+	Button btnSave2;
+	Button btnSave3;
+	VBox selectScreen;
 	Label lblVolumeSlider;
 	Label lblShowCharDescription;
 	StackPane titleScreen;
 	Slider volumeSlider;
-	Save save1 = new Save(), save2 = new Save(), save3 = new Save();
+	Save save1 = new Save(), save2 = new Save(), save3 = new Save(), selectedSave;
 	TextField txtSaveName;
+	Button btnCharSelectScreenSelect;
+	HBox charSelectScreenAndDescription;
 	
 	//visual finals
 	final int TITLE_GAP = 50;
@@ -101,11 +107,11 @@ public class BigBossGame extends Application {
 	public void start(Stage stage) throws Exception {
 		
 		StackPane root = new StackPane();
-		root.setMaxSize(Toolkit.getDefaultToolkit().getScreenSize().getWidth(), Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+		root.setMaxSize(1126, 634);
 		
 		//background images
-		ImageView background = new ImageView(new Image(getClass().getResource("/images/Background8Bit.jpg").toString(), 1126, 634, false, false));
-		ImageView background2 = new ImageView(new Image(getClass().getResource("/images/Background8Bit.jpg").toString(), 1126, 634, false, false));
+		ImageView background = new ImageView(new Image(getClass().getResource("/images/Background8Bit.png").toString()));
+		ImageView background2 = new ImageView(new Image(getClass().getResource("/images/Background8Bit.png").toString()));
 		//background animation
 		TranslateTransition trans1 = new TranslateTransition(Duration.seconds(10), background);
 	    trans1.setFromX(0);
@@ -138,8 +144,8 @@ public class BigBossGame extends Application {
 	    pathTransition.setAutoReverse(true);
 	    pathTransition.play();
 	    
-	    //charecter selection screen
 	    
+	    //charecter selection screen
 	    VBox charSelectScreen = new VBox();
 	    charSelectScreen.setMaxSize(MENU_WIDTH, MENU_HEIGHT);
 	    
@@ -153,20 +159,13 @@ public class BigBossGame extends Application {
 	    selectAndBackBtns.getChildren().addAll(btnCharSelectScreenBack, lblName);
 
 	    HBox saveNamingLine = new HBox();
-	    Button btnCharSelectScreenSelect= new Button("Select");
+	    btnCharSelectScreenSelect = new Button("Select");
 	    btnCharSelectScreenSelect.setDisable(true);
 	    btnCharSelectScreenSelect.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    btnCharSelectScreenSelect.setOnAction(event -> backMenu(btnCharSelectScreenSelect)); //TODO
 	    txtSaveName = new TextField();
 	    txtSaveName.setPrefWidth(SAVE_NAME_TXT_SIZE);
 	    txtSaveName.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    txtSaveName.setOnKeyTyped(event -> {
-	    	if (!txtSaveName.getText().equals("")) {
-	    	    btnCharSelectScreenSelect.setDisable(false);
-	    	} else {
-	    	    btnCharSelectScreenSelect.setDisable(true);
-	    	}
-	    });
+	    txtSaveName.setOnKeyTyped(event -> updateSelectButton());
 	    saveNamingLine.getChildren().addAll(txtSaveName, btnCharSelectScreenSelect);
 
 	    
@@ -176,7 +175,8 @@ public class BigBossGame extends Application {
 
 	    charSelectScreen.getChildren().addAll(selectAndBackBtns, saveNamingLine, selectMrBasic);
 
-	    HBox charSelectScreenAndDescription = new HBox();
+	    charSelectScreenAndDescription = new HBox();
+	    StackPane.setMargin(charSelectScreenAndDescription, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 	    charSelectScreenAndDescription.setVisible(false);
 	    charSelectScreenAndDescription.setMaxSize(MENU_WIDTH * 2, MENU_HEIGHT * 2);
 	    lblShowCharDescription = new Label("");
@@ -184,7 +184,7 @@ public class BigBossGame extends Application {
 	    
 	    
 	    //Save selection screen
-	    VBox selectScreen = new VBox();
+	    selectScreen = new VBox();
 	    selectScreen.setVisible(false);
 	    selectScreen.setMaxSize(MENU_WIDTH, MENU_HEIGHT);
 	    
@@ -193,29 +193,23 @@ public class BigBossGame extends Application {
 	    btnSelectScreenBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSelectScreenBack.setOnAction(event -> backMenu(selectScreen));
 	    
-	    Button btnSave1 = new Button(save1.getName());
+	    btnSave1 = new Button(save1.getName());
 	    btnSave1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSave1.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
-	    btnSave1.setOnAction(event -> {
-	    	if (save1.getIsEmpty()) {
-	    		lblShowCharDescription.setText("");
-	    		nextMenu(selectScreen, charSelectScreenAndDescription);
-	    	} else {
-	    		//TODO
-	    	}
-	    });
+	    btnSave1.setOnAction(event -> selectSave(save1));
 	    VBox.setMargin(btnSave1, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 	    
-	    Button btnSave2 = new Button(save2.getName());
+	    btnSave2 = new Button(save2.getName());
 	    btnSave2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSave2.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
 	    VBox.setMargin(btnSave2, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 	    
-	    Button btnSave3 = new Button(save3.getName());
+	    btnSave3 = new Button(save3.getName());
 	    btnSave3.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSave3.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
 	    VBox.setMargin(btnSave3, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 
+	    btnCharSelectScreenSelect.setOnAction(event -> wrightSave()); //TODO
 	    
 	    selectScreen.getChildren().addAll(btnSelectScreenBack, btnSave1, btnSave2, btnSave3);
 	    
@@ -367,6 +361,7 @@ public class BigBossGame extends Application {
 	
 	public void setSelectedCharecter(AbstractCharecter charecter) {
 		selectedCharecter = charecter;
+		updateSelectButton();
 		lblShowCharDescription.setText("");
 		FileReader description;
 		BufferedReader descriptionReader;
@@ -386,6 +381,36 @@ public class BigBossGame extends Application {
 		} catch (IOException e) {
 			System.out.print("Error reading file: " + e.getMessage());
 		}
+	}
+	
+	public void selectSave (Save save) {
+		if (save.getIsEmpty()) {
+    		lblShowCharDescription.setText("");
+    		nextMenu(selectScreen, charSelectScreenAndDescription);
+    	} else {
+    		//TODO
+    	}
+	}
+	
+	public void wrightSave () {
+		updateButtonNames();
+		selectedSave.setIsEmpty(false);
+		selectedSave.setCharecter(selectedCharecter);
+		selectedSave.setName(txtSaveName.getText());
+	}
+	
+	public void updateSelectButton () {
+		if (!txtSaveName.getText().equals("") && selectedCharecter != null) {
+    	    btnCharSelectScreenSelect.setDisable(false);
+    	} else {
+    	    btnCharSelectScreenSelect.setDisable(true);
+    	}
+	}
+	
+	public void updateButtonNames() {
+		btnSave1.setText(save1.getName());
+		btnSave2.setText(save2.getName());
+		btnSave3.setText(save3.getName());
 	}
 	
 	@Override

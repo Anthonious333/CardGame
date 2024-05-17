@@ -47,5 +47,4 @@ public class Save {
 		this.charecter = charecter;
 	}
 	
-	
 }

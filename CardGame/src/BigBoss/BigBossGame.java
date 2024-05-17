@@ -72,11 +72,14 @@ public class BigBossGame extends Application {
 	TextField txtSaveName;
 	Button btnCharSelectScreenSelect;
 	HBox charSelectScreenAndDescription;
+	GridPane preFightScreen;
+	Label lblDisplayStats;
 	
 	//visual finals
 	final int TITLE_GAP = 50;
 	final int TITLE_POS = 160;
-	final int IMAGE_GAP = 1126;
+	final int IMAGE_WIDTH = 1126;
+	final int IMAGE_HEIGHT = 634;
 	final int TITLE_SIZE = 100;
 	final String GAME_NAME = "Big Boss";
 	final String FONT = "Comic Sans MS";
@@ -91,6 +94,7 @@ public class BigBossGame extends Application {
 	final int SELECT_BTN_WIDTH = 400;
 	final int SELECT_BTN_HEIGHT = 150;
 	final int SAVE_NAME_TXT_SIZE = 200;
+	final int TEXT_FONT_SIZE = 20;
 
 
 	//inner finals
@@ -108,7 +112,7 @@ public class BigBossGame extends Application {
 	public void start(Stage stage) throws Exception {
 		
 		StackPane root = new StackPane();
-		root.setMaxSize(1126, 634);
+		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		
 		//background images
 		ImageView background = new ImageView(new Image(getClass().getResource("/images/Background8Bit.png").toString()));
@@ -116,11 +120,11 @@ public class BigBossGame extends Application {
 		//background animation
 		TranslateTransition trans1 = new TranslateTransition(Duration.seconds(10), background);
 	    trans1.setFromX(0);
-	    trans1.setToX(IMAGE_GAP);
+	    trans1.setToX(IMAGE_WIDTH);
 	    trans1.setInterpolator(Interpolator.LINEAR);
 	    trans1.setCycleCount(Animation.INDEFINITE);
 	    TranslateTransition trans2 = new TranslateTransition(Duration.seconds(10), background2);
-	    trans2.setFromX(-IMAGE_GAP);
+	    trans2.setFromX(-IMAGE_WIDTH);
 	    trans2.setToX(0);
 	    trans2.setCycleCount(Animation.INDEFINITE);
 	    trans2.setInterpolator(Interpolator.LINEAR);
@@ -216,7 +220,40 @@ public class BigBossGame extends Application {
 	    
 	    selectScreen.getChildren().addAll(btnSelectScreenBack, btnSave1, btnSave2, btnSave3);
 	    
+	    //preFight screen
+	    preFightScreen = new GridPane();
+	    preFightScreen.setVgap(MENU_GAP);
+	    preFightScreen.setHgap(MENU_GAP);
+	    preFightScreen.setPadding(new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+	    preFightScreen.setVisible(false);
+	    preFightScreen.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+	    preFightScreen.setMinSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+
+	    VBox fightSection = new VBox();
+
+	    Button btnFight = new Button("FIGHT!");
+	    btnFight.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
+	    btnFight.setFont(Font.font(FONT, BTN_FONT_SIZE));
+	    btnFight.setOnAction(event -> nextMenu(titleScreen, selectScreen)); //TODO set this to go to the fight screen once its done
 	    
+	    //back button
+	    Button btnPreFightBack = new Button("Back");
+	    btnPreFightBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnPreFightBack.setOnAction(event -> backMenu(preFightScreen));
+	    
+	    VBox statsSection = new VBox();
+	    
+	    Button btnEditStats = new Button("Stats");
+	    btnEditStats.setFont(Font.font(FONT, BTN_FONT_SIZE));
+	    btnEditStats.setOnAction(event -> nextMenu(titleScreen, selectScreen)); //TODO set this once its done
+	    
+	    lblDisplayStats = new Label();
+	    lblDisplayStats.setFont(Font.font(FONT, TEXT_FONT_SIZE));
+	    
+	    fightSection.getChildren().addAll(btnFight, btnPreFightBack);
+	    statsSection.getChildren().addAll(btnEditStats, lblDisplayStats);
+	    preFightScreen.add(fightSection, 0, 0);
+	    preFightScreen.add(statsSection, 1, 0);
 	    
 	    
 	    //options screen
@@ -286,7 +323,7 @@ public class BigBossGame extends Application {
 	    titleScreen.getChildren().add(title);
 	    
 	    //adding all nodes to pane
-	    root.getChildren().addAll(background, background2, titleScreen, selectScreen, optionsScreen, charSelectScreenAndDescription);
+	    root.getChildren().addAll(background, background2, titleScreen, selectScreen, optionsScreen, charSelectScreenAndDescription, preFightScreen);
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
@@ -385,10 +422,14 @@ public class BigBossGame extends Application {
 		if (save.getIsEmpty()) {
     		lblShowCharDescription.setText("");
     		selectedSave = save;
+    		
     		nextMenu(selectScreen, charSelectScreenAndDescription);
     	} else {
     		switch(FXDialog.chooseOption("What would you like to do?", "Play", "Delete")) {
     		case"Play" :
+        		selectedSave = save;
+        		updatePreFightScreen();
+    			nextMenu(selectScreen, preFightScreen);
     			break;
     		case"Delete" :
     			save.clear();
@@ -396,6 +437,10 @@ public class BigBossGame extends Application {
     			break;
     		}
     	}
+	}
+	
+	public void updatePreFightScreen () {
+		lblDisplayStats.setText(selectedSave.getCharecter().getStatsAsString() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
 	}
 	
 	public void wrightSave () {

@@ -24,6 +24,14 @@ public abstract class AbstractCharecter {
 			}
 		}
 	}
+	
+	public String getStatsAsString () {
+		String ret = "";
+		for (Stat s : stats) {
+			ret += s + " ";
+		}
+		return ret;
+	}
 
 	public String getName() {
 		return name;

@@ -211,7 +211,7 @@ public class FXDialog {
 
     /**
      * This method will allow the user to make a choice from a list of options (each
-     * option appears as a button on the dialog)
+     * option appears as a button on the dialog) (Edited by Anthony Farinon)
      * 
      * @param prompt
      *            A message for the user, so they know what the choices mean
@@ -219,7 +219,7 @@ public class FXDialog {
      *            List of choices in a <code>String[]</code> array
      * @return A <code>String</code> corresponding to the user's choice
      */
-    public static String chooseOption(String prompt, String[] options) {
+    public static String chooseOption(String prompt, String... options) {
         // setting up input validation
         boolean validInput = false;
         // default return value

@@ -15,6 +15,13 @@ public class Save {
 		this.setName(name);
 		isEmpty = false;
 	}
+	
+	public void clear() {
+		this.setName("Empty Save");
+		isEmpty = true;
+		charecter = null;
+		//TODO make sure this wipes the char at least to the point where it dosent matter
+	}
 
 	public String getName() {
 		return name;

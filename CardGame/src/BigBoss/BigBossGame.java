@@ -45,6 +45,7 @@ import javafx.scene.shape.VLineTo;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import simpleIO.FXDialog;
 
 public class BigBossGame extends Application {
 
@@ -155,7 +156,7 @@ public class BigBossGame extends Application {
 	    lblName.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    Button btnCharSelectScreenBack = new Button("Back");
 	    btnCharSelectScreenBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    btnCharSelectScreenBack.setOnAction(event -> backMenu(charSelectScreen));
+	    btnCharSelectScreenBack.setOnAction(event -> backMenu(charSelectScreenAndDescription));
 	    selectAndBackBtns.getChildren().addAll(btnCharSelectScreenBack, lblName);
 
 	    HBox saveNamingLine = new HBox();
@@ -202,14 +203,16 @@ public class BigBossGame extends Application {
 	    btnSave2 = new Button(save2.getName());
 	    btnSave2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSave2.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
+	    btnSave2.setOnAction(event -> selectSave(save2));
 	    VBox.setMargin(btnSave2, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 	    
 	    btnSave3 = new Button(save3.getName());
 	    btnSave3.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSave3.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
+	    btnSave3.setOnAction(event -> selectSave(save3));
 	    VBox.setMargin(btnSave3, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 
-	    btnCharSelectScreenSelect.setOnAction(event -> wrightSave()); //TODO
+	    btnCharSelectScreenSelect.setOnAction(event -> wrightSave());
 	    
 	    selectScreen.getChildren().addAll(btnSelectScreenBack, btnSave1, btnSave2, btnSave3);
 	    
@@ -354,11 +357,6 @@ public class BigBossGame extends Application {
 		lblVolumeSlider.setText("Volume (" + ((int)volumeSlider.getValue()) + "%)" );
 	}
 	
-	public void selectCharecter (Save save, AbstractCharecter charecter) {
-		save = new Save();
-		//TODO
-	}
-	
 	public void setSelectedCharecter(AbstractCharecter charecter) {
 		selectedCharecter = charecter;
 		updateSelectButton();
@@ -386,17 +384,29 @@ public class BigBossGame extends Application {
 	public void selectSave (Save save) {
 		if (save.getIsEmpty()) {
     		lblShowCharDescription.setText("");
+    		selectedSave = save;
     		nextMenu(selectScreen, charSelectScreenAndDescription);
     	} else {
-    		//TODO
+    		switch(FXDialog.chooseOption("What would you like to do?", "Play", "Delete")) {
+    		case"Play" :
+    			break;
+    		case"Delete" :
+    			save.clear();
+    			updateButtonNames();
+    			break;
+    		}
     	}
 	}
 	
 	public void wrightSave () {
-		updateButtonNames();
+		nextMenu(charSelectScreenAndDescription, selectScreen);
 		selectedSave.setIsEmpty(false);
 		selectedSave.setCharecter(selectedCharecter);
-		selectedSave.setName(txtSaveName.getText());
+		selectedSave.setName(txtSaveName.getText() + "\n" + selectedCharecter.getName());
+		txtSaveName.setText("");
+		btnCharSelectScreenSelect.setDisable(true);
+		selectedCharecter = null;
+		updateButtonNames();
 	}
 	
 	public void updateSelectButton () {

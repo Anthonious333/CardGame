@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public abstract class AbstractCharecter {
 
 	private ArrayList<Stat> stats = new ArrayList<Stat>();
+	private AbstractAbility [] abilities = new AbstractAbility[3];
 	private String name;
 	
 	public AbstractCharecter (String name) {
@@ -39,5 +40,23 @@ public abstract class AbstractCharecter {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public AbstractAbility getAbility(int index) {
+		return abilities[index];
+	}
+
+	public void addAbility(AbstractAbility ability, int index) {
+		abilities[index] = ability;
+	}
+	
+	public String getAbilitiesAsString () {
+		String ret = "";
+		for (AbstractAbility s : abilities) {
+			if (s != null) {
+				ret += s + " ";				
+			}
+		}
+		return ret;
 	}
 }

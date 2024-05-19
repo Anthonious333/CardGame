@@ -74,6 +74,8 @@ public class BigBossGame extends Application {
 	HBox charSelectScreenAndDescription;
 	GridPane preFightScreen;
 	Label lblDisplayStats;
+	Label lblDisplayAbilities;
+
 	
 	//visual finals
 	final int TITLE_GAP = 50;
@@ -239,7 +241,7 @@ public class BigBossGame extends Application {
 	    //back button
 	    Button btnPreFightBack = new Button("Back");
 	    btnPreFightBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    btnPreFightBack.setOnAction(event -> backMenu(preFightScreen));
+	    btnPreFightBack.setOnAction(event -> nextMenu(preFightScreen, selectScreen));
 	    
 	    VBox statsSection = new VBox();
 	    
@@ -250,10 +252,21 @@ public class BigBossGame extends Application {
 	    lblDisplayStats = new Label();
 	    lblDisplayStats.setFont(Font.font(FONT, TEXT_FONT_SIZE));
 	    
+	    VBox abilitySection = new VBox();
+	    
+	    Button btnEditAbility = new Button("Ability"); // just able to view and move them, and see their description
+	    btnEditAbility.setFont(Font.font(FONT, BTN_FONT_SIZE));
+	    btnEditAbility.setOnAction(event -> nextMenu(titleScreen, selectScreen)); //TODO set this once its done
+	    
+	    lblDisplayAbilities = new Label();
+	    lblDisplayAbilities.setFont(Font.font(FONT, TEXT_FONT_SIZE));
+	    
 	    fightSection.getChildren().addAll(btnFight, btnPreFightBack);
 	    statsSection.getChildren().addAll(btnEditStats, lblDisplayStats);
+	    abilitySection.getChildren().addAll(btnEditAbility, lblDisplayAbilities);
 	    preFightScreen.add(fightSection, 0, 0);
 	    preFightScreen.add(statsSection, 1, 0);
+	    preFightScreen.add(abilitySection, 0, 1);
 	    
 	    
 	    //options screen
@@ -441,6 +454,7 @@ public class BigBossGame extends Application {
 	
 	public void updatePreFightScreen () {
 		lblDisplayStats.setText(selectedSave.getCharecter().getStatsAsString() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
+		lblDisplayAbilities.setText(selectedSave.getCharecter().getAbilitiesAsString() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
 	}
 	
 	public void wrightSave () {

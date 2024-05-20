@@ -109,6 +109,9 @@ public class BigBossGame extends Application {
 	AbstractCharecter selectedCharecter;
 	double animationSpeedMultiplyer = SLOW_ANIMATION_SPEED;
 	
+	//global vars
+	public final static String unlockID = "UNLOCKED";
+	
 	
 	@Override
 	public void start(Stage stage) throws Exception {

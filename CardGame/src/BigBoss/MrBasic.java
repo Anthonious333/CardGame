@@ -40,31 +40,30 @@ public class MrBasic extends AbstractCharecter{
 		Button btn3 = new Button(this.getMods().get(2).getName());
 		Button btn4 = new Button(this.getMods().get(3).getName());
 
-		Line line1 = new Line(0, 0, 0, 100);
-		Line line2 = new Line(0, 0, 0, 100);
-		Line line3 = new Line(0, 0, 0, 100);
+		Line line1 = new Line(0, 0, 0, SKILL_SIZE);
+		Line line2 = new Line(0, 0, 0, SKILL_SIZE);
+		Line line3 = new Line(0, 0, 0, SKILL_SIZE);
 
-		line1.setLayoutX(100);
-		line1.setLayoutY(100);
-		line2.setLayoutX(100);
-		line2.setLayoutY(300);
-		line3.setLayoutX(100);
-		line3.setLayoutY(500);
+		line1.setLayoutX(BigBossGame.IMAGE_WIDTH / 2);
+		line1.setLayoutY(SKILL_SIZE);
+		line2.setLayoutX(BigBossGame.IMAGE_WIDTH / 2);
+		line2.setLayoutY(SKILL_SIZE * 3);
+		line3.setLayoutX(BigBossGame.IMAGE_WIDTH / 2);
+		line3.setLayoutY(SKILL_SIZE * 5);
 
-		back.setPrefSize(25, 50);
-		btn1.setPrefSize(100, 100);
-		btn2.setPrefSize(100, 100);
-		btn3.setPrefSize(100, 100);
-		btn4.setPrefSize(100, 100);
+		btn1.setPrefSize(SKILL_SIZE, SKILL_SIZE);
+		btn2.setPrefSize(SKILL_SIZE, SKILL_SIZE);
+		btn3.setPrefSize(SKILL_SIZE, SKILL_SIZE);
+		btn4.setPrefSize(SKILL_SIZE, SKILL_SIZE);
 		
-		btn1.setLayoutX(50);
+		btn1.setLayoutX((BigBossGame.IMAGE_WIDTH - SKILL_SIZE) / 2);
 		btn1.setLayoutY(0);
-		btn2.setLayoutX(50);
-		btn2.setLayoutY(200);
-		btn3.setLayoutX(50);
-		btn3.setLayoutY(400);
-		btn4.setLayoutX(50);
-		btn4.setLayoutY(600);
+		btn2.setLayoutX((BigBossGame.IMAGE_WIDTH - SKILL_SIZE) / 2);
+		btn2.setLayoutY(SKILL_SIZE * 2);
+		btn3.setLayoutX((BigBossGame.IMAGE_WIDTH - SKILL_SIZE) / 2);
+		btn3.setLayoutY(SKILL_SIZE * 4);
+		btn4.setLayoutX((BigBossGame.IMAGE_WIDTH - SKILL_SIZE) / 2);
+		btn4.setLayoutY(SKILL_SIZE *6);
 		
 		group.getChildren().addAll(btn1, btn2, btn3, btn4, line1, line2, line3, back);
 		return group;

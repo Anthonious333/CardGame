@@ -7,6 +7,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 
 public abstract class AbstractCharecter {
+	
+	public final int SKILL_SIZE = 70;
 
 	private ArrayList<Stat> stats = new ArrayList<Stat>();
 	private AbstractAbility [] abilities = new AbstractAbility[3];

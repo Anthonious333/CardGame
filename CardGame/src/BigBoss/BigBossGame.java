@@ -27,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -84,8 +85,6 @@ public class BigBossGame extends Application {
 	//visual finals
 	final int TITLE_GAP = 50;
 	final int TITLE_POS = 160;
-	final int IMAGE_WIDTH = 1126;
-	final int IMAGE_HEIGHT = 634;
 	final int TITLE_SIZE = 100;
 	final String GAME_NAME = "Big Boss";
 	final String FONT = "Comic Sans MS";
@@ -115,6 +114,8 @@ public class BigBossGame extends Application {
 	
 	//global vars
 	public final static String unlockID = "UNLOCKED";
+	public static final int IMAGE_WIDTH = 1126;
+	public static final int IMAGE_HEIGHT = 634;
 	
 	
 	@Override
@@ -505,7 +506,8 @@ public class BigBossGame extends Application {
 	
 	public void editMods(Node thisScene, AbstractCharecter charecter) { //TODO fix sizeing by placing scrol bars on the sides to move around
 		Button back = new Button("Back");
-		Group group = charecter.getSkillTreeLayout(back);
+		ScrollPane group = new ScrollPane(charecter.getSkillTreeLayout(back));
+		group.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 		back.setOnAction(event -> leaveMods(group, thisScene)); // make animations finish before removing group - on finish aciton for transition 
 		root.getChildren().add(group);
 		nextMenu(thisScene, group);

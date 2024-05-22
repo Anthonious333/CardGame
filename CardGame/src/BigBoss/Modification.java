@@ -11,10 +11,7 @@ public class Modification {
 	private Modification last;
 	
 
-	public Modification (String name, Modification last, Modification... next) {
-		for (Modification m : next) {
-			this.next.add(m);
-		}
+	public Modification (String name, Modification last) {
 		this.unlockable = true;
 		this.last = last;
 		this.name = name;
@@ -52,13 +49,23 @@ public class Modification {
 	public void setUnlocked(boolean unlocked) {
 		this.unlocked = unlocked;
 	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public ArrayList<Modification> getNext() {
 		return next;
 	}
 
-	public void setNext(ArrayList<Modification> next) {
-		this.next = next;
+	public void setNext(Modification... next) {
+		for (Modification m : next) {
+			this.next.add(m);			
+		}
 	}
 	
 }

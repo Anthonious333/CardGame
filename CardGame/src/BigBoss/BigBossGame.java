@@ -20,6 +20,7 @@ import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -59,6 +60,7 @@ public class BigBossGame extends Application {
 	 * starts game
 	 */
 	
+	StackPane root;
 	Label title;
 	Button btnSave1;
 	Button btnSave2;
@@ -75,6 +77,8 @@ public class BigBossGame extends Application {
 	GridPane preFightScreen;
 	Label lblDisplayStats;
 	Label lblDisplayAbilities;
+	Label lblDisplayMods;
+
 
 	
 	//visual finals
@@ -116,7 +120,7 @@ public class BigBossGame extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		
-		StackPane root = new StackPane();
+		root = new StackPane();
 		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		
 		//background images
@@ -264,12 +268,24 @@ public class BigBossGame extends Application {
 	    lblDisplayAbilities = new Label();
 	    lblDisplayAbilities.setFont(Font.font(FONT, TEXT_FONT_SIZE));
 	    
+	    VBox modSection = new VBox();
+	    
+	    Button btnEditMod = new Button("Mods"); // just able to view and move them, and see their description
+	    btnEditMod.setFont(Font.font(FONT, BTN_FONT_SIZE));
+	    btnEditMod.setOnAction(event -> editMods(preFightScreen, selectedSave.getCharecter())); //TODO set this once its done
+	    
+	    lblDisplayMods = new Label();
+	    lblDisplayMods.setFont(Font.font(FONT, TEXT_FONT_SIZE));
+	    
 	    fightSection.getChildren().addAll(btnFight, btnPreFightBack);
 	    statsSection.getChildren().addAll(btnEditStats, lblDisplayStats);
 	    abilitySection.getChildren().addAll(btnEditAbility, lblDisplayAbilities);
+	    modSection.getChildren().addAll(btnEditMod, lblDisplayMods);
 	    preFightScreen.add(fightSection, 0, 0);
 	    preFightScreen.add(statsSection, 1, 0);
 	    preFightScreen.add(abilitySection, 0, 1);
+	    preFightScreen.add(modSection, 1, 1);
+
 	    
 	    
 	    //options screen
@@ -458,6 +474,8 @@ public class BigBossGame extends Application {
 	public void updatePreFightScreen () {
 		lblDisplayStats.setText(selectedSave.getCharecter().getStatsAsString() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
 		lblDisplayAbilities.setText(selectedSave.getCharecter().getAbilitiesAsString() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
+		lblDisplayMods.setText(selectedSave.getCharecter().LastUnlockedMod() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
+
 	}
 	
 	public void wrightSave () {
@@ -483,6 +501,19 @@ public class BigBossGame extends Application {
 		btnSave1.setText(save1.getName());
 		btnSave2.setText(save2.getName());
 		btnSave3.setText(save3.getName());
+	}
+	
+	public void editMods(Node thisScene, AbstractCharecter charecter) { //TODO fix sizeing by placing scrol bars on the sides to move around
+		Button back = new Button("Back");
+		Group group = charecter.getSkillTreeLayout(back);
+		back.setOnAction(event -> leaveMods(group, thisScene)); // make animations finish before removing group - on finish aciton for transition 
+		root.getChildren().add(group);
+		nextMenu(thisScene, group);
+	}
+	
+	public void leaveMods(Node thisScene, Node prevScene) {
+		nextMenu(thisScene, prevScene);
+		root.getChildren().remove(thisScene);
 	}
 	
 	@Override

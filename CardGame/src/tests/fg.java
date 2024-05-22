@@ -43,7 +43,6 @@ public class fg extends Application {
 
 		
 		Group group = new Group();
-
 		
 		Button btn1 = new Button("Button");
 		Button btn2 = new Button("Button");
@@ -53,11 +52,13 @@ public class fg extends Application {
 		Line line1 = new Line(0, 0, 0, 100);
 		Line line2 = new Line(0, 0, 0, 100);
 		Line line3 = new Line(0, 0, 0, 100);
-		Line line4 = new Line(0, 0, 0, 100);
 
-		
 		line1.setLayoutX(100);
-		line1.setLayoutX(100);
+		line1.setLayoutY(100);
+		line2.setLayoutX(100);
+		line2.setLayoutY(300);
+		line3.setLayoutX(100);
+		line3.setLayoutY(500);
 
 		btn1.setPrefSize(100, 100);
 		btn2.setPrefSize(100, 100);
@@ -73,7 +74,7 @@ public class fg extends Application {
 		btn4.setLayoutX(50);
 		btn4.setLayoutY(600);
 		
-		group.getChildren().addAll(btn1, btn2, btn3, btn4, line1, line2, line3, line4);
+		group.getChildren().addAll(btn1, btn2, btn3, btn4, line1, line2, line3);
 		
 		Scene scene = new Scene(group, 200, 700);
 		stage.setScene(scene);

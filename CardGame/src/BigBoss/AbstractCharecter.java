@@ -2,10 +2,16 @@ package BigBoss;
 
 import java.util.ArrayList;
 
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+
 public abstract class AbstractCharecter {
 
 	private ArrayList<Stat> stats = new ArrayList<Stat>();
 	private AbstractAbility [] abilities = new AbstractAbility[3];
+	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
+	private ArrayList<Modification> mods = new ArrayList<Modification>();
 	private String name;
 	
 	public AbstractCharecter (String name) {
@@ -59,4 +65,37 @@ public abstract class AbstractCharecter {
 		}
 		return ret;
 	}
+	
+	public String LastUnlockedMod() {
+		String ret = "NONE";
+		for (Modification m : mods) {
+			if (m.isUnlocked()) {
+				ret = m.getName();
+			}
+		}
+		return ret;
+	}
+	
+	public abstract Group getSkillTreeLayout(Button back);
+
+	public ArrayList<AbstractAbility> getPosibleAbilities() {
+		return posibleAbilities;
+	}
+
+	public void setPosibleAbilities(AbstractAbility... posibleAbilities) {
+		for (AbstractAbility a : posibleAbilities) {
+			this.posibleAbilities.add(a);
+		}
+	}
+
+	public ArrayList<Modification> getMods() {
+		return mods;
+	}
+
+	public void setMods(Modification... mods) {
+		for (Modification m : mods) {
+			this.mods.add(m);
+		}
+	}
+
 }

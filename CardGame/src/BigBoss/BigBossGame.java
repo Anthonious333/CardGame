@@ -513,9 +513,35 @@ public class BigBossGame extends Application {
 		nextMenu(thisScene, group);
 	}
 	
-	public void leaveMods(Node thisScene, Node prevScene) {
-		nextMenu(thisScene, prevScene);
-		root.getChildren().remove(thisScene);
+	public void leaveMods(Node screen, Node newScreen) {
+		newScreen.setVisible(true);
+		TranslateTransition buttonsTrans2 = new TranslateTransition(Duration.seconds(1.25 * animationSpeedMultiplyer), screen);
+		buttonsTrans2.setFromY(-100);
+		buttonsTrans2.setToY(1000);
+		buttonsTrans2.setCycleCount(1);
+		buttonsTrans2.setOnFinished(event -> {
+			screen.setLayoutY(1000);
+			root.getChildren().remove(screen);
+		});
+		TranslateTransition buttonsTrans1 = new TranslateTransition(Duration.seconds(.75 * animationSpeedMultiplyer), screen);
+		buttonsTrans1.setFromY(0);
+		buttonsTrans1.setToY(-100);
+		buttonsTrans1.setCycleCount(1);
+		buttonsTrans1.setOnFinished(event -> {
+			buttonsTrans2.play();
+		});
+		
+		TranslateTransition newSceneTrans = new TranslateTransition(Duration.seconds(2 * animationSpeedMultiplyer), newScreen);
+		newSceneTrans.setFromY(-1000);
+		newSceneTrans.setToY(0);
+		newSceneTrans.setCycleCount(1);
+		newSceneTrans.setOnFinished(event -> {
+			newScreen.setLayoutY(0);
+		});
+		
+		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans1);
+		parTrans.play();
+		
 	}
 	
 	@Override

@@ -26,6 +26,27 @@ public abstract class AbstractCharecter {
 		}
 	}
 	
+	public Stat findInfo(String ID) {
+        for (Stat i : stats) { 
+            if (i.getName().equals(ID)) { 
+                return i;
+            }
+        }
+        return null;
+    }
+	
+	public int getStat(String ID) {
+		Stat i = findInfo(ID);
+        if (i != null) {
+            return i.getValue();
+        }
+        return -1;
+    }
+	
+	public ArrayList<Stat> getStats() {
+		return stats;
+    }
+	
 	public void removeStats (Stat...stats) {
 		for (Stat s : stats) {
 			if (this.stats.contains(s)) {

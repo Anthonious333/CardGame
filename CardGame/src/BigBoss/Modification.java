@@ -15,7 +15,7 @@ public class Modification {
 		this.unlockable = true;
 		this.last = last;
 		this.name = name;
-		setUnlocked(false);
+		unlocked = false;
 	}
 	
 	
@@ -42,12 +42,21 @@ public class Modification {
 		return name;
 	}
 
+	public boolean canUnlock() {
+		if (last == null) {
+			return (unlockable);			
+		}
+		return (unlockable && last.isUnlocked());			
+
+		
+	}
+	
 	public boolean isUnlocked() {
 		return unlocked;
 	}
 
-	public void setUnlocked(boolean unlocked) {
-		this.unlocked = unlocked;
+	public void unlock() {
+		this.unlocked = true;
 	}
 	
 	public String getName() {

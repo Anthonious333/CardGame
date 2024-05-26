@@ -42,6 +42,14 @@ public class Stat {
 		this.name = name;
 	}
 	
+	public boolean isLimited() {
+		return limited;
+	}
+	
+	public int getMax () {
+		return max;
+	}
+	
 	@Override
 	public String toString() {
 		String ret = name + ": " + value;

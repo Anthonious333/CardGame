@@ -55,6 +55,8 @@ public class MrBasic extends AbstractCharecter{
 	@Override
 	public int getStat(String ID) {
 		return super.getStat(ID) + (ID.equals("ATK")? 10 : 0);
-	} //TODO fix stat as string thingy to make it show the bonus stats
+	}
+	
+	
 		
 }

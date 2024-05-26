@@ -512,9 +512,9 @@ public class BigBossGame extends Application {
 		group.getChildren().addAll(findModLayout(charecter.getMods().get(0), (IMAGE_WIDTH / 2), 50 + MOD_BUTTON_SIZE));
 		group.getChildren().add(back);
 		back.setLayoutX(IMAGE_WIDTH / 2 - (MOD_BUTTON_SIZE / 2));
-		back.setOnAction(event -> leaveMods(group, thisScene)); // make animations finish before removing group - on finish aciton for transition 
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		ScrollPane scrollPane = new ScrollPane(group);
+		back.setOnAction(event -> leaveMods(scrollPane, thisScene)); // make animations finish before removing group - on finish aciton for transition 
 		scrollPane.setPannable(true);
 		scrollPane.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 		root.getChildren().add(scrollPane);

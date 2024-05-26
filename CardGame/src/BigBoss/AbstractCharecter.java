@@ -99,8 +99,6 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public abstract Group getSkillTreeLayout(Button back);
-
 	public ArrayList<AbstractAbility> getPosibleAbilities() {
 		return posibleAbilities;
 	}

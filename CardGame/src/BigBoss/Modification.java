@@ -51,6 +51,20 @@ public class Modification {
 		
 	}
 	
+	public int endPoints() {
+		if (next.isEmpty()) {
+			return 1;
+		} else {
+			int total = 0;
+			for (Modification m : next) {
+				total += m.endPoints();
+			}
+			return total;
+		}
+	}
+	
+	
+	
 	public boolean isUnlocked() {
 		return unlocked;
 	}

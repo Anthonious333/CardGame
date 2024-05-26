@@ -100,6 +100,8 @@ public class BigBossGame extends Application {
 	final int SELECT_BTN_HEIGHT = 150;
 	final int SAVE_NAME_TXT_SIZE = 200;
 	final int TEXT_FONT_SIZE = 20;
+	final int MOD_BUTTON_SIZE = 100;
+	final int MOD_GAP = 100;
 
 
 	//inner finals
@@ -110,7 +112,7 @@ public class BigBossGame extends Application {
 	//inner variables
 	int timer = 0;
 	AbstractCharecter selectedCharecter;
-	double animationSpeedMultiplyer = SLOW_ANIMATION_SPEED;
+	double animationSpeedMultiplyer = FAST_ANIMATION_SPEED; //TODO fix title moding fast
 	
 	//global vars
 	public final static String unlockID = "UNLOCKED";
@@ -505,12 +507,18 @@ public class BigBossGame extends Application {
 	}
 	
 	public void editMods(Node thisScene, AbstractCharecter charecter) { //TODO fix sizeing by placing scrol bars on the sides to move around
+		Group group = new Group();
 		Button back = new Button("Back");
-		ScrollPane group = new ScrollPane(charecter.getSkillTreeLayout(back));
-		group.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		group.getChildren().addAll(findModLayout(charecter.getMods().get(0), (IMAGE_WIDTH / 2), 50 + MOD_BUTTON_SIZE));
+		group.getChildren().add(back);
+		back.setLayoutX(IMAGE_WIDTH / 2 - (MOD_BUTTON_SIZE / 2));
 		back.setOnAction(event -> leaveMods(group, thisScene)); // make animations finish before removing group - on finish aciton for transition 
-		root.getChildren().add(group);
-		nextMenu(thisScene, group);
+		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		ScrollPane scrollPane = new ScrollPane(group);
+		scrollPane.setPannable(true);
+		scrollPane.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		root.getChildren().add(scrollPane);
+		nextMenu(thisScene, scrollPane);
 	}
 	
 	public void leaveMods(Node screen, Node newScreen) {
@@ -541,6 +549,32 @@ public class BigBossGame extends Application {
 		
 		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans1);
 		parTrans.play();
+		
+	}
+
+	
+	public ArrayList<Node> findModLayout (Modification mod, double xPos, double yPos) {
+		ArrayList<Node> ret = new ArrayList<Node>();
+		
+		Button btn = new Button(mod.getName());
+		btn.setLayoutX(xPos - (MOD_BUTTON_SIZE / 2));
+		btn.setLayoutY(yPos);
+		btn.setPrefSize(MOD_BUTTON_SIZE, MOD_BUTTON_SIZE);
+		System.out.print(" at" + (xPos - (MOD_BUTTON_SIZE / 2)));
+		ret.add(btn);
+		
+		if (!mod.getNext().isEmpty()) {
+			if (mod.getNext().size() == 1) {
+				ret.addAll(findModLayout(mod.getNext().get(0), xPos, yPos + MOD_GAP + MOD_BUTTON_SIZE));
+			} else if (mod.getNext().size() == 2) {
+				ret.addAll(findModLayout(mod.getNext().get(0), xPos - (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
+				ret.addAll(findModLayout(mod.getNext().get(1), xPos + (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
+			} else {
+				
+			}
+		}
+		
+		return ret;
 		
 	}
 	

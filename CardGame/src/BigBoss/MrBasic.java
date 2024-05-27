@@ -4,6 +4,8 @@ import BigBoss.MrBasicAbilities.Punch;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 
 public class MrBasic extends AbstractCharecter{
@@ -54,7 +56,7 @@ public class MrBasic extends AbstractCharecter{
 
 	@Override
 	public int getStat(String ID) {
-		return super.getStat(ID) + (ID.equals("ATK")? 10 : 0);
+		return super.getStat(ID) + (ID.equals("ATK")? 15 : 0);
 	}
 	
 	

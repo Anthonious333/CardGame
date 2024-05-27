@@ -58,7 +58,7 @@ public abstract class AbstractCharecter {
 	public String getStatsAsString () {
 		String ret = "";
 		for (Stat s : stats) {
-			ret += this.findInfo(s.getName()).getName() + " :" + this.getStat(s.getName()) + (this.findInfo(s.getName()).isLimited()? "/" +  this.findInfo(s.getName()).getMax(): "") + " ";
+			ret += s.getName() + " :" + this.getStat(s.getName()) + (this.findInfo(s.getName()).isLimited()? "/" +  this.findInfo(s.getName()).getMax(): "") + " ";
 		}
 		return ret;
 	}

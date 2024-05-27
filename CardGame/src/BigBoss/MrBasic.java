@@ -11,50 +11,37 @@ public class MrBasic extends AbstractCharecter{
 	public MrBasic() {
 		super("Mr. Basic");
 		this.addStats(
-				new Stat("ATK", 5), 
+				new Stat("ATK", 10), 
 				new Stat("HP", 100, 0, 100)
 				);
 		this.addAbility(new Punch(), 0);
 		
 		this.setPosibleAbilities();
 				
-		Modification might1 = new Modification("Might 1", null);
-		Modification might2 = new Modification("Might 2", might1);
-		Modification might3 = new Modification("Might 3", might2);
-		Modification might4 = new Modification("Might 4", might3);
-		Modification might5 = new Modification("Might 5", might3);
-		Modification might6 = new Modification("Might 6", might4);
-		Modification might7 = new Modification("Might 7", might4);
-		Modification might8 = new Modification("Might 8", might5);
-		Modification might9 = new Modification("Might 9", might5);
-		Modification might61 = new Modification("Might 8", might6);
-		Modification might62= new Modification("Might 9", might6);
-		Modification might71= new Modification("Might 8", might7);
-		Modification might72= new Modification("Might 9", might7);
-		Modification might81= new Modification("Might 8", might8);
-		Modification might82= new Modification("Might 9", might8);
-		Modification might91= new Modification("Might 8", might9);
-		Modification might92= new Modification("Might 9", might9);
-		 
+		MightMod might1 = new MightMod(null, 1, .10, this);
+		MightMod might2 = new MightMod(null, 1, .25, this);
+		MightMod might3 = new MightMod(null, 1, .5, this);
+		MightMod might4 = new MightMod(null, 1, 1, this);
+
 		 might1.setNext(might2);
 		 might2.setNext(might3);
-		 might3.setNext(might4, might5);
-		 might4.setNext(might6, might7);
-		 might5.setNext(might8, might9);
-		 might6.setNext(might61, might62);
-		 might7.setNext(might71, might72);
-		 might8.setNext(might81, might82);
-		 might9.setNext(might91, might92);
+		 might3.setNext(might4);
 		 
-
-
-		
-		this.setMods(might1, might2, might3, might4, might5, might6, might7, might8, might9, might61, might62, might71, might72, might81, might82,might91, might92);
+		this.setMods(might1, might2, might3, might4);
 	}
 
 	@Override
 	public int getStat(String ID) {
-		return super.getStat(ID) + (ID.equals("ATK")? 10 : 0);
+		double mightPower = 0;
+		
+		if (ID.equals("ATK")) {
+			for (AbstractModification m : this.getMods()) {
+				if (m.getClass() == MightMod.class && m.isUnlocked()) {
+					mightPower += (this.findInfo(ID).getValue() * m.getMagicNumber());
+				}
+			}
+		}
+		return super.getStat(ID) + (int)mightPower;
 	}
 	
 	

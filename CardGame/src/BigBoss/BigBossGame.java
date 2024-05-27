@@ -557,7 +557,7 @@ public class BigBossGame extends Application {
 	public ArrayList<Node> findModLayout (AbstractModification mod, double xPos, double yPos) {
 		ArrayList<Node> ret = new ArrayList<Node>();
 		
-		Button btn = new Button(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" : mod.isUnlockable()? "\nCAN UNLOCK" : "\nCANT UNLOCK"));
+		Button btn = new Button(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" :"" ));
 		btn.setOnAction(event -> {
 			if (mod.unlock()) {
 				btn.setText(mod.getName() + "\nUNLOCKED");
@@ -566,7 +566,6 @@ public class BigBossGame extends Application {
 		btn.setLayoutX(xPos - (MOD_BUTTON_SIZE / 2));
 		btn.setLayoutY(yPos);
 		btn.setPrefSize(MOD_BUTTON_SIZE, MOD_BUTTON_SIZE);
-		System.out.print(" at" + (xPos - (MOD_BUTTON_SIZE / 2)));
 		ret.add(btn);
 		
 		if (!mod.getNext().isEmpty()) {

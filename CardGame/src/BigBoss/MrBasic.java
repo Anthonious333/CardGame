@@ -21,9 +21,9 @@ public class MrBasic extends AbstractCharecter{
 		this.setPosibleAbilities();
 				
 		MightMod might1 = new MightMod(null, 1, .10, this);
-		MightMod might2 = new MightMod(null, 2, .25, this);
-		MightMod might3 = new MightMod(null, 3, .5, this);
-		MightMod might4 = new MightMod(null, 4, 1, this);
+		MightMod might2 = new MightMod(might1, 2, .25, this);
+		MightMod might3 = new MightMod(might2, 3, .5, this);
+		MightMod might4 = new MightMod(might3, 4, 1, this);
 
 		 might1.setNext(might2);
 		 might2.setNext(might3);
@@ -34,9 +34,6 @@ public class MrBasic extends AbstractCharecter{
 
 	@Override
 	public int getStat(String ID) {
-<<<<<<< HEAD
-		return super.getStat(ID) + (ID.equals("ATK")? 15 : 0);
-=======
 		double mightPower = 0;
 		
 		if (ID.equals("ATK")) {
@@ -47,7 +44,6 @@ public class MrBasic extends AbstractCharecter{
 			}
 		}
 		return super.getStat(ID) + (int)mightPower;
->>>>>>> branch 'master' of https://github.com/Anthonious333/CardGame.git
 	}
 	
 	

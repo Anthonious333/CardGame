@@ -11,7 +11,7 @@ public class MrBasic extends AbstractCharecter{
 	public MrBasic() {
 		super("Mr. Basic");
 		this.addStats(
-				new Stat("ATK", 10), 
+				new Stat("ATK", 100), 
 				new Stat("HP", 100, 0, 100)
 				);
 		this.addAbility(new Punch(), 0);
@@ -19,9 +19,9 @@ public class MrBasic extends AbstractCharecter{
 		this.setPosibleAbilities();
 				
 		MightMod might1 = new MightMod(null, 1, .10, this);
-		MightMod might2 = new MightMod(null, 1, .25, this);
-		MightMod might3 = new MightMod(null, 1, .5, this);
-		MightMod might4 = new MightMod(null, 1, 1, this);
+		MightMod might2 = new MightMod(null, 2, .25, this);
+		MightMod might3 = new MightMod(null, 3, .5, this);
+		MightMod might4 = new MightMod(null, 4, 1, this);
 
 		 might1.setNext(might2);
 		 might2.setNext(might3);

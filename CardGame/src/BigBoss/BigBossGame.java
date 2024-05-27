@@ -40,6 +40,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.HLineTo;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -153,7 +154,7 @@ public class BigBossGame extends Application {
 	    path.getElements().add (new MoveTo (TITLE_POS, 70));
 	    path.getElements().add (new LineTo (TITLE_POS + 100, 30));
 	    PathTransition pathTransition = new PathTransition();
-	    pathTransition.setDuration(Duration.seconds(1 * animationSpeedMultiplyer));
+	    pathTransition.setDuration(Duration.seconds(1));
 	    pathTransition.setNode(title);
 	    pathTransition.setPath(path);
 	    pathTransition.setOrientation(OrientationType.NONE);
@@ -549,14 +550,19 @@ public class BigBossGame extends Application {
 		
 		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans1);
 		parTrans.play();
-		
+		updatePreFightScreen();
 	}
 
 	
-	public ArrayList<Node> findModLayout (Modification mod, double xPos, double yPos) {
+	public ArrayList<Node> findModLayout (AbstractModification mod, double xPos, double yPos) {
 		ArrayList<Node> ret = new ArrayList<Node>();
 		
-		Button btn = new Button(mod.getName());
+		Button btn = new Button(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" : mod.isUnlockable()? "\nCAN UNLOCK" : "\nCANT UNLOCK"));
+		btn.setOnAction(event -> {
+			if (mod.unlock()) {
+				btn.setText(mod.getName() + "\nUNLOCKED");
+			}
+		});
 		btn.setLayoutX(xPos - (MOD_BUTTON_SIZE / 2));
 		btn.setLayoutY(yPos);
 		btn.setPrefSize(MOD_BUTTON_SIZE, MOD_BUTTON_SIZE);
@@ -565,8 +571,11 @@ public class BigBossGame extends Application {
 		
 		if (!mod.getNext().isEmpty()) {
 			if (mod.getNext().size() == 1) {
+				ret.add(new Line(xPos, yPos + MOD_BUTTON_SIZE, xPos, yPos + MOD_GAP + MOD_BUTTON_SIZE));
 				ret.addAll(findModLayout(mod.getNext().get(0), xPos, yPos + MOD_GAP + MOD_BUTTON_SIZE));
 			} else if (mod.getNext().size() == 2) {
+				ret.add(new Line(xPos - (MOD_BUTTON_SIZE / 2), yPos + MOD_BUTTON_SIZE, xPos - (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
+				ret.add(new Line(xPos + (MOD_BUTTON_SIZE / 2), yPos + MOD_BUTTON_SIZE, xPos + (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
 				ret.addAll(findModLayout(mod.getNext().get(0), xPos - (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
 				ret.addAll(findModLayout(mod.getNext().get(1), xPos + (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
 			} else {

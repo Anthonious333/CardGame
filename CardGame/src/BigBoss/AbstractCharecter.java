@@ -13,7 +13,7 @@ public abstract class AbstractCharecter {
 	private ArrayList<Stat> stats = new ArrayList<Stat>();
 	private AbstractAbility [] abilities = new AbstractAbility[3];
 	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
-	private ArrayList<Modification> mods = new ArrayList<Modification>();
+	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
 	private String name;
 	
 	public AbstractCharecter (String name) {
@@ -91,7 +91,7 @@ public abstract class AbstractCharecter {
 	
 	public String LastUnlockedMod() {
 		String ret = "NONE";
-		for (Modification m : mods) {
+		for (AbstractModification m : mods) {
 			if (m.isUnlocked()) {
 				ret = m.getName();
 			}
@@ -109,12 +109,12 @@ public abstract class AbstractCharecter {
 		}
 	}
 
-	public ArrayList<Modification> getMods() {
+	public ArrayList<AbstractModification> getMods() {
 		return mods;
 	}
 
-	public void setMods(Modification... mods) {
-		for (Modification m : mods) {
+	public void setMods(AbstractModification... mods) {
+		for (AbstractModification m : mods) {
 			this.mods.add(m);
 		}
 	}

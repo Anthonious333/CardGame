@@ -44,6 +44,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.VLineTo;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -508,18 +509,30 @@ public class BigBossGame extends Application {
 	}
 	
 	public void editMods(Node thisScene, AbstractCharecter charecter) { //TODO fix sizeing by placing scrol bars on the sides to move around
+		StackPane stack = new StackPane();
+		stack.setPrefSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		Group group = new Group();
 		Button back = new Button("Back");
-		group.getChildren().addAll(findModLayout(charecter.getMods().get(0), (IMAGE_WIDTH / 2), 50 + MOD_BUTTON_SIZE));
-		group.getChildren().add(back);
+		StackPane.setAlignment(back, Pos.TOP_LEFT);
+		Rectangle block = new Rectangle();
+		block.setOpacity(100);
+		group.getChildren().addAll(findModLayout(charecter.getMods().get(0), (IMAGE_WIDTH / 2), 0));
+		group.getChildren().add(block);
 		back.setLayoutX(IMAGE_WIDTH / 2 - (MOD_BUTTON_SIZE / 2));
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		ScrollPane scrollPane = new ScrollPane(group);
-		back.setOnAction(event -> leaveMods(scrollPane, thisScene)); // make animations finish before removing group - on finish aciton for transition 
+		back.setOnAction(event -> leaveMods(stack, thisScene)); // make animations finish before removing group - on finish aciton for transition 
 		scrollPane.setPannable(true);
 		scrollPane.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
-		root.getChildren().add(scrollPane);
-		nextMenu(thisScene, scrollPane);
+		stack.getChildren().addAll(scrollPane, back);
+		root.getChildren().add(stack);
+		nextMenu(thisScene, stack);
+	}
+	
+	public void editStats (Node thisScene, AbstractCharecter charecter) {
+		Group group = new Group();
+		Button back = new Button("Back");
+
 	}
 	
 	public void leaveMods(Node screen, Node newScreen) {

@@ -259,7 +259,7 @@ public class BigBossGame extends Application {
 	    
 	    Button btnEditStats = new Button("Stats");
 	    btnEditStats.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    btnEditStats.setOnAction(event -> nextMenu(titleScreen, selectScreen)); //TODO set this once its done
+	    btnEditStats.setOnAction(event -> editStats(preFightScreen, selectedSave.getCharecter())); //TODO set this once its done
 	    
 	    lblDisplayStats = new Label();
 	    lblDisplayStats.setFont(Font.font(FONT, TEXT_FONT_SIZE));
@@ -530,9 +530,58 @@ public class BigBossGame extends Application {
 	}
 	
 	public void editStats (Node thisScene, AbstractCharecter charecter) {
-		Group group = new Group();
+		ListView<Node> lvStats = new ListView<Node>();
 		Button back = new Button("Back");
 
+		lvStats.getItems().add(back);
+		
+		for (Stat s : charecter.getStats()) {
+			Button add = new Button("+");
+			Label change = new Label(s.getTempValue() + "");
+			Button sub = new Button("-");
+			Label stat = new Label("New Total: " + charecter.getStatAsString(s.getName()));
+			GridPane gp = new GridPane();
+			//TODO add comite button
+			add.setOnAction(event -> {
+				charecter.addStatPoints(-1);
+				s.addTempValue(1);
+				changeTempStats(s, charecter, change, stat, add, sub);
+			});
+			
+			sub.setOnAction(event -> {
+				charecter.addStatPoints(1);
+				s.addTempValue(-1);
+				changeTempStats(s, charecter, change, stat, add, sub); //TODO change this to take a number to make the seteting easier.
+			});
+			changeTempStats(s, charecter, change, stat, add, sub);
+			gp.add(add, 0, 0);
+			gp.add(change, 1, 0);
+			gp.add(sub, 2, 0);
+			gp.add(stat, 0, 1, 3, 1);
+			lvStats.getItems().add(gp);
+		}
+		lvStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		//TODO make so that when yolu go back it resets the uncomited stats
+		back.setOnAction(event -> leaveMods(lvStats, thisScene)); // make animations finish before removing group - on finish aciton for transition 
+		root.getChildren().add(lvStats);
+		nextMenu(thisScene, lvStats);
+	}
+	
+	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Button add, Button sub) {
+		change.setText(s.getTempValue() + "");
+		stat.setText("New Total: " + charecter.getStatAsString(s.getName()));
+		
+		if (charecter.getStatPoints() <= 0) {
+			add.setDisable(true);
+		} else {
+			add.setDisable(false);
+		}
+		
+		if (s.getTempValue() <= 0) {
+			sub.setDisable(true);
+		} else {
+			sub.setDisable(false);
+		}
 	}
 	
 	public void leaveMods(Node screen, Node newScreen) {

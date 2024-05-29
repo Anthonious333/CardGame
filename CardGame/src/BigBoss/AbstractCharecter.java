@@ -15,6 +15,7 @@ public abstract class AbstractCharecter {
 	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
 	private String name;
+	private int statPoints;
 	
 	public AbstractCharecter (String name) {
 		this.setName(name);
@@ -58,9 +59,14 @@ public abstract class AbstractCharecter {
 	public String getStatsAsString () {
 		String ret = "";
 		for (Stat s : stats) {
-			ret += s.getName() + " :" + this.getStat(s.getName()) + (this.findInfo(s.getName()).isLimited()? "/" +  this.findInfo(s.getName()).getMax(): "") + " ";
+			ret += getStatAsString(s.getName());
 		}
 		return ret;
+	}
+	
+	public String getStatAsString (String id) {
+		Stat s = findInfo(id);
+		return s.getName() + " :" + (this.getStat(s.getName()) + s.getTempValue()) + (this.findInfo(s.getName()).isLimited()? "/" +  this.findInfo(s.getName()).getMax(): "") + " ";
 	}
 
 	public String getName() {
@@ -117,6 +123,14 @@ public abstract class AbstractCharecter {
 		for (AbstractModification m : mods) {
 			this.mods.add(m);
 		}
+	}
+
+	public int getStatPoints() {
+		return statPoints;
+	}
+
+	public void addStatPoints(int statPoints) {
+		this.statPoints += statPoints;
 	}
 
 }

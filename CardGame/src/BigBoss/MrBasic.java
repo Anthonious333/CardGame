@@ -17,7 +17,7 @@ public class MrBasic extends AbstractCharecter{
 				new Stat("HP", 100, 0, 100)
 				);
 		this.addAbility(new Punch(), 0);
-		
+		this.addStatPoints(10);
 		this.setPosibleAbilities();
 				
 		MightMod might1 = new MightMod(null, 1, .10, this);

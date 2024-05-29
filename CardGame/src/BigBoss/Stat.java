@@ -6,6 +6,7 @@ public class Stat {
 	private String name;
 	private boolean limited;
 	private int min, max;
+	private int tempValue = 0;
 	
 	public Stat (String name, int value) {
 		this(name, value, -1, -1);
@@ -59,4 +60,17 @@ public class Stat {
 		}
 		return ret;
 	}
+
+	public int getTempValue() {
+		return tempValue;
+	}
+
+	public void setTempValue(int tempValue) {
+		this.tempValue = tempValue;
+	}
+	
+	public void addTempValue(int tempValue) {
+		this.tempValue += tempValue;
+	}
+
 }

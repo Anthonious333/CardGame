@@ -37,6 +37,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.HLineTo;
@@ -534,44 +535,64 @@ public class BigBossGame extends Application {
 	public void editStats (Node thisScene, AbstractCharecter charecter) {
 		
 		//TODO orgonize and coment this 
-
-		ListView<Node> lvStats = new ListView<Node>();
+		GridPane gpStats = new GridPane();
+		ScrollPane sp = new ScrollPane(gpStats);
+		sp.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 		Button back = new Button("Back");
-		lvStats.getItems().add(back);
+		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		Label lblTotalPoints = new Label();
+		lblTotalPoints.setTextFill(Color.BLACK);
+		lblTotalPoints.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		gpStats.add(back, 0, 0);
+		gpStats.add(lblTotalPoints, 1, 0);
+		gpStats.setHgap(MENU_GAP);
+		
 		for (Stat s : charecter.getStats()) {
 			Button sub = new Button("-");
-			Label change = new Label(s.getTempValue() + "");
+			Label change = new Label();
 			Button add = new Button("+");
-			Label stat = new Label("New Total: " + charecter.getStatAsString(s.getName()));
+			Label stat = new Label();
 			GridPane gp = new GridPane();
 			Button commit = new Button("Commit");
-			add.setOnAction(event -> changeTempStats(s, charecter, change, stat, add, sub, true));
-			sub.setOnAction(event -> changeTempStats(s, charecter, change, stat, add, sub, false));
+			
+			sub.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			change.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			add.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			stat.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			commit.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			change.setTextFill(Color.BLACK);
+			stat.setTextFill(Color.BLACK);
+			gp.setHgap(MENU_GAP);
+
+		    
+			
+			add.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, true));
+			sub.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, false));
 			commit.setOnAction(event -> {
 				s.commitTempStat();
-				changeTempStats(s, charecter, change, stat, add, sub, false);
+				changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, false);
 			});
-			changeTempStats(s, charecter, change, stat, add, sub, false);
+			changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, false);
 			gp.add(sub, 0, 0);
 			gp.add(change, 1, 0);
 			gp.add(add, 2, 0);
 			gp.add(commit, 3, 0);
 			gp.add(stat, 0, 1, 4, 1);
-			lvStats.getItems().add(gp);
+			gpStats.add(gp, 0, gpStats.getChildren().size() + 1, 2, 1);
 		}
-		lvStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		
 		back.setOnAction(event -> {
 			for (Stat s : charecter.getStats()) {
 				charecter.addStatPoints(s.getTempValue());
 				s.setTempValue(0);
 			}
-			leaveMods(lvStats, thisScene);
+			leaveMods(sp, thisScene);
 		});
-		root.getChildren().add(lvStats);
-		nextMenu(thisScene, lvStats);
+		root.getChildren().add(sp);
+		nextMenu(thisScene, sp);
 	}
 	
-	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Button add, Button sub, boolean adding) {
+	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, Button add, Button sub, boolean adding) {
 
 		if (adding) {
 			if (!(charecter.getStatPoints() <= 0)) {
@@ -586,6 +607,7 @@ public class BigBossGame extends Application {
 		}
 		change.setText(s.getTempValue() + "");
 		stat.setText("New Total: " + charecter.getStatAsString(s.getName()));
+		lblTotalPoints.setText("Stat Points Avalable: " + charecter.getStatPoints() + "");
 	}
 	
 	public void leaveMods(Node screen, Node newScreen) {

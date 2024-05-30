@@ -39,7 +39,7 @@ public abstract class AbstractCharecter {
 	public int getStat(String ID) {
 		Stat i = findInfo(ID);
         if (i != null) {
-            return i.getValue();
+            return i.getValue() + i.getTempValue();
         }
         return -1;
     }
@@ -66,7 +66,16 @@ public abstract class AbstractCharecter {
 	
 	public String getStatAsString (String id) {
 		Stat s = findInfo(id);
-		return s.getName() + " :" + (this.getStat(s.getName()) + s.getTempValue()) + (this.findInfo(s.getName()).isLimited()? "/" +  this.findInfo(s.getName()).getMax(): "") + " ";
+		
+		String ret = s.getName() + " :";
+		int value = this.getStat(s.getName());
+		ret += value;
+		if (s.isLimited()) {
+			ret += "/" +  (this.findInfo(s.getName()).getMax() + s.getTempValue());
+		}
+		ret += " ";
+		
+		return ret;
 	}
 
 	public String getName() {

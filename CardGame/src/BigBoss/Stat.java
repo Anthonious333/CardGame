@@ -61,6 +61,14 @@ public class Stat {
 		return ret;
 	}
 
+	public void commitTempStat() {
+		this.value += this.tempValue;
+		if (limited) {
+			max += this.tempValue;
+		}
+		tempValue = 0;
+	}
+	
 	public int getTempValue() {
 		return tempValue;
 	}

@@ -508,7 +508,9 @@ public class BigBossGame extends Application {
 		btnSave3.setText(save3.getName());
 	}
 	
-	public void editMods(Node thisScene, AbstractCharecter charecter) { //TODO fix sizeing by placing scrol bars on the sides to move around
+	public void editMods(Node thisScene, AbstractCharecter charecter) {
+		
+		//TODO orgonize and coment this 
 		StackPane stack = new StackPane();
 		stack.setPrefSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		Group group = new Group();
@@ -530,58 +532,60 @@ public class BigBossGame extends Application {
 	}
 	
 	public void editStats (Node thisScene, AbstractCharecter charecter) {
+		
+		//TODO orgonize and coment this 
+
 		ListView<Node> lvStats = new ListView<Node>();
 		Button back = new Button("Back");
-
 		lvStats.getItems().add(back);
-		
 		for (Stat s : charecter.getStats()) {
-			Button add = new Button("+");
-			Label change = new Label(s.getTempValue() + "");
 			Button sub = new Button("-");
+			Label change = new Label(s.getTempValue() + "");
+			Button add = new Button("+");
 			Label stat = new Label("New Total: " + charecter.getStatAsString(s.getName()));
 			GridPane gp = new GridPane();
-			//TODO add comite button
-			add.setOnAction(event -> {
-				charecter.addStatPoints(-1);
-				s.addTempValue(1);
-				changeTempStats(s, charecter, change, stat, add, sub);
+			Button commit = new Button("Commit");
+			add.setOnAction(event -> changeTempStats(s, charecter, change, stat, add, sub, true));
+			sub.setOnAction(event -> changeTempStats(s, charecter, change, stat, add, sub, false));
+			commit.setOnAction(event -> {
+				s.commitTempStat();
+				changeTempStats(s, charecter, change, stat, add, sub, false);
 			});
-			
-			sub.setOnAction(event -> {
-				charecter.addStatPoints(1);
-				s.addTempValue(-1);
-				changeTempStats(s, charecter, change, stat, add, sub); //TODO change this to take a number to make the seteting easier.
-			});
-			changeTempStats(s, charecter, change, stat, add, sub);
-			gp.add(add, 0, 0);
+			changeTempStats(s, charecter, change, stat, add, sub, false);
+			gp.add(sub, 0, 0);
 			gp.add(change, 1, 0);
-			gp.add(sub, 2, 0);
-			gp.add(stat, 0, 1, 3, 1);
+			gp.add(add, 2, 0);
+			gp.add(commit, 3, 0);
+			gp.add(stat, 0, 1, 4, 1);
 			lvStats.getItems().add(gp);
 		}
 		lvStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
-		//TODO make so that when yolu go back it resets the uncomited stats
-		back.setOnAction(event -> leaveMods(lvStats, thisScene)); // make animations finish before removing group - on finish aciton for transition 
+		back.setOnAction(event -> {
+			for (Stat s : charecter.getStats()) {
+				charecter.addStatPoints(s.getTempValue());
+				s.setTempValue(0);
+			}
+			leaveMods(lvStats, thisScene);
+		});
 		root.getChildren().add(lvStats);
 		nextMenu(thisScene, lvStats);
 	}
 	
-	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Button add, Button sub) {
+	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Button add, Button sub, boolean adding) {
+
+		if (adding) {
+			if (!(charecter.getStatPoints() <= 0)) {
+				charecter.addStatPoints(-1);
+				s.addTempValue(1);
+			} 
+		} else {
+			if (!(s.getTempValue() <= 0)) {
+				charecter.addStatPoints(1);
+				s.addTempValue(-1);
+			}
+		}
 		change.setText(s.getTempValue() + "");
 		stat.setText("New Total: " + charecter.getStatAsString(s.getName()));
-		
-		if (charecter.getStatPoints() <= 0) {
-			add.setDisable(true);
-		} else {
-			add.setDisable(false);
-		}
-		
-		if (s.getTempValue() <= 0) {
-			sub.setDisable(true);
-		} else {
-			sub.setDisable(false);
-		}
 	}
 	
 	public void leaveMods(Node screen, Node newScreen) {

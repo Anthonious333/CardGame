@@ -21,9 +21,9 @@ public class MrBasic extends AbstractCharecter{
 		this.setPosibleAbilities();
 				
 		MightMod might1 = new MightMod(null, 1, .10, this);
-		MightMod might2 = new MightMod(might1, 2, .25, this);
-		MightMod might3 = new MightMod(might2, 3, .5, this);
-		MightMod might4 = new MightMod(might3, 4, 1, this);
+		MightMod might2 = new MightMod(might1, 2, .15, this);
+		MightMod might3 = new MightMod(might2, 3, .25, this);
+		MightMod might4 = new MightMod(might3, 4, .50, this);
 
 		 might1.setNext(might2);
 		 might2.setNext(might3);
@@ -39,7 +39,7 @@ public class MrBasic extends AbstractCharecter{
 		if (ID.equals("ATK")) {
 			for (AbstractModification m : this.getMods()) {
 				if (m.getClass() == MightMod.class && m.isUnlocked()) {
-					mightPower += (this.findInfo(ID).getValue() * m.getMagicNumber());
+					mightPower += (super.getStat(ID) * m.getMagicNumber());
 				}
 			}
 		}

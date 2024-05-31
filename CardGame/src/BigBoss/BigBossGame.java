@@ -17,10 +17,12 @@ import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,6 +34,12 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -56,12 +64,7 @@ public class BigBossGame extends Application {
 
 
 	/*
-	 * TODO selection screen
-	 * 
-	 * start
-	 * asks what save you want to use
-	 * if new chose char
-	 * starts game
+	 * TODO add descriptions and coment things
 	 */
 	
 	StackPane root;
@@ -269,7 +272,7 @@ public class BigBossGame extends Application {
 	    
 	    Button btnEditAbility = new Button("Ability"); // just able to view and move them, and see their description
 	    btnEditAbility.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    btnEditAbility.setOnAction(event -> nextMenu(titleScreen, selectScreen)); //TODO set this once its done
+	    btnEditAbility.setOnAction(event -> editAbilities(preFightScreen, selectedSave.getCharecter())); //TODO set this once its done
 	    
 	    lblDisplayAbilities = new Label();
 	    lblDisplayAbilities.setFont(Font.font(FONT, TEXT_FONT_SIZE));
@@ -478,9 +481,9 @@ public class BigBossGame extends Application {
 	}
 	
 	public void updatePreFightScreen () {
-		lblDisplayStats.setText(selectedSave.getCharecter().getStatsAsString() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
-		lblDisplayAbilities.setText(selectedSave.getCharecter().getAbilitiesAsString() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
-		lblDisplayMods.setText(selectedSave.getCharecter().LastUnlockedMod() + "dlkgjskdbgkjsdhgkjsdglkjdhslgkjsdlkgjhldkfjhglk");
+		lblDisplayStats.setText(selectedSave.getCharecter().getStatsAsString());
+		lblDisplayAbilities.setText(selectedSave.getCharecter().getAbilitiesAsString());
+		lblDisplayMods.setText(selectedSave.getCharecter().LastUnlockedMod());
 
 	}
 	
@@ -563,8 +566,6 @@ public class BigBossGame extends Application {
 			change.setTextFill(Color.BLACK);
 			stat.setTextFill(Color.BLACK);
 			gp.setHgap(MENU_GAP);
-
-		    
 			
 			add.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, true));
 			sub.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, false));
@@ -591,6 +592,38 @@ public class BigBossGame extends Application {
 		root.getChildren().add(sp);
 		nextMenu(thisScene, sp);
 	}
+	
+	public void editAbilities(Node thisScene, AbstractCharecter charecter) {
+		GridPane gp = new GridPane();
+		
+		Button ability1 = new Button(charecter.getAbility(0).getName());
+		Button ability2 = new Button(charecter.getAbility(1).getName());
+		Button ability3 = new Button(charecter.getAbility(2).getName());
+		//TODO add the moving functionality
+		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		FlowPane activeAbilities = new FlowPane();
+		activeAbilities.getChildren().addAll(ability1, ability2, ability3);
+		gp.add(activeAbilities, 0, 0);
+		
+		gp.add(new Line(0, 0, IMAGE_WIDTH, 0), 0, 1);
+		
+		FlowPane unlockedAbilities = new FlowPane();
+		unlockedAbilities.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+		for (AbstractAbility a : charecter.getPosibleAbilities()) {
+			if (a.isUnlocked() && !a.isEquiped()) {
+				Button ability = new Button(a.getName());
+				ability.setOnMouseDragReleased(event -> ability.setCursor(null));
+				unlockedAbilities.getChildren().add(ability);
+			}
+		}
+		
+		gp.add(unlockedAbilities, 0, 2);
+		root.getChildren().add(gp);
+		nextMenu(thisScene, gp);
+	}
+	
 	
 	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, Button add, Button sub, boolean adding) {
 

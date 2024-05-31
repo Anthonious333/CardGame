@@ -1,25 +1,18 @@
 package BigBoss;
 
-import BigBoss.MrBasicAbilities.Punch;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.Line;
 
 public class MrBasic extends AbstractCharecter{
 
 	public MrBasic() {
 		super("Mr. Basic");
-		this.addStats(
+		this.addStatsToList(
 				new Stat("ATK", 100), 
 				new Stat("HP", 100, 0, 100)
 				);
-		this.addAbility(new Punch(), 0);
 		this.addStatPoints(10);
-		this.setPosibleAbilities();
-				
+		this.setPosibleAbilities(new PunchAbility(this), new EmptyAbility(this));
+		this.equipAbility("Punch", 0);
+		this.findAbility("Punch").setUnlocked(true);
 		MightMod might1 = new MightMod(null, 1, .10, this);
 		MightMod might2 = new MightMod(might1, 2, .15, this);
 		MightMod might3 = new MightMod(might2, 3, .25, this);

@@ -21,13 +21,13 @@ public abstract class AbstractCharecter {
 		this.setName(name);
 	}
 	
-	public void addStats (Stat...stats) {
+	public void addStatsToList (Stat...stats) {
 		for (Stat s : stats) {
 			this.stats.add(s);
 		}
 	}
 	
-	public Stat findInfo(String ID) {
+	public Stat findStat(String ID) {
         for (Stat i : stats) { 
             if (i.getName().equals(ID)) { 
                 return i;
@@ -36,8 +36,17 @@ public abstract class AbstractCharecter {
         return null;
     }
 	
+	public AbstractAbility findAbility(String ID) {
+        for (AbstractAbility a : posibleAbilities) { 
+            if (a.getName().equals(ID)) { 
+                return a;
+            }
+        }
+        return null;
+    }
+	
 	public int getStat(String ID) {
-		Stat i = findInfo(ID);
+		Stat i = findStat(ID);
         if (i != null) {
             return i.getValue() + i.getTempValue();
         }
@@ -48,7 +57,7 @@ public abstract class AbstractCharecter {
 		return stats;
     }
 	
-	public void removeStats (Stat...stats) {
+	public void removeStatsFromList (Stat...stats) {
 		for (Stat s : stats) {
 			if (this.stats.contains(s)) {
 				this.stats.remove(s);
@@ -64,14 +73,28 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
+	public void addStat (String id, int amount) {
+		this.findStat(id).addValue(amount);
+	}
+	
+	public void reduceStat (String id, int amount) {
+		this.findStat(id).addValue(-amount);
+	}
+	
+	public void damage (int amount) {
+		this.reduceStat("HP", amount);
+	}
+	
+	
+	
 	public String getStatAsString (String id) {
-		Stat s = findInfo(id);
+		Stat s = findStat(id);
 		
 		String ret = s.getName() + " :";
 		int value = this.getStat(s.getName());
 		ret += value;
 		if (s.isLimited()) {
-			ret += "/" +  (this.findInfo(s.getName()).getMax() + s.getTempValue());
+			ret += "/" +  (this.findStat(s.getName()).getMax() + s.getTempValue());
 		}
 		ret += " ";
 		
@@ -87,11 +110,22 @@ public abstract class AbstractCharecter {
 	}
 
 	public AbstractAbility getAbility(int index) {
-		return abilities[index];
+		if(abilities[index] != null) {
+			return abilities[index];			
+		} else {
+			return new EmptyAbility(this);
+		}
+		
 	}
 
-	public void addAbility(AbstractAbility ability, int index) {
-		abilities[index] = ability;
+	public void equipAbility(String id, int index) {
+		findAbility(id).setEquiped(true);
+		abilities[index] = findAbility(id);
+	}
+	
+	public void unequipAbility(int index) {
+		abilities[index].setEquiped(false);
+		abilities[index] = new EmptyAbility(this);
 	}
 	
 	public String getAbilitiesAsString () {

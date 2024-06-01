@@ -35,6 +35,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
@@ -124,6 +125,12 @@ public class BigBossGame extends Application {
 	public final static String unlockID = "UNLOCKED";
 	public static final int IMAGE_WIDTH = 1126;
 	public static final int IMAGE_HEIGHT = 634;
+	
+	private static final DataFormat customFormat =
+		    new DataFormat("helloworld.custom");
+	private static final DataFormat customFormat1 =
+		    new DataFormat("helloworld.custom1");
+
 	
 	
 	@Override
@@ -596,13 +603,17 @@ public class BigBossGame extends Application {
 	public void editAbilities(Node thisScene, AbstractCharecter charecter) {
 		GridPane gp = new GridPane();
 		
-		Button ability1 = new Button(charecter.getAbility(0).getName());
-		Button ability2 = new Button(charecter.getAbility(1).getName());
-		Button ability3 = new Button(charecter.getAbility(2).getName());
-		//TODO add the moving functionality
+		Label ability1 = new Label(charecter.getAbility(0).getName());
+		Label ability2 = new Label(charecter.getAbility(1).getName());
+		Label ability3 = new Label(charecter.getAbility(2).getName());
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		setUpLabel(ability1);
+		setUpLabel(ability2);
+		setUpLabel(ability3);
+
+		
 		FlowPane activeAbilities = new FlowPane();
 		activeAbilities.getChildren().addAll(ability1, ability2, ability3);
 		gp.add(activeAbilities, 0, 0);
@@ -613,17 +624,97 @@ public class BigBossGame extends Application {
 		unlockedAbilities.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		for (AbstractAbility a : charecter.getPosibleAbilities()) {
 			if (a.isUnlocked() && !a.isEquiped()) {
-				Button ability = new Button(a.getName());
-				ability.setOnMouseDragReleased(event -> ability.setCursor(null));
+				Label ability = new Label(a.getName());
+				setUpLabel(ability);
 				unlockedAbilities.getChildren().add(ability);
 			}
 		}
+		
+		//TODO make it so when you leave is equipes the first three and unequips all the rest
 		
 		gp.add(unlockedAbilities, 0, 2);
 		root.getChildren().add(gp);
 		nextMenu(thisScene, gp);
 	}
 	
+	public void setUpLabel(Label lbl) {
+		
+			lbl.setOnDragDetected(new EventHandler <MouseEvent>() {
+	            public void handle(MouseEvent event) {
+	                
+	                Dragboard db = lbl.startDragAndDrop(TransferMode.ANY);
+	                
+	                ClipboardContent content = new ClipboardContent();
+	                content.putString(lbl.getText());
+	                db.setContent(content);
+	                
+	                event.consume();
+	            }
+	        });
+		  
+			lbl.setOnDragOver(new EventHandler <DragEvent>() {
+	            public void handle(DragEvent event) {
+	                if (event.getGestureSource() != lbl &&
+	                        event.getDragboard().hasString()) {
+	                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+	                }
+	                
+	                event.consume();
+	            }
+	        });
+
+			lbl.setOnDragEntered(new EventHandler <DragEvent>() {
+	            public void handle(DragEvent event) {
+	            	Dragboard db = event.getDragboard();
+	                ClipboardContent content = new ClipboardContent();
+
+	                if (event.getGestureSource() != lbl &&
+	                        event.getDragboard().hasString()) {
+	                	lbl.setTextFill(Color.GREEN);
+	                	if (db.getString().contains(":")) {
+	                		content.putString(db.getString().substring(0, db.getString().indexOf(":")) + ":" + lbl.getText());
+	                	} else {
+	                		content.putString(db.getString() + ":" + lbl.getText());
+	                	}
+	                	 db.setContent(content);
+	                }
+	                
+	                event.consume();
+	            }
+	        });
+
+			lbl.setOnDragExited(new EventHandler <DragEvent>() {
+	            public void handle(DragEvent event) {
+	            	lbl.setTextFill(Color.BLACK);
+	                
+	                event.consume();
+	            }
+	        });
+	        
+			lbl.setOnDragDropped(new EventHandler <DragEvent>() {
+	            public void handle(DragEvent event) {
+	                Dragboard db = event.getDragboard();
+	                boolean success = false;
+	                if (db.hasString() && db.getString().contains(":")) {
+	                	lbl.setText(db.getString().substring(0, db.getString().indexOf(":")));
+	                    success = true;
+	                }
+	                event.setDropCompleted(success);
+	                
+	                event.consume();
+	            }
+	        });
+
+			lbl.setOnDragDone(new EventHandler <DragEvent>() {
+	            public void handle(DragEvent event) {
+	                Dragboard db = event.getDragboard();
+	                if (event.getTransferMode() == TransferMode.MOVE) {
+	                	lbl.setText(db.getString().substring((db.getString().indexOf(":") + 1)));
+	                }
+	                event.consume();
+	            }
+	        });
+	}
 	
 	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, Button add, Button sub, boolean adding) {
 

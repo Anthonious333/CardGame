@@ -9,10 +9,14 @@ public class MrBasic extends AbstractCharecter{
 				new Stat("ATK", 100), 
 				new Stat("HP", 100, 0, 100)
 				);
+		
+		//TODO fix this, default ability should be a moethod of some sort or param 
 		this.addStatPoints(10);
 		this.setPosibleAbilities(new PunchAbility(this), new EmptyAbility(this));
 		this.equipAbility("Punch", 0);
 		this.findAbility("Punch").setUnlocked(true);
+		
+		
 		MightMod might1 = new MightMod(null, 1, .10, this);
 		MightMod might2 = new MightMod(might1, 2, .15, this);
 		MightMod might3 = new MightMod(might2, 3, .25, this);

@@ -602,7 +602,8 @@ public class BigBossGame extends Application {
 	
 	public void editAbilities(Node thisScene, AbstractCharecter charecter) {
 		GridPane gp = new GridPane();
-		
+		Button back = new Button("Back");
+		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		Label ability1 = new Label(charecter.getAbility(0).getName());
 		Label ability2 = new Label(charecter.getAbility(1).getName());
 		Label ability3 = new Label(charecter.getAbility(2).getName());
@@ -613,18 +614,25 @@ public class BigBossGame extends Application {
 		setUpLabel(ability2);
 		setUpLabel(ability3);
 
+		back.setOnAction(event -> {
+			fixAbilities(charecter, ability1, ability2, ability3);
+			leaveMods(gp, thisScene);
+		});
 		
 		FlowPane activeAbilities = new FlowPane();
-		activeAbilities.getChildren().addAll(ability1, ability2, ability3);
+		activeAbilities.setOpaqueInsets(new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+		activeAbilities.getChildren().addAll(back, ability1, ability2, ability3);
 		gp.add(activeAbilities, 0, 0);
 		
 		gp.add(new Line(0, 0, IMAGE_WIDTH, 0), 0, 1);
 		
 		FlowPane unlockedAbilities = new FlowPane();
+		unlockedAbilities.setOpaqueInsets(new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 		unlockedAbilities.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		for (AbstractAbility a : charecter.getPosibleAbilities()) {
 			if (a.isUnlocked() && !a.isEquiped()) {
 				Label ability = new Label(a.getName());
+				ability.setFont(Font.font(FONT, MENU_FONT_SIZE));
 				setUpLabel(ability);
 				unlockedAbilities.getChildren().add(ability);
 			}
@@ -635,6 +643,17 @@ public class BigBossGame extends Application {
 		gp.add(unlockedAbilities, 0, 2);
 		root.getChildren().add(gp);
 		nextMenu(thisScene, gp);
+	}
+	
+	public void fixAbilities(AbstractCharecter charecter, Label ability1, Label ability2, Label ability3) {
+		for (AbstractAbility a : charecter.getPosibleAbilities()) {
+			if (a.isUnlocked()) {
+				charecter.unequipAbility(a);	
+			}
+		}
+		charecter.equipAbility(ability1.getText(), 0);
+		charecter.equipAbility(ability2.getText(), 1);
+		charecter.equipAbility(ability3.getText(), 2);
 	}
 	
 	public void setUpLabel(Label lbl) {
@@ -657,8 +676,21 @@ public class BigBossGame extends Application {
 	                if (event.getGestureSource() != lbl &&
 	                        event.getDragboard().hasString()) {
 	                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+	                    
+	                    Dragboard db = event.getDragboard();
+		                ClipboardContent content = new ClipboardContent();
+	                    if (db.getString().contains(":")) {
+	                		content.putString(db.getString().substring(0, db.getString().indexOf(":")) + ":" + lbl.getText());
+	                		//works
+	                	} else {
+	                		content.putString(db.getString() + ":" + lbl.getText());
+	                	}
+	                    System.out.print(content.getString() + "\n");
+	                    //works
+	                	db.setContent(content);
+	                	//dosen't work
+
 	                }
-	                
 	                event.consume();
 	            }
 	        });
@@ -667,7 +699,7 @@ public class BigBossGame extends Application {
 	            public void handle(DragEvent event) {
 	            	Dragboard db = event.getDragboard();
 	                ClipboardContent content = new ClipboardContent();
-
+	                
 	                if (event.getGestureSource() != lbl &&
 	                        event.getDragboard().hasString()) {
 	                	lbl.setTextFill(Color.GREEN);
@@ -676,7 +708,7 @@ public class BigBossGame extends Application {
 	                	} else {
 	                		content.putString(db.getString() + ":" + lbl.getText());
 	                	}
-	                	 db.setContent(content);
+	                	db.setContent(content);
 	                }
 	                
 	                event.consume();
@@ -686,7 +718,8 @@ public class BigBossGame extends Application {
 			lbl.setOnDragExited(new EventHandler <DragEvent>() {
 	            public void handle(DragEvent event) {
 	            	lbl.setTextFill(Color.BLACK);
-	                
+	            	System.out.print("exit");
+
 	                event.consume();
 	            }
 	        });
@@ -697,6 +730,7 @@ public class BigBossGame extends Application {
 	                boolean success = false;
 	                if (db.hasString() && db.getString().contains(":")) {
 	                	lbl.setText(db.getString().substring(0, db.getString().indexOf(":")));
+	                	System.out.print(db.getString().substring(0, db.getString().indexOf(":")));
 	                    success = true;
 	                }
 	                event.setDropCompleted(success);
@@ -710,6 +744,8 @@ public class BigBossGame extends Application {
 	                Dragboard db = event.getDragboard();
 	                if (event.getTransferMode() == TransferMode.MOVE) {
 	                	lbl.setText(db.getString().substring((db.getString().indexOf(":") + 1)));
+	                	System.out.print(db.getString().substring((db.getString().indexOf(":") + 1)));
+
 	                }
 	                event.consume();
 	            }

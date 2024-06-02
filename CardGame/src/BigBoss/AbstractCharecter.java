@@ -11,7 +11,7 @@ public abstract class AbstractCharecter {
 	public final int SKILL_SIZE = 70;
 
 	private ArrayList<Stat> stats = new ArrayList<Stat>();
-	private AbstractAbility [] abilities = new AbstractAbility[3];
+	private ArrayList<AbstractAbility> abilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
 	private String name;
@@ -25,6 +25,18 @@ public abstract class AbstractCharecter {
 		for (Stat s : stats) {
 			this.stats.add(s);
 		}
+		
+		AbstractAbility a1 = new EmptyAbility(this);
+		AbstractAbility a2 = new EmptyAbility(this);
+		AbstractAbility a3 = new EmptyAbility(this);
+		this.setPosibleAbilities(a1, a2, a3);
+		abilities.add(a1);
+		abilities.add(a2);
+		abilities.add(a3);
+		a1.setEquiped(true);
+		a2.setEquiped(true);
+		a3.setEquiped(true);
+
 	}
 	
 	public Stat findStat(String ID) {
@@ -110,8 +122,8 @@ public abstract class AbstractCharecter {
 	}
 
 	public AbstractAbility getAbility(int index) {
-		if(abilities[index] != null) {
-			return abilities[index];			
+		if(abilities.get(index) != null) {
+			return abilities.get(index);			
 		} else {
 			return new EmptyAbility(this);
 		}
@@ -119,13 +131,24 @@ public abstract class AbstractCharecter {
 	}
 
 	public void equipAbility(String id, int index) {
-		findAbility(id).setEquiped(true);
-		abilities[index] = findAbility(id);
+		equipAbility(findAbility(id), index);
+	}
+	
+	public void equipAbility(AbstractAbility a, int index) {
+		a.setEquiped(true);
+		abilities.set(index, a);
 	}
 	
 	public void unequipAbility(int index) {
-		abilities[index].setEquiped(false);
-		abilities[index] = new EmptyAbility(this);
+		abilities.get(index).setEquiped(false);
+		abilities.set(index, new EmptyAbility(this));
+	}
+	
+	public void unequipAbility(AbstractAbility a) {
+		a.setEquiped(false);
+		if (abilities.contains(a)) {
+			abilities.set(abilities.indexOf(a), new EmptyAbility(this));
+		}
 	}
 	
 	public String getAbilitiesAsString () {

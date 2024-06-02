@@ -673,22 +673,11 @@ public class BigBossGame extends Application {
 		  
 			lbl.setOnDragOver(new EventHandler <DragEvent>() {
 	            public void handle(DragEvent event) {
-	                if (event.getGestureSource() != lbl &&
-	                        event.getDragboard().hasString()) {
+	            
+	            	
+	                if (event.getGestureSource() != lbl) {
 	                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 	                    
-	                    Dragboard db = event.getDragboard();
-		                ClipboardContent content = new ClipboardContent();
-	                    if (db.getString().contains(":")) {
-	                		content.putString(db.getString().substring(0, db.getString().indexOf(":")) + ":" + lbl.getText());
-	                		//works
-	                	} else {
-	                		content.putString(db.getString() + ":" + lbl.getText());
-	                	}
-	                    System.out.print(content.getString() + "\n");
-	                    //works
-	                	db.setContent(content);
-	                	//dosen't work
 
 	                }
 	                event.consume();
@@ -697,18 +686,10 @@ public class BigBossGame extends Application {
 
 			lbl.setOnDragEntered(new EventHandler <DragEvent>() {
 	            public void handle(DragEvent event) {
-	            	Dragboard db = event.getDragboard();
-	                ClipboardContent content = new ClipboardContent();
 	                
-	                if (event.getGestureSource() != lbl &&
-	                        event.getDragboard().hasString()) {
+	                if (event.getGestureSource() != lbl) {
 	                	lbl.setTextFill(Color.GREEN);
-	                	if (db.getString().contains(":")) {
-	                		content.putString(db.getString().substring(0, db.getString().indexOf(":")) + ":" + lbl.getText());
-	                	} else {
-	                		content.putString(db.getString() + ":" + lbl.getText());
-	                	}
-	                	db.setContent(content);
+	                
 	                }
 	                
 	                event.consume();
@@ -726,7 +707,12 @@ public class BigBossGame extends Application {
 	        
 			lbl.setOnDragDropped(new EventHandler <DragEvent>() {
 	            public void handle(DragEvent event) {
+	            	
 	                Dragboard db = event.getDragboard();
+	                ClipboardContent content = new ClipboardContent();
+                	content.putString(db.getString() + ":" + lbl.getText());
+                	db.setContent(content);
+                	
 	                boolean success = false;
 	                if (db.hasString() && db.getString().contains(":")) {
 	                	lbl.setText(db.getString().substring(0, db.getString().indexOf(":")));

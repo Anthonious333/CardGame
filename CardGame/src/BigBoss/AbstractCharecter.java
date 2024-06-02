@@ -2,6 +2,7 @@ package BigBoss;
 
 import java.util.ArrayList;
 
+import BigBoss.Abilities.EmptyAbility;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -19,24 +20,29 @@ public abstract class AbstractCharecter {
 	
 	public AbstractCharecter (String name) {
 		this.setName(name);
+		
+		//default ability setup
+		AbstractAbility a1 = new EmptyAbility(this);
+		AbstractAbility a2 = new EmptyAbility(this);
+		AbstractAbility a3 = new EmptyAbility(this);
+		abilities.add(a1);
+		abilities.add(a2);
+		abilities.add(a3);
+		a1.setUnlocked(true);
+		a2.setUnlocked(true);
+		a3.setUnlocked(true);
+		a1.setEquiped(true);
+		a2.setEquiped(true);
+		a3.setEquiped(true);
+		this.setPosibleAbilities(a1, a2, a3);
+
 	}
 	
 	public void addStatsToList (Stat...stats) {
 		for (Stat s : stats) {
 			this.stats.add(s);
 		}
-		
-		AbstractAbility a1 = new EmptyAbility(this);
-		AbstractAbility a2 = new EmptyAbility(this);
-		AbstractAbility a3 = new EmptyAbility(this);
-		this.setPosibleAbilities(a1, a2, a3);
-		abilities.add(a1);
-		abilities.add(a2);
-		abilities.add(a3);
-		a1.setEquiped(true);
-		a2.setEquiped(true);
-		a3.setEquiped(true);
-
+	
 	}
 	
 	public Stat findStat(String ID) {
@@ -97,6 +103,10 @@ public abstract class AbstractCharecter {
 		this.reduceStat("HP", amount);
 	}
 	
+	public void heal (int amount) {
+		this.addStat("HP", amount);
+	}
+	
 	
 	
 	public String getStatAsString (String id) {
@@ -135,7 +145,9 @@ public abstract class AbstractCharecter {
 	}
 	
 	public void equipAbility(AbstractAbility a, int index) {
+		a.setUnlocked(true);
 		a.setEquiped(true);
+		unequipAbility(index);
 		abilities.set(index, a);
 	}
 	
@@ -198,5 +210,6 @@ public abstract class AbstractCharecter {
 	public void addStatPoints(int statPoints) {
 		this.statPoints += statPoints;
 	}
+
 
 }

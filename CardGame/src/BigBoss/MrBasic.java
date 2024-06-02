@@ -1,5 +1,7 @@
 package BigBoss;
 
+import BigBoss.Abilities.EmptyAbility;
+import BigBoss.Abilities.PunchAbility;
 
 public class MrBasic extends AbstractCharecter{
 
@@ -12,9 +14,9 @@ public class MrBasic extends AbstractCharecter{
 		
 		//TODO fix this, default ability should be a moethod of some sort or param 
 		this.addStatPoints(10);
-		this.setPosibleAbilities(new PunchAbility(this), new EmptyAbility(this));
-		this.equipAbility("Punch", 0);
-		this.findAbility("Punch").setUnlocked(true);
+		AbstractAbility punch = new PunchAbility(this);
+		this.setPosibleAbilities(punch, new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this));
+		this.equipAbility(punch, 0);
 		
 		
 		MightMod might1 = new MightMod(null, 1, .10, this);

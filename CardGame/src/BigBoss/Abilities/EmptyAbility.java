@@ -1,4 +1,8 @@
-package BigBoss;
+package BigBoss.Abilities;
+
+import BigBoss.AbstractAbility;
+import BigBoss.AbstractCharecter;
+import BigBoss.BossEnemy;
 
 public class EmptyAbility extends AbstractAbility{
 
@@ -6,12 +10,11 @@ public class EmptyAbility extends AbstractAbility{
 	
 	public EmptyAbility(AbstractCharecter owner) {
 		super("Empty " + identifier, owner);
-		this.setUnlocked(true);
 		identifier++;
 	}
 
 	@Override
-	public void use(BossEnemy target) {
+	public void use(AbstractCharecter target) {
 
 	}
 

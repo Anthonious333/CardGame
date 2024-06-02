@@ -7,16 +7,33 @@ public abstract class AbstractAbility {
 	private AbstractCharecter owner;
 	private boolean unlocked;
 	private boolean equiped;
+	//intedded for boss and canselect
+	private int roleDifficulty;
+	private int roleNumber;
 	
 	public AbstractAbility(String name, AbstractCharecter owner) {
 		this.setName(name);
 		this.setOwner(owner);
 		this.setUnlocked(false);
 		this.setEquiped(false);
+		this.setRoleDifficulty(0);
+		this.setRoleNumber(0);
 	}
 
-	public abstract void use(BossEnemy target);
+	public abstract void use(AbstractCharecter target);
 
+	//to make it harder / more cinditions for the boss not meant for charecters
+	public boolean canSelect () {
+		if (roleNumber < roleDifficulty ) {
+			roleNumber++;
+			return false;
+		} else {
+			this.setRoleNumber(0);
+			return true;
+		}
+	}
+
+	
 	public String getName() {
 		return name;
 	}
@@ -52,5 +69,21 @@ public abstract class AbstractAbility {
 
 	public void setEquiped(boolean equiped) {
 		this.equiped = equiped;
+	}
+
+	public int getRoleDifficulty() {
+		return roleDifficulty;
+	}
+
+	public void setRoleDifficulty(int roleDifficulty) {
+		this.roleDifficulty = roleDifficulty;
+	}
+
+	public int getRoleNumber() {
+		return roleNumber;
+	}
+
+	public void setRoleNumber(int roleNumber) {
+		this.roleNumber = roleNumber;
 	}
 }

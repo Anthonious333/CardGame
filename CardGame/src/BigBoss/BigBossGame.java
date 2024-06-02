@@ -119,17 +119,13 @@ public class BigBossGame extends Application {
 	//inner variables
 	int timer = 0;
 	AbstractCharecter selectedCharecter;
-	double animationSpeedMultiplyer = FAST_ANIMATION_SPEED; //TODO fix title moding fast
+	double animationSpeedMultiplyer = FAST_ANIMATION_SPEED; 
 	
 	//global vars
 	public final static String unlockID = "UNLOCKED";
 	public static final int IMAGE_WIDTH = 1126;
 	public static final int IMAGE_HEIGHT = 634;
-	
-	private static final DataFormat customFormat =
-		    new DataFormat("helloworld.custom");
-	private static final DataFormat customFormat1 =
-		    new DataFormat("helloworld.custom1");
+
 
 	
 	
@@ -270,7 +266,7 @@ public class BigBossGame extends Application {
 	    
 	    Button btnEditStats = new Button("Stats");
 	    btnEditStats.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    btnEditStats.setOnAction(event -> editStats(preFightScreen, selectedSave.getCharecter())); //TODO set this once its done
+	    btnEditStats.setOnAction(event -> editStats(preFightScreen, selectedSave.getCharecter())); 
 	    
 	    lblDisplayStats = new Label();
 	    lblDisplayStats.setFont(Font.font(FONT, TEXT_FONT_SIZE));
@@ -279,7 +275,7 @@ public class BigBossGame extends Application {
 	    
 	    Button btnEditAbility = new Button("Ability"); // just able to view and move them, and see their description
 	    btnEditAbility.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    btnEditAbility.setOnAction(event -> editAbilities(preFightScreen, selectedSave.getCharecter())); //TODO set this once its done
+	    btnEditAbility.setOnAction(event -> editAbilities(preFightScreen, selectedSave.getCharecter())); 
 	    
 	    lblDisplayAbilities = new Label();
 	    lblDisplayAbilities.setFont(Font.font(FONT, TEXT_FONT_SIZE));
@@ -288,7 +284,7 @@ public class BigBossGame extends Application {
 	    
 	    Button btnEditMod = new Button("Mods"); // just able to view and move them, and see their description
 	    btnEditMod.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    btnEditMod.setOnAction(event -> editMods(preFightScreen, selectedSave.getCharecter())); //TODO set this once its done
+	    btnEditMod.setOnAction(event -> editMods(preFightScreen, selectedSave.getCharecter()));
 	    
 	    lblDisplayMods = new Label();
 	    lblDisplayMods.setFont(Font.font(FONT, TEXT_FONT_SIZE));
@@ -550,12 +546,23 @@ public class BigBossGame extends Application {
 		sp.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 		Button back = new Button("Back");
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		Button commmitAll = new Button("Commmit All");
+		commmitAll.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		commmitAll.setOnAction(event -> {
+			for (int i = 0; i < charecter.getStats().size(); i++) {
+				Stat s = charecter.getStats().get(i);
+				s.commitTempStat();
+				((Label) ((GridPane) gpStats.getChildren().get(i + 3)).getChildren().get(1)).setText(s.getTempValue() + "");
+			}
+		});
 		Label lblTotalPoints = new Label();
 		lblTotalPoints.setTextFill(Color.BLACK);
 		lblTotalPoints.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		gpStats.add(back, 0, 0);
 		gpStats.add(lblTotalPoints, 1, 0);
+		gpStats.add(commmitAll, 2, 0);
 		gpStats.setHgap(MENU_GAP);
+		
 		
 		for (Stat s : charecter.getStats()) {
 			Button sub = new Button("-");
@@ -574,13 +581,13 @@ public class BigBossGame extends Application {
 			stat.setTextFill(Color.BLACK);
 			gp.setHgap(MENU_GAP);
 			
-			add.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, true));
-			sub.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, false));
+			add.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, true));
+			sub.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, false));
 			commit.setOnAction(event -> {
 				s.commitTempStat();
-				changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, false);
+				changeTempStats(s, charecter, change, stat, lblTotalPoints, false);
 			});
-			changeTempStats(s, charecter, change, stat, lblTotalPoints, add, sub, false);
+			changeTempStats(s, charecter, change, stat, lblTotalPoints, false);
 			gp.add(sub, 0, 0);
 			gp.add(change, 1, 0);
 			gp.add(add, 2, 0);
@@ -610,6 +617,10 @@ public class BigBossGame extends Application {
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		FlowPane.setMargin(ability1, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+		FlowPane.setMargin(ability2, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+		FlowPane.setMargin(ability3, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+
 		setUpLabel(ability1);
 		setUpLabel(ability2);
 		setUpLabel(ability3);
@@ -620,25 +631,30 @@ public class BigBossGame extends Application {
 		});
 		
 		FlowPane activeAbilities = new FlowPane();
-		activeAbilities.setOpaqueInsets(new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 		activeAbilities.getChildren().addAll(back, ability1, ability2, ability3);
 		gp.add(activeAbilities, 0, 0);
 		
 		gp.add(new Line(0, 0, IMAGE_WIDTH, 0), 0, 1);
 		
 		FlowPane unlockedAbilities = new FlowPane();
-		unlockedAbilities.setOpaqueInsets(new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 		unlockedAbilities.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		for (AbstractAbility a : charecter.getPosibleAbilities()) {
 			if (a.isUnlocked() && !a.isEquiped()) {
 				Label ability = new Label(a.getName());
+				FlowPane.setMargin(ability, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 				ability.setFont(Font.font(FONT, MENU_FONT_SIZE));
 				setUpLabel(ability);
 				unlockedAbilities.getChildren().add(ability);
 			}
 		}
-		
-		//TODO make it so when you leave is equipes the first three and unequips all the rest
+		for (AbstractAbility a : charecter.getPosibleAbilities()) {
+			if (!a.isUnlocked()) {
+				Label ability = new Label("???");
+				FlowPane.setMargin(ability, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
+				ability.setFont(Font.font(FONT, MENU_FONT_SIZE));
+				unlockedAbilities.getChildren().add(ability);
+			}
+		}
 		
 		gp.add(unlockedAbilities, 0, 2);
 		root.getChildren().add(gp);
@@ -738,7 +754,7 @@ public class BigBossGame extends Application {
 	        });
 	}
 	
-	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, Button add, Button sub, boolean adding) {
+	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, boolean adding) {
 
 		if (adding) {
 			if (!(charecter.getStatPoints() <= 0)) {
@@ -819,6 +835,14 @@ public class BigBossGame extends Application {
 		return ret;
 		
 	}
+	
+	// from workspace
+		public static int randomNumber(int a, int b) {
+			int highNum = Math.max(a, b);
+			int lowNum = Math.min(a, b);
+			int range = highNum - lowNum + 1;
+			return (int) (Math.random() * range) + lowNum;
+		}
 	
 	@Override
 	public void stop() throws Exception {

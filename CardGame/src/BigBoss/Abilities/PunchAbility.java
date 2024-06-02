@@ -1,4 +1,8 @@
-package BigBoss;
+package BigBoss.Abilities;
+
+import BigBoss.AbstractAbility;
+import BigBoss.AbstractCharecter;
+import BigBoss.BossEnemy;
 
 public class PunchAbility extends AbstractAbility{
 
@@ -7,7 +11,7 @@ public class PunchAbility extends AbstractAbility{
 	}
 
 	@Override
-	public void use(BossEnemy target) {
+	public void use(AbstractCharecter target) {
 		target.damage(this.getOwner().getStat("ATK"));
 	}
 

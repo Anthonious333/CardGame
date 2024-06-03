@@ -6,6 +6,7 @@ import BigBoss.Abilities.EmptyAbility;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 
 public abstract class AbstractCharecter {
 	
@@ -37,6 +38,11 @@ public abstract class AbstractCharecter {
 		this.setPosibleAbilities(a1, a2, a3);
 
 	}
+	
+	public String getImageLocation() {
+		return getClass().getResource("/images/" + this.getName() + ".png").toString();
+	}
+
 	
 	public void addStatsToList (Stat...stats) {
 		for (Stat s : stats) {

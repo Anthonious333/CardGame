@@ -2,6 +2,7 @@ package BigBoss;
 
 import BigBoss.Abilities.EmptyAbility;
 import BigBoss.Abilities.PunchAbility;
+import javafx.scene.image.Image;
 
 public class MrBasic extends AbstractCharecter{
 
@@ -44,7 +45,8 @@ public class MrBasic extends AbstractCharecter{
 		}
 		return super.getStat(ID) + (int)mightPower;
 	}
-	
+
+
 	
 		
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PathTransition;
@@ -17,6 +18,7 @@ import javafx.animation.PathTransition.OrientationType;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -102,7 +104,12 @@ public class BigBossGame extends Application {
 	Label lblDisplayStats;
 	Label lblDisplayAbilities;
 	Label lblDisplayMods;
-
+	ImageView mainBackgroundV;
+	ImageView mainBackgroundV2; 
+	ParallelTransition backgroundParallelTrans;
+	Image mainBackgroundI = new Image(getClass().getResource("/images/Background8Bit.png").toString());
+	Image mainBackgroundI2 = new Image(getClass().getResource("/images/Background8Bit.png").toString());
+	Image fightBackgroundI = new Image(getClass().getResource("/images/fight room.png").toString());
 
 	
 	//visual finals
@@ -152,21 +159,21 @@ public class BigBossGame extends Application {
 		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		
 		//background images
-		ImageView background = new ImageView(new Image(getClass().getResource("/images/Background8Bit.png").toString()));
-		ImageView background2 = new ImageView(new Image(getClass().getResource("/images/Background8Bit.png").toString()));
+		mainBackgroundV = new ImageView(mainBackgroundI);
+		mainBackgroundV2 = new ImageView(mainBackgroundI);
 		//background animation
-		TranslateTransition trans1 = new TranslateTransition(Duration.seconds(10), background);
-	    trans1.setFromX(0);
-	    trans1.setToX(IMAGE_WIDTH);
-	    trans1.setInterpolator(Interpolator.LINEAR);
-	    trans1.setCycleCount(Animation.INDEFINITE);
-	    TranslateTransition trans2 = new TranslateTransition(Duration.seconds(10), background2);
-	    trans2.setFromX(-IMAGE_WIDTH);
-	    trans2.setToX(0);
-	    trans2.setCycleCount(Animation.INDEFINITE);
-	    trans2.setInterpolator(Interpolator.LINEAR);
-	    ParallelTransition parTrans = new ParallelTransition(trans1, trans2);
-	    parTrans.play();
+		TranslateTransition backgroundTrans = new TranslateTransition(Duration.seconds(10), mainBackgroundV);
+	    backgroundTrans.setFromX(0);
+	    backgroundTrans.setToX(IMAGE_WIDTH);
+	    backgroundTrans.setInterpolator(Interpolator.LINEAR);
+	    backgroundTrans.setCycleCount(Animation.INDEFINITE);
+	    TranslateTransition backgroundTrans2 = new TranslateTransition(Duration.seconds(10), mainBackgroundV2);
+	    backgroundTrans2.setFromX(-IMAGE_WIDTH);
+	    backgroundTrans2.setToX(0);
+	    backgroundTrans2.setCycleCount(Animation.INDEFINITE);
+	    backgroundTrans2.setInterpolator(Interpolator.LINEAR);
+	    backgroundParallelTrans = new ParallelTransition(backgroundTrans, backgroundTrans2);
+	    backgroundParallelTrans.play();
 		
 	    //title
 	    title = new Label(GAME_NAME);
@@ -271,7 +278,7 @@ public class BigBossGame extends Application {
 	    Button btnFight = new Button("FIGHT!");
 	    btnFight.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
 	    btnFight.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    btnFight.setOnAction(event -> nextMenu(titleScreen, selectScreen)); //TODO set this to go to the fight screen once its done
+	    btnFight.setOnAction(event -> fadeToNext(preFightScreen, titleScreen, fightBackgroundI, true)); //TODO make this fight scene not title screen
 	    
 	    //back button
 	    Button btnPreFightBack = new Button("Back");
@@ -314,8 +321,6 @@ public class BigBossGame extends Application {
 	    preFightScreen.add(abilitySection, 0, 1);
 	    preFightScreen.add(modSection, 1, 1);
 
-	    
-	    
 	    //options screen
 	    VBox optionsScreen = new VBox();
 	    optionsScreen.setVisible(false);
@@ -349,11 +354,8 @@ public class BigBossGame extends Application {
 	    HBox.setMargin(volumeSlider, new Insets(MENU_GAP * 2.5, MENU_GAP, MENU_GAP, MENU_GAP));
 	    volumeOption.getChildren().addAll(lblVolumeSlider, volumeSlider);
 	    
-	    
 	    //adding all to the options screen
 	    optionsScreen.getChildren().addAll(btnOptionsScreenBack, fastAnimationsOption, volumeOption);
-	    
-	    
 	    
 	    //titleScreen
 	    titleScreen = new StackPane();
@@ -383,11 +385,11 @@ public class BigBossGame extends Application {
 	    titleScreen.getChildren().add(title);
 	    
 	    //adding all nodes to pane
-	    root.getChildren().addAll(background, background2, titleScreen, selectScreen, optionsScreen, charSelectScreenAndDescription, preFightScreen);
+	    root.getChildren().addAll(mainBackgroundV, mainBackgroundV2, titleScreen, selectScreen, optionsScreen, charSelectScreenAndDescription, preFightScreen);
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
-	    stage.setResizable(false);
+//	    stage.setResizable(false);
 	    stage.show();
 	}
 	
@@ -852,11 +854,44 @@ public class BigBossGame extends Application {
 		
 	}
 	
+	public void fadeToNext(Node thisScene, Node nextScene, Image Background, boolean fight) {
+		Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+		
+		FadeTransition ft2 = new FadeTransition(Duration.seconds(1.5), rect);
+		ft2.setFromValue(1.0);
+		ft2.setToValue(0.0);
+		ft2.setCycleCount(1);
+		ft2.setDelay(Duration.seconds(2));
+		ft2.setOnFinished(event -> {
+			root.getChildren().remove(rect);
+		});
+		
+		FadeTransition ft = new FadeTransition(Duration.seconds(1), rect);
+		ft.setFromValue(0.0);
+		ft.setToValue(1.0);
+		ft.setCycleCount(1);
+		ft.setOnFinished(event -> {
+			nextMenu(thisScene, nextScene);
+			if(fight) {
+				backgroundParallelTrans.jumpTo(Duration.seconds(-1));
+				backgroundParallelTrans.stop();
+			} else {
+				backgroundParallelTrans.play();
+			}
+			mainBackgroundV.setImage(Background);
+			ft2.play();
+		});
+		ft.play();
+	    root.getChildren().add(rect);
+	}
+	
 	public void startNewCombat (Node thisScene, AbstractCharecter charecter) {
 		Pane gp = new Pane();
 		ImageView ememyHolder = new ImageView(getClass().getResource("/images/boogle.jpg").toString());
 		ImageView playerHolder = new ImageView(getClass().getResource("/images/boogle.jpg").toString());
 		Line line = new Line(0, 0, IMAGE_WIDTH, 0);
+		
+		
 		
 	}
 	

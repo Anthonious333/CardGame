@@ -43,6 +43,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -66,6 +67,21 @@ public class BigBossGame extends Application {
 
 	/*
 	 * TODO add descriptions and coment things
+	 * 
+	 * TODO add sounds
+	 * 
+	 * make fade out trasition
+	 * 
+	 * finish designing fight screen
+	 * 
+	 * add images to fight screen
+	 * 
+	 * add ability for each of them to speak // decide if they are going to speak in a log or out of their mouth
+	 * 
+	 * add voice lines to both of them
+	 * 
+	 * add fight logic 
+	 * 
 	 */
 	
 	StackPane root;
@@ -833,6 +849,14 @@ public class BigBossGame extends Application {
 		}
 		
 		return ret;
+		
+	}
+	
+	public void startNewCombat (Node thisScene, AbstractCharecter charecter) {
+		Pane gp = new Pane();
+		ImageView ememyHolder = new ImageView(getClass().getResource("/images/boogle.jpg").toString());
+		ImageView playerHolder = new ImageView(getClass().getResource("/images/boogle.jpg").toString());
+		Line line = new Line(0, 0, IMAGE_WIDTH, 0);
 		
 	}
 	

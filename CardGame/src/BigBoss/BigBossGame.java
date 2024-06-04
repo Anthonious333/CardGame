@@ -108,7 +108,7 @@ public class BigBossGame extends Application {
 	Image mainBackgroundI = new Image(getClass().getResource("/images/Background8Bit.png").toString());
 	Image mainBackgroundI2 = new Image(getClass().getResource("/images/Background8Bit.png").toString());
 	Image fightBackgroundI = new Image(getClass().getResource("/images/fight room.png").toString());
-
+	Pane fightDisplayPane = new Pane();
 	
 	//visual finals
 	final int TITLE_GAP = 50;
@@ -141,6 +141,7 @@ public class BigBossGame extends Application {
 	int timer = 0;
 	AbstractCharecter selectedCharecter;
 	double animationSpeedMultiplyer = FAST_ANIMATION_SPEED; 
+	
 	
 	//global vars
 	public final static String unlockID = "UNLOCKED";
@@ -892,8 +893,13 @@ public class BigBossGame extends Application {
 		
 		enemyHolder.setLayoutX(IMAGE_WIDTH - 300);
 		
-		pane.getChildren().addAll(enemyHolder, playerHolder);
+		fightDisplayPane.setLayoutY(500);
+		
+		fightDisplayPane.getChildren().add(new Rectangle(IMAGE_WIDTH, 334));
+		
+		pane.getChildren().addAll(enemyHolder, playerHolder, fightDisplayPane);
 		pane.setVisible(false);
+		
 		root.getChildren().add(pane);
 		
 		

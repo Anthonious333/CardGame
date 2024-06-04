@@ -72,8 +72,6 @@ public class BigBossGame extends Application {
 	 * 
 	 * TODO add sounds
 	 * 
-	 * make fade out trasition
-	 * 
 	 * finish designing fight screen
 	 * 
 	 * add images to fight screen
@@ -278,7 +276,7 @@ public class BigBossGame extends Application {
 	    Button btnFight = new Button("FIGHT!");
 	    btnFight.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
 	    btnFight.setFont(Font.font(FONT, BTN_FONT_SIZE));
-	    btnFight.setOnAction(event -> fadeToNext(preFightScreen, titleScreen, fightBackgroundI, true)); //TODO make this fight scene not title screen
+	    btnFight.setOnAction(event -> startNewCombat(preFightScreen, selectedSave.getCharecter())); //TODO make this fight scene not title screen
 	    
 	    //back button
 	    Button btnPreFightBack = new Button("Back");
@@ -854,7 +852,7 @@ public class BigBossGame extends Application {
 		
 	}
 	
-	public void fadeToNext(Node thisScene, Node nextScene, Image Background, boolean fight) {
+	public void fadeToNext(Node thisScene, Node nextScene, boolean fight) {
 		Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 		
 		FadeTransition ft2 = new FadeTransition(Duration.seconds(1.5), rect);
@@ -875,10 +873,11 @@ public class BigBossGame extends Application {
 			if(fight) {
 				backgroundParallelTrans.jumpTo(Duration.seconds(-1));
 				backgroundParallelTrans.stop();
+				mainBackgroundV.setImage(fightBackgroundI);
 			} else {
+				mainBackgroundV.setImage(mainBackgroundI);
 				backgroundParallelTrans.play();
 			}
-			mainBackgroundV.setImage(Background);
 			ft2.play();
 		});
 		ft.play();
@@ -886,12 +885,19 @@ public class BigBossGame extends Application {
 	}
 	
 	public void startNewCombat (Node thisScene, AbstractCharecter charecter) {
-		Pane gp = new Pane();
-		ImageView ememyHolder = new ImageView(getClass().getResource("/images/boogle.jpg").toString());
-		ImageView playerHolder = new ImageView(getClass().getResource("/images/boogle.jpg").toString());
-		Line line = new Line(0, 0, IMAGE_WIDTH, 0);
+		Pane pane = new Pane();
+		BossEnemy boss = new BossEnemy();
+		ImageView enemyHolder = new ImageView(boss.getImageLocation());
+		ImageView playerHolder = new ImageView(charecter.getImageLocation());
+		
+		enemyHolder.setLayoutX(IMAGE_WIDTH - 300);
+		
+		pane.getChildren().addAll(enemyHolder, playerHolder);
+		pane.setVisible(false);
+		root.getChildren().add(pane);
 		
 		
+		fadeToNext(thisScene, pane, true);
 		
 	}
 	

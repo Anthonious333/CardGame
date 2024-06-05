@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
@@ -15,6 +16,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PathTransition;
 import javafx.animation.PathTransition.OrientationType;
+import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -60,6 +62,7 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.VLineTo;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import simpleIO.FXDialog;
@@ -71,10 +74,6 @@ public class BigBossGame extends Application {
 	 * TODO add descriptions and coment things
 	 * 
 	 * TODO add sounds
-	 * 
-	 * finish designing fight screen
-	 * 
-	 * add images to fight screen
 	 * 
 	 * add ability for each of them to speak // decide if they are going to speak in a log or out of their mouth
 	 * 
@@ -388,7 +387,7 @@ public class BigBossGame extends Application {
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
-//	    stage.setResizable(false);
+	    stage.setResizable(false);
 	    stage.show();
 	}
 	
@@ -863,6 +862,7 @@ public class BigBossGame extends Application {
 		ft2.setDelay(Duration.seconds(2));
 		ft2.setOnFinished(event -> {
 			root.getChildren().remove(rect);
+			speak(next -> System.out.print("Done"), "String 1", "String 2", "String 3", "String 4", "String 5");
 		});
 		
 		FadeTransition ft = new FadeTransition(Duration.seconds(1), rect);
@@ -895,8 +895,6 @@ public class BigBossGame extends Application {
 		
 		fightDisplayPane.setLayoutY(500);
 		
-		fightDisplayPane.getChildren().add(new Rectangle(IMAGE_WIDTH, 334));
-		
 		pane.getChildren().addAll(enemyHolder, playerHolder, fightDisplayPane);
 		pane.setVisible(false);
 		
@@ -906,6 +904,65 @@ public class BigBossGame extends Application {
 		fadeToNext(thisScene, pane, true);
 		
 	}
+	
+	public void speak(EventHandler<ActionEvent> next, String... toSay) {
+		fightDisplayPane.getChildren().clear();
+
+		Label lbl = new Label();
+		lbl.setWrapText(true);
+		lbl.setLayoutX(10);
+		lbl.setLayoutY(10);
+		lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		ImageView display = new ImageView(getClass().getResource("/images/TextDisplay.jpg").toString());
+		
+		ImageView displayArrow = new ImageView(getClass().getResource("/images/DisplayArrow.jpg").toString());
+		displayArrow.setLayoutX(-100);
+		displayArrow.setLayoutY(99);
+		
+		TranslateTransition tt1 = new TranslateTransition(Duration.seconds(1), displayArrow);
+		TranslateTransition tt2 = new TranslateTransition(Duration.seconds(1), displayArrow);
+	    tt1.setFromX(1192);
+	    tt1.setToX(1182);
+	    tt1.setCycleCount(1);
+	    tt1.setInterpolator(Interpolator.LINEAR);
+	    tt1.setOnFinished(event -> tt2.play());
+	    tt2.setFromX(1182);
+	    tt2.setToX(1192);
+	    tt2.setCycleCount(1);
+	    tt2.setInterpolator(Interpolator.LINEAR);
+	    tt2.setDelay(Duration.seconds(1));
+	    tt2.setOnFinished(event -> tt1.play());
+	    tt1.play();
+	    tt1.setDelay(Duration.seconds(1));
+	    
+	    //TODO ask andrew what is better, apear during printing or after. and delay or no delay
+	    
+		Button btn = new Button();
+		btn.setOpacity(0);
+		btn.setPrefSize(IMAGE_WIDTH, 134);
+		fightDisplayPane.getChildren().addAll(display, lbl, displayArrow, btn);
+
+		final Animation animation = new Transition() {
+			{
+				setCycleDuration(Duration.seconds(1));
+			}
+			protected void interpolate(double frac) {
+				final int length = toSay[0].length();
+				final int n = Math.round(length * (float) frac);
+				lbl.setText(toSay[0].substring(0, n));
+			}
+		};
+		if (toSay.length > 1) {
+			animation.setOnFinished(event -> btn.setOnAction(event2 -> speak(next, Arrays.copyOfRange(toSay, 1, toSay.length))));		
+		} else {
+			animation.setOnFinished(event -> btn.setOnAction(next));
+		}
+		btn.setOnMouseClicked(event -> animation.jumpTo(Duration.INDEFINITE));
+		
+		animation.play();
+
+	}
+	
 	
 	// from workspace
 		public static int randomNumber(int a, int b) {

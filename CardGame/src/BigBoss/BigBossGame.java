@@ -31,6 +31,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -44,6 +45,8 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -852,7 +855,7 @@ public class BigBossGame extends Application {
 		
 	}
 	
-	public void fadeToNext(Node thisScene, Node nextScene, boolean fight) {
+	public void fadeToNext(Node thisScene, Node nextScene, boolean fight, AbstractCharecter charecter, EventHandler<ActionEvent> last) {
 		Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 		
 		FadeTransition ft2 = new FadeTransition(Duration.seconds(1.5), rect);
@@ -862,7 +865,7 @@ public class BigBossGame extends Application {
 		ft2.setDelay(Duration.seconds(2));
 		ft2.setOnFinished(event -> {
 			root.getChildren().remove(rect);
-			speak(next -> System.out.print("Done"), "String 1", "String 2", "String 3", "String 4", "String 5");
+			speak(last, charecter.getFightIntro());
 		});
 		
 		FadeTransition ft = new FadeTransition(Duration.seconds(1), rect);
@@ -900,9 +903,41 @@ public class BigBossGame extends Application {
 		
 		root.getChildren().add(pane);
 		
+		fadeToNext(thisScene, pane, true, charecter, event -> fightRound(charecter, boss));
 		
-		fadeToNext(thisScene, pane, true);
+	}
+	
+	public void fightRound (AbstractCharecter charecter, AbstractCharecter boss) {
+		fightDisplayPane.getChildren().clear();
 		
+		ImageView display = new ImageView(getClass().getResource("/images/TextDisplay.jpg").toString());
+		
+		BorderPane bp = new BorderPane();
+		bp.setPrefSize(IMAGE_WIDTH, 134);
+		
+		Button ability1 = new Button(charecter.getAbility(0).getName());
+		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		BorderPane.setAlignment(ability1, Pos.CENTER_LEFT);
+		bp.setLeft(ability1);
+		BorderPane.setMargin(ability1, new Insets(10, 10, 10, 10));
+		ability1.setOnAction(event -> charecter.getAbility(0).use(boss));
+		
+		Button ability2 = new Button(charecter.getAbility(1).getName());
+		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		bp.setCenter(ability2);
+		BorderPane.setMargin(ability2, new Insets(10, 10, 10, 10));
+		ability2.setOnAction(event -> charecter.getAbility(1).use(boss));
+		
+		Button ability3 = new Button(charecter.getAbility(2).getName());
+		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		BorderPane.setAlignment(ability3, Pos.CENTER_RIGHT);
+		bp.setRight(ability3);
+		BorderPane.setMargin(ability3, new Insets(10, 10, 10, 10));
+		ability3.setOnAction(event -> charecter.getAbility(2).use(boss));
+		
+		
+		fightDisplayPane.getChildren().addAll(display, bp);
+
 	}
 	
 	public void speak(EventHandler<ActionEvent> next, String... toSay) {

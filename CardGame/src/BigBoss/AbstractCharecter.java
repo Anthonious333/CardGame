@@ -1,5 +1,9 @@
 package BigBoss;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import BigBoss.Abilities.EmptyAbility;
@@ -186,6 +190,35 @@ public abstract class AbstractCharecter {
 				ret = m.getName();
 			}
 		}
+		return ret;
+	}
+	
+	public String[] getFightIntro () {
+		ArrayList<String> toSay = new ArrayList<String>();
+		FileReader intro;
+		BufferedReader introReader;
+		String line;
+		
+		try {
+			intro = new FileReader("data/" + this.getName() + "FightIntro.txt");
+			introReader = new BufferedReader(intro);
+
+			//Continues until file is empty
+			while ((line = introReader.readLine()) != null) {
+				toSay.add(line);
+			}
+
+		} catch (FileNotFoundException e) {
+			System.out.print("No file was found: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.print("Error reading file: " + e.getMessage());
+		}
+		
+		String[] ret = new String[toSay.size()];
+		for (int i = 0; i < toSay.size(); i++) {
+			ret[i] = toSay.get(i);
+		}
+		
 		return ret;
 	}
 	

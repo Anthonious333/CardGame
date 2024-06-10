@@ -82,6 +82,8 @@ public class BigBossGame extends Application {
 	 *  
 	 * add fight logic - add the ability for somone to win or lose 
 	 * 
+	 * add health and power // next move displays
+	 * 
 	 */
 	
 	StackPane root;

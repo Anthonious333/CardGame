@@ -78,11 +78,9 @@ public class BigBossGame extends Application {
 	 * 
 	 * TODO add sounds
 	 * 
-	 * add ability for each of them to speak // decide if they are going to speak in a log or out of their mouth
-	 * 
-	 * add voice lines to both of them
-	 * 
-	 * add fight logic 
+	 * TODO add a boolean the makes you unable to press ANYTHING during animations
+	 *  
+	 * add fight logic - add the ability for somone to win or lose 
 	 * 
 	 */
 	
@@ -903,11 +901,11 @@ public class BigBossGame extends Application {
 		
 		root.getChildren().add(pane);
 		
-		fadeToNext(thisScene, pane, true, charecter, event -> fightRound(charecter, boss));
+		fadeToNext(thisScene, pane, true, charecter, event -> playerFightRound(charecter, boss));
 		
 	}
 	
-	public void fightRound (AbstractCharecter charecter, AbstractCharecter boss) {
+	public void playerFightRound (AbstractCharecter charecter, BossEnemy boss) {
 		fightDisplayPane.getChildren().clear();
 		
 		ImageView display = new ImageView(getClass().getResource("/images/TextDisplay.jpg").toString());
@@ -919,26 +917,37 @@ public class BigBossGame extends Application {
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		BorderPane.setAlignment(ability1, Pos.CENTER_LEFT);
 		bp.setLeft(ability1);
-		BorderPane.setMargin(ability1, new Insets(10, 10, 10, 10));
-		ability1.setOnAction(event -> charecter.getAbility(0).use(boss));
+		BorderPane.setMargin(ability1, new Insets(10, 50, 10, 50));
+		ability1.setOnAction(event -> useAbility(charecter.getAbility(0), boss));
 		
 		Button ability2 = new Button(charecter.getAbility(1).getName());
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		bp.setCenter(ability2);
 		BorderPane.setMargin(ability2, new Insets(10, 10, 10, 10));
-		ability2.setOnAction(event -> charecter.getAbility(1).use(boss));
+		ability2.setOnAction(event -> useAbility(charecter.getAbility(1), boss));
 		
 		Button ability3 = new Button(charecter.getAbility(2).getName());
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		BorderPane.setAlignment(ability3, Pos.CENTER_RIGHT);
 		bp.setRight(ability3);
-		BorderPane.setMargin(ability3, new Insets(10, 10, 10, 10));
-		ability3.setOnAction(event -> charecter.getAbility(2).use(boss));
+		BorderPane.setMargin(ability3, new Insets(10, 50, 10, 50));
+		ability3.setOnAction(event -> useAbility(charecter.getAbility(2), boss));
 		
 		
 		fightDisplayPane.getChildren().addAll(display, bp);
 
 	}
+	
+	public void bossFightRound(AbstractCharecter charecter, BossEnemy boss) {
+		speak(event -> playerFightRound(charecter, boss), boss.play(charecter));
+	}
+	
+	public void useAbility(AbstractAbility ability, BossEnemy boss) {
+		
+		speak(event -> bossFightRound(ability.getOwner(), boss), ability.use(boss));
+	}
+	
+	
 	
 	public void speak(EventHandler<ActionEvent> next, String... toSay) {
 		fightDisplayPane.getChildren().clear();

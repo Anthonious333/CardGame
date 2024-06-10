@@ -24,8 +24,10 @@ public class Stat {
 	public int getValue() {
 		return value;
 	}
-
-	public void addValue(int value) {
+	
+	//returns the actual change in stat (positive for adding / negative for subtracting)
+	public int addValue(int value) {
+		int pre = this.value;
 		if (limited && this.value + value > max) {
 			this.value = max;
 		} else if (limited && this.value + value < min) {
@@ -33,6 +35,7 @@ public class Stat {
 		} else {
 			this.value += value;
 		}
+		return -(pre - this.value);
 	}
 
 	public String getName() {

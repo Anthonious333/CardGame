@@ -14,8 +14,13 @@ public class EmptyAbility extends AbstractAbility{
 	}
 
 	@Override
-	public void use(AbstractCharecter target) {
-
+	public String use(AbstractCharecter target) {
+		return "Nothing happened";
+	}
+	
+	@Override
+	public boolean canSelect() {
+		return false;
 	}
 
 }

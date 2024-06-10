@@ -20,7 +20,7 @@ public abstract class AbstractAbility {
 		this.setRoleNumber(0);
 	}
 
-	public abstract void use(AbstractCharecter target);
+	public abstract String use(AbstractCharecter target);
 
 	//to make it harder / more cinditions for the boss not meant for charecters
 	public boolean canSelect () {

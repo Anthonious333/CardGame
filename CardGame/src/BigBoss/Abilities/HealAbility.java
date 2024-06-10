@@ -13,8 +13,8 @@ public class HealAbility extends AbstractAbility{
 	}
 
 	@Override
-	public void use(AbstractCharecter target) {
-		this.getOwner().heal(power);
+	public String use(AbstractCharecter target) {
+		return this.getOwner().getName() + " healed for " + this.getOwner().heal(power) + " HP.";
 	}
 	
 	@Override

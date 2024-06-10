@@ -11,8 +11,8 @@ public class PunchAbility extends AbstractAbility{
 	}
 
 	@Override
-	public void use(AbstractCharecter target) {
-		target.damage(this.getOwner().getStat("ATK"));
+	public String use(AbstractCharecter target) {
+		return this.getOwner().getName() + " dealt " + target.damage(this.getOwner().getStat("ATK")) + " damage to " + target.getName();
 	}
 
 	

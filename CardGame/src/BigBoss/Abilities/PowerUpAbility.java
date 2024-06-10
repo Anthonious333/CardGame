@@ -16,8 +16,8 @@ public class PowerUpAbility extends AbstractAbility{
 	}
 
 	@Override
-	public void use(AbstractCharecter target) {
-		this.getOwner().addStat("ATK", power);
+	public String use(AbstractCharecter target) {
+		return this.getOwner().getName() + " Powered up by " + this.getOwner().addStat("ATK", power) + " ATK!";
 	}
 
 }

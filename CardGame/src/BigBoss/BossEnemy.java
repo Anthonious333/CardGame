@@ -7,6 +7,7 @@ import BigBoss.Abilities.PunchAbility;
 public class BossEnemy extends AbstractCharecter{
 
 	private AbstractAbility nextMove;
+	private boolean buttonFix = true;
 	
 	public BossEnemy() {
 		super("The Boss");
@@ -19,13 +20,16 @@ public class BossEnemy extends AbstractCharecter{
 		for (AbstractAbility a : getPosibleAbilities()) {
 			a.setUnlocked(true);
 		}
-	}
-	
-	public void play(AbstractCharecter player) {
-		nextMove.use(player);
 		choseNestMove();
 	}
 	
+	public String play(AbstractCharecter player) {
+		String ret = nextMove.use(player);
+		System.out.print(nextMove.getName());
+		choseNestMove();
+		return ret;			
+	}
+
 	public void choseNestMove () {
 		boolean deciding;
 		do {
@@ -40,7 +44,6 @@ public class BossEnemy extends AbstractCharecter{
 			
 		} while(deciding);
 			
-		
 	}
 	
 

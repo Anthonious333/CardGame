@@ -101,20 +101,24 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public void addStat (String id, int amount) {
-		this.findStat(id).addValue(amount);
+	//retruns the amoutn of stat added(positive
+	public int addStat (String id, int amount) {
+		return this.findStat(id).addValue(amount);
 	}
 	
-	public void reduceStat (String id, int amount) {
-		this.findStat(id).addValue(-amount);
+	//returns the amount reduced (positive)
+	public int reduceStat (String id, int amount) {
+		return -this.findStat(id).addValue(-amount);
 	}
 	
-	public void damage (int amount) {
-		this.reduceStat("HP", amount);
+	//returns the amount of damage taken (positive)
+	public int damage (int amount) {
+		return this.reduceStat("HP", amount);
 	}
 	
-	public void heal (int amount) {
-		this.addStat("HP", amount);
+	//returns the amount healed (positive)
+	public int heal (int amount) {
+		return this.addStat("HP", amount);
 	}
 	
 	

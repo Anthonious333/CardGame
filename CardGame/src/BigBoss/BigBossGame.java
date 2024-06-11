@@ -855,7 +855,7 @@ public class BigBossGame extends Application {
 		
 	}
 	
-	public void fadeToNext(Node thisScene, Node nextScene, boolean fight, AbstractCharecter charecter, EventHandler<ActionEvent> last) {
+	public void fadeToNext(Node thisScene, Node nextScene, FadeTransitionResult next, AbstractCharecter charecter, BossEnemy boss) {
 		Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 		
 		FadeTransition ft2 = new FadeTransition(Duration.seconds(1.5), rect);
@@ -865,7 +865,17 @@ public class BigBossGame extends Application {
 		ft2.setDelay(Duration.seconds(2));
 		ft2.setOnFinished(event -> {
 			root.getChildren().remove(rect);
-			speak(last, charecter.getFightIntro());
+			
+			switch(next) {
+			case FIGHT:
+				speak(last -> playerFightRound(thisScene, charecter, boss), charecter.getFightIntro());				
+				break;
+			case BLACK: 
+				root.getChildren().remove(root.getChildren().size() - 2);
+				root.getChildren().add(fightDisplayPane);
+				speak(last -> fadeToNext(nextScene, titleScreen, FadeTransitionResult.MENU, charecter, boss), postCombatResult());
+				break;
+			}
 		});
 		
 		FadeTransition ft = new FadeTransition(Duration.seconds(1), rect);
@@ -874,11 +884,18 @@ public class BigBossGame extends Application {
 		ft.setCycleCount(1);
 		ft.setOnFinished(event -> {
 			nextMenu(thisScene, nextScene);
-			if(fight) {
+			switch(next) {
+			case FIGHT:
 				backgroundParallelTrans.jumpTo(Duration.seconds(-1));
 				backgroundParallelTrans.stop();
 				mainBackgroundV.setImage(fightBackgroundI);
-			} else {
+			break;
+			case MENU:
+				root.getChildren().remove(root.getChildren().size() - 1); //TODO not work
+				mainBackgroundV.setImage(mainBackgroundI);
+				backgroundParallelTrans.play();
+				break;
+			default:
 				mainBackgroundV.setImage(mainBackgroundI);
 				backgroundParallelTrans.play();
 			}
@@ -903,11 +920,24 @@ public class BigBossGame extends Application {
 		
 		root.getChildren().add(pane);
 		
-		fadeToNext(thisScene, pane, true, charecter, event -> playerFightRound(charecter, boss));
+		fadeToNext(thisScene, pane, FadeTransitionResult.FIGHT, charecter, boss);
 		
 	}
 	
-	public void playerFightRound (AbstractCharecter charecter, BossEnemy boss) {
+	public String postCombatResult() {
+		return "combat results"; // make this good
+	}
+	
+	public void playerFightRound (Node thisScene, AbstractCharecter charecter, BossEnemy boss) {
+		if (deathCheck(charecter)) {
+			Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+			rect.setVisible(false);
+		    root.getChildren().add(rect);
+		    fadeToNext(thisScene, rect, FadeTransitionResult.BLACK, charecter, boss);
+		    return;
+		}
+		
+		
 		fightDisplayPane.getChildren().clear();
 		
 		ImageView display = new ImageView(getClass().getResource("/images/TextDisplayWithStats.jpg").toString());
@@ -920,13 +950,13 @@ public class BigBossGame extends Application {
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		AnchorPane.setLeftAnchor(ability1, 10.0);
 		AnchorPane.setTopAnchor(ability1, 10.0);
-		ability1.setOnAction(event -> useAbility(charecter.getAbility(0), boss));
+		ability1.setOnAction(event -> useAbility(thisScene, charecter.getAbility(0), boss));
 		
 		Button ability2 = new Button(charecter.getAbility(1).getName());
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		AnchorPane.setRightAnchor(ability2, 10.0);
 		AnchorPane.setTopAnchor(ability2, 10.0);
-		ability2.setOnAction(event -> useAbility(charecter.getAbility(1), boss));
+		ability2.setOnAction(event -> useAbility(thisScene, charecter.getAbility(1), boss));
 		
 		Button ability3 = new Button(charecter.getAbility(2).getName());
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -935,7 +965,7 @@ public class BigBossGame extends Application {
 		AnchorPane.setBottomAnchor(p, 10.0);
 		AnchorPane.setRightAnchor(p, 10.0);
 		AnchorPane.setLeftAnchor(p, 10.0);
-		ability3.setOnAction(event -> useAbility(charecter.getAbility(2), boss));
+		ability3.setOnAction(event -> useAbility(thisScene, charecter.getAbility(2), boss));
 		
 		bp.getChildren().addAll(ability1, ability2, p);
 		
@@ -972,20 +1002,35 @@ public class BigBossGame extends Application {
 
 	}
 	
-	public void bossFightRound(AbstractCharecter charecter, BossEnemy boss) {
-		speak(event -> playerFightRound(charecter, boss), boss.play(charecter));
+	public void bossFightRound(Node thisScene, AbstractCharecter charecter, BossEnemy boss) {
+		if (deathCheck(boss)) {
+			Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+			rect.setVisible(false);
+			root.getChildren().add(rect);
+			fadeToNext(thisScene, rect, FadeTransitionResult.BLACK, null, boss);
+			return;
+		}
+		speak(event -> playerFightRound(thisScene, charecter, boss), boss.play(charecter));
 	}
 	
-	public void useAbility(AbstractAbility ability, BossEnemy boss) {
+	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss) {
 		
-		speak(event -> bossFightRound(ability.getOwner(), boss), ability.use(boss));
+		speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), ability.use(boss));
+		
 	}
 	
+	public boolean deathCheck(AbstractCharecter target) {
+		if (target.isDead()) {
+			return true;
+		} else {
+			return false;			
+		}
+	}
 	
 	
 	public void speak(EventHandler<ActionEvent> next, String... toSay) {
 		fightDisplayPane.getChildren().clear();
-
+		
 		Label lbl = new Label();
 		lbl.setWrapText(true);
 		lbl.setLayoutX(10);

@@ -22,10 +22,11 @@ public abstract class AbstractCharecter {
 	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
 	private String name;
 	private int statPoints;
+	private boolean isDead;
 	
 	public AbstractCharecter (String name) {
 		this.setName(name);
-		
+		this.setDead(false);
 		//default ability setup
 		AbstractAbility a1 = new EmptyAbility(this);
 		AbstractAbility a2 = new EmptyAbility(this);
@@ -108,6 +109,9 @@ public abstract class AbstractCharecter {
 	
 	//returns the amount reduced (positive)
 	public int reduceStat (String id, int amount) {
+		if (id.equals("HP") && (this.getStat(id) - amount) <= 0) {
+			this.setDead(true);
+		}
 		return -this.findStat(id).addValue(-amount);
 	}
 	
@@ -252,6 +256,14 @@ public abstract class AbstractCharecter {
 
 	public void addStatPoints(int statPoints) {
 		this.statPoints += statPoints;
+	}
+
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public void setDead(boolean isDead) {
+		this.isDead = isDead;
 	}
 
 

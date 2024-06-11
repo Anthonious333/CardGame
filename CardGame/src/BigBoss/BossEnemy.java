@@ -7,13 +7,12 @@ import BigBoss.Abilities.PunchAbility;
 public class BossEnemy extends AbstractCharecter{
 
 	private AbstractAbility nextMove;
-	private boolean buttonFix = true;
 	
 	public BossEnemy() {
 		super("The Boss");
 		this.addStatsToList(
 				new Stat("ATK", 100), 
-				new Stat("HP", 100, 0, 100)
+				new Stat("HP", 100, 0, 100, true)
 				);
 		
 		this.setPosibleAbilities(new PunchAbility(this), new HealAbility(this, 10), new PowerUpAbility(this, 10));

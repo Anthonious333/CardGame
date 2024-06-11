@@ -79,10 +79,17 @@ public class BigBossGame extends Application {
 	 * TODO add sounds
 	 * 
 	 * TODO add a boolean the makes you unable to press ANYTHING during animations
-	 *  
-	 * add fight logic - add the ability for somone to win or lose 
 	 * 
-	 * add health and power // next move displays
+	 * add ability roll tokens
+	 * 
+	 * add attack animations with enums in the move itself
+	 * 
+	 * fix all menus look nicer
+	 * 
+	 * make buttons look nicer
+	 * 
+	 * make diologe better // add punctuation and names to things
+	 * 
 	 * 
 	 */
 	
@@ -873,8 +880,12 @@ public class BigBossGame extends Application {
 			case BLACK: 
 				root.getChildren().remove(root.getChildren().size() - 2);
 				root.getChildren().add(fightDisplayPane);
-				speak(last -> fadeToNext(nextScene, titleScreen, FadeTransitionResult.MENU, charecter, boss), postCombatResult());
+				speak(last -> fadeToNext(nextScene, titleScreen, FadeTransitionResult.MENU, charecter, boss), postCombatResult(charecter, boss));
 				break;
+			case MENU:
+				fightDisplayPane.getChildren().clear();
+				break;
+			
 			}
 		});
 		
@@ -890,17 +901,15 @@ public class BigBossGame extends Application {
 				backgroundParallelTrans.stop();
 				mainBackgroundV.setImage(fightBackgroundI);
 			break;
-			case MENU:
-				root.getChildren().remove(root.getChildren().size() - 1); //TODO not work
-				mainBackgroundV.setImage(mainBackgroundI);
-				backgroundParallelTrans.play();
-				break;
 			default:
 				mainBackgroundV.setImage(mainBackgroundI);
 				backgroundParallelTrans.play();
 			}
 			ft2.play();
 		});
+		if (root.getChildren().contains(fightDisplayPane)) {
+			root.getChildren().remove(fightDisplayPane); 			
+		}
 		ft.play();
 	    root.getChildren().add(rect);
 	}
@@ -924,8 +933,43 @@ public class BigBossGame extends Application {
 		
 	}
 	
-	public String postCombatResult() {
-		return "combat results"; // make this good
+	public String[] postCombatResult(AbstractCharecter charecter, BossEnemy boss) {
+		int skillPoints = randomNumber(0, (100 - boss.getStat("HP")) / 5);
+		skillPoints +=5 ;
+		boolean abilityRoll; //TODO do i need this?
+		
+		if (randomNumber(0, boss.getStat("HP")) == 1) {
+			abilityRoll = true;
+		}
+
+		charecter.addStatPoints(skillPoints);
+		
+		ArrayList<String> toSay = new ArrayList<String>();
+		
+		if (charecter.isDead()) {
+			toSay.add("You lost...");
+			toSay.add("But don't be discouraged!");
+			toSay.add("You Earnt " + skillPoints + " to upgrade your charecter next time.");
+			if (randomNumber(1, 5) == 1) {
+				//TODO add a skill role feture
+				toSay.add("And a Ability Token to use in the prep menu.");
+			}
+			
+		}
+		
+		if (boss.isDead()) {
+			skillPoints *= 2;
+			//TODO add a skill role feture
+			toSay.add("Congradulations, you won!");
+			toSay.add("You have recived double points, bringin you to " + skillPoints + ", and a guarentied Ability Token to use in the prep menu.");
+			toSay.add("The Boss has aslow DOUBLED its stats for next fight!");
+		}
+		String[] ret = new String[toSay.size()];
+		for (int i = 0; i < toSay.size(); i++) {
+			ret[i] = toSay.get(i);
+		}
+		charecter.reset();
+		return ret; // make this good
 	}
 	
 	public void playerFightRound (Node thisScene, AbstractCharecter charecter, BossEnemy boss) {
@@ -972,7 +1016,7 @@ public class BigBossGame extends Application {
 		
 		VBox playerFP = new VBox();
 		for(Stat s : charecter.getStats()) {
-			Label lbl = new Label(s.toString());
+			Label lbl = new Label(charecter.getStatAsString(s.getName()));
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			lbl.setTextFill(Color.BLACK);
 			playerFP.getChildren().add(lbl);
@@ -986,7 +1030,7 @@ public class BigBossGame extends Application {
 		
 		VBox bossFP = new VBox();
 		for(Stat s : boss.getStats()) {
-			Label lbl = new Label(s.toString());
+			Label lbl = new Label(boss.getStatAsString(s.getName()));
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			lbl.setTextFill(Color.BLACK);
 			bossFP.getChildren().add(lbl);
@@ -1007,7 +1051,7 @@ public class BigBossGame extends Application {
 			Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 			rect.setVisible(false);
 			root.getChildren().add(rect);
-			fadeToNext(thisScene, rect, FadeTransitionResult.BLACK, null, boss);
+			fadeToNext(thisScene, rect, FadeTransitionResult.BLACK, charecter, boss);
 			return;
 		}
 		speak(event -> playerFightRound(thisScene, charecter, boss), boss.play(charecter));
@@ -1033,6 +1077,7 @@ public class BigBossGame extends Application {
 		
 		Label lbl = new Label();
 		lbl.setWrapText(true);
+		lbl.setMaxWidth(1000);
 		lbl.setLayoutX(10);
 		lbl.setLayoutY(10);
 		lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));

@@ -230,6 +230,13 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
+	public void reset() {
+		this.setDead(false);
+		for (Stat s : this.getStats()) {
+			s.reset();
+		}
+	}
+	
 	public ArrayList<AbstractAbility> getPosibleAbilities() {
 		return posibleAbilities;
 	}

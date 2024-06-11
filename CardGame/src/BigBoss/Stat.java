@@ -7,18 +7,24 @@ public class Stat {
 	private boolean limited;
 	private int min, max;
 	private int tempValue = 0;
+	private boolean resets;
 	
 	public Stat (String name, int value) {
-		this(name, value, -1, -1);
+		this(name, value, -1, -1, false);
 		limited = false;
 	}
 	
 	public Stat (String name, int value, int min, int max) {
+		this(name, value);
+	}
+	
+	public Stat (String name, int value, int min, int max, boolean reset) {
 		this.name = name;
 		this.value = value;
 		this.max = max;
 		this.min = min;
 		limited = true;
+		this.resets = reset;
 	}
 
 	public int getValue() {
@@ -72,6 +78,12 @@ public class Stat {
 		tempValue = 0;
 	}
 	
+	public void reset() {
+		if (this.resets()) {
+			this.value = max;
+		}
+	}
+	
 	public int getTempValue() {
 		return tempValue;
 	}
@@ -82,6 +94,14 @@ public class Stat {
 	
 	public void addTempValue(int tempValue) {
 		this.tempValue += tempValue;
+	}
+
+	public boolean resets() {
+		return resets;
+	}
+
+	public void setResets(boolean resets) {
+		this.resets = resets;
 	}
 
 }

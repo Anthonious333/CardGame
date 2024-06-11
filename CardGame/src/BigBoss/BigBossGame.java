@@ -390,7 +390,7 @@ public class BigBossGame extends Application {
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
-	    stage.setResizable(false);
+//	    stage.setResizable(false);
 	    stage.show();
 	}
 	
@@ -910,33 +910,65 @@ public class BigBossGame extends Application {
 	public void playerFightRound (AbstractCharecter charecter, BossEnemy boss) {
 		fightDisplayPane.getChildren().clear();
 		
-		ImageView display = new ImageView(getClass().getResource("/images/TextDisplay.jpg").toString());
+		ImageView display = new ImageView(getClass().getResource("/images/TextDisplayWithStats.jpg").toString());
 		
-		BorderPane bp = new BorderPane();
-		bp.setPrefSize(IMAGE_WIDTH, 134);
+		AnchorPane bp = new AnchorPane();
+		bp.setPrefSize(505, 134);
+		bp.setLayoutX(310);
 		
 		Button ability1 = new Button(charecter.getAbility(0).getName());
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		BorderPane.setAlignment(ability1, Pos.CENTER_LEFT);
-		bp.setLeft(ability1);
-		BorderPane.setMargin(ability1, new Insets(10, 50, 10, 50));
+		AnchorPane.setLeftAnchor(ability1, 10.0);
+		AnchorPane.setTopAnchor(ability1, 10.0);
 		ability1.setOnAction(event -> useAbility(charecter.getAbility(0), boss));
 		
 		Button ability2 = new Button(charecter.getAbility(1).getName());
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		bp.setCenter(ability2);
-		BorderPane.setMargin(ability2, new Insets(10, 10, 10, 10));
+		AnchorPane.setRightAnchor(ability2, 10.0);
+		AnchorPane.setTopAnchor(ability2, 10.0);
 		ability2.setOnAction(event -> useAbility(charecter.getAbility(1), boss));
 		
 		Button ability3 = new Button(charecter.getAbility(2).getName());
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		BorderPane.setAlignment(ability3, Pos.CENTER_RIGHT);
-		bp.setRight(ability3);
-		BorderPane.setMargin(ability3, new Insets(10, 50, 10, 50));
+		HBox p = new HBox(ability3);
+		p.setAlignment(Pos.BOTTOM_CENTER);
+		AnchorPane.setBottomAnchor(p, 10.0);
+		AnchorPane.setRightAnchor(p, 10.0);
+		AnchorPane.setLeftAnchor(p, 10.0);
 		ability3.setOnAction(event -> useAbility(charecter.getAbility(2), boss));
 		
+		bp.getChildren().addAll(ability1, ability2, p);
 		
-		fightDisplayPane.getChildren().addAll(display, bp);
+		
+		VBox playerFP = new VBox();
+		for(Stat s : charecter.getStats()) {
+			Label lbl = new Label(s.toString());
+			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			lbl.setTextFill(Color.BLACK);
+			playerFP.getChildren().add(lbl);
+		}
+		ScrollPane playerStats = new ScrollPane(playerFP);
+		playerStats.setPannable(true);
+		playerStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		playerFP.setPrefSize(295, 134);
+		playerStats.setLayoutX(10);
+
+		
+		VBox bossFP = new VBox();
+		for(Stat s : boss.getStats()) {
+			Label lbl = new Label(s.toString());
+			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			lbl.setTextFill(Color.BLACK);
+			bossFP.getChildren().add(lbl);
+		}
+		ScrollPane bossStats = new ScrollPane(bossFP);
+		bossStats.setPannable(true);
+		bossStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		bossFP.setPrefSize(295, 134);
+		bossStats.setLayoutX(825);
+
+		
+		fightDisplayPane.getChildren().addAll(display, bp, playerStats, bossStats);
 
 	}
 	

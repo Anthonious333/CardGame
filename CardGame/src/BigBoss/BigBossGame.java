@@ -145,7 +145,6 @@ public class BigBossGame extends Application {
 	final double SLOW_ANIMATION_SPEED = 1;
 	final double FAST_ANIMATION_SPEED = 0.25;
 	
-	
 	//inner variables
 	int timer = 0;
 	AbstractCharecter selectedCharecter;
@@ -156,12 +155,14 @@ public class BigBossGame extends Application {
 	public final static String unlockID = "UNLOCKED";
 	public static final int IMAGE_WIDTH = 1126;
 	public static final int IMAGE_HEIGHT = 634;
-
-
 	
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+	
+	
+		AbstractCharecter[] ALL_CHARECTERS = {new MrBasic()};
+		
 		
 		root = new StackPane();
 		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -225,12 +226,17 @@ public class BigBossGame extends Application {
 	    txtSaveName.setOnKeyTyped(event -> updateSelectButton());
 	    saveNamingLine.getChildren().addAll(txtSaveName, btnCharSelectScreenSelect);
 
-	    
-	    Button selectMrBasic = new Button("Mr. Basic");
-	    selectMrBasic.setOnAction(event -> setSelectedCharecter(new MrBasic()));
-	    selectMrBasic.setFont(Font.font(FONT, MENU_FONT_SIZE));
 
-	    charSelectScreen.getChildren().addAll(selectAndBackBtns, saveNamingLine, selectMrBasic);
+	    charSelectScreen.getChildren().addAll(selectAndBackBtns, saveNamingLine);
+	    
+	    for (AbstractCharecter a : ALL_CHARECTERS) {
+	    	AbstractCharecter charecter = (AbstractCharecter) Class.forName(a.getClass().getName()).newInstance();
+	    	Button selectChar = new Button(a.getName());
+	    	selectChar.setOnAction(event -> setSelectedCharecter(charecter));
+	    	selectChar.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    	
+	    }
+
 
 	    charSelectScreenAndDescription = new HBox();
 	    StackPane.setMargin(charSelectScreenAndDescription, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));

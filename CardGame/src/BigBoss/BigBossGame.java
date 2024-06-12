@@ -79,12 +79,8 @@ public class BigBossGame extends Application {
 	 * TODO add sounds
 	 * 
 	 * TODO add a boolean the makes you unable to press ANYTHING during animations
-	 * 
-	 * TODO fix back button in edit abilitys after unlocking abiloty keeps unlocking more
-	 * 
+	 *  
 	 * add a box / highlights to the edit abilitioes to imply interacability to the user
-	 * 
-	 * add ability roll tokens
 	 * 
 	 * add attack animations with enums in the move itself
 	 * 
@@ -95,12 +91,6 @@ public class BigBossGame extends Application {
 	 * make diologe better // add punctuation and names to things
 	 * 
 	 * make sure things are removed from the scene and dont pile up 
-	 * 
-	 * make post fight go back to pre fight menu
-	 * 
-	 * add plus 10 stat point buttons
-	 * 
-	 * 
 	 */
 	
 	StackPane root;
@@ -588,7 +578,7 @@ public class BigBossGame extends Application {
 			for (int i = 0; i < charecter.getStats().size(); i++) {
 				Stat s = charecter.getStats().get(i);
 				s.commitTempStat();
-				((Label) ((GridPane) gpStats.getChildren().get(i + 3)).getChildren().get(1)).setText(s.getTempValue() + "");
+				((Label) ((GridPane) gpStats.getChildren().get(i + 3)).getChildren().get(2)).setText(s.getTempValue() + "");
 			}
 		});
 		Label lblTotalPoints = new Label();
@@ -601,34 +591,43 @@ public class BigBossGame extends Application {
 		
 		
 		for (Stat s : charecter.getStats()) {
+			Button subTen = new Button("-10");
 			Button sub = new Button("-");
 			Label change = new Label();
 			Button add = new Button("+");
+			Button addTen = new Button("+10");
 			Label stat = new Label();
 			GridPane gp = new GridPane();
 			Button commit = new Button("Commit");
 			
+			subTen.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			sub.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			change.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			add.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			addTen.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			stat.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			commit.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			change.setTextFill(Color.BLACK);
 			stat.setTextFill(Color.BLACK);
 			gp.setHgap(MENU_GAP);
 			
-			add.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, true));
-			sub.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, false));
+			add.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, true, 1));
+			sub.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, false, 1));
+			addTen.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, true, 10));
+			subTen.setOnAction(event -> changeTempStats(s, charecter, change, stat, lblTotalPoints, false, 10));
+			
 			commit.setOnAction(event -> {
 				s.commitTempStat();
-				changeTempStats(s, charecter, change, stat, lblTotalPoints, false);
+				changeTempStats(s, charecter, change, stat, lblTotalPoints, false, 1);
 			});
-			changeTempStats(s, charecter, change, stat, lblTotalPoints, false);
-			gp.add(sub, 0, 0);
-			gp.add(change, 1, 0);
-			gp.add(add, 2, 0);
-			gp.add(commit, 3, 0);
-			gp.add(stat, 0, 1, 4, 1);
+			changeTempStats(s, charecter, change, stat, lblTotalPoints, false, 1);
+			gp.add(subTen, 0, 0);
+			gp.add(sub, 1, 0);
+			gp.add(change, 2, 0);
+			gp.add(add, 3, 0);
+			gp.add(addTen, 4, 0);
+			gp.add(commit, 5, 0);
+			gp.add(stat, 0, 1, 6, 1);
 			gpStats.add(gp, 0, gpStats.getChildren().size() + 1, 2, 1);
 		}
 		
@@ -668,7 +667,8 @@ public class BigBossGame extends Application {
 
 		back.setOnAction(event -> {
 			fixAbilities(charecter, ability1, ability2, ability3);
-			leaveMods(gp, thisScene);
+			updatePreFightScreen();
+			leaveMods(gp, preFightScreen);
 		});
 		
 		useRoll.setOnAction(event -> {
@@ -841,17 +841,23 @@ public class BigBossGame extends Application {
 	        });
 	}
 	
-	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, boolean adding) {
+	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, boolean adding, int amount) {
 
 		if (adding) {
-			if (!(charecter.getStatPoints() <= 0)) {
-				charecter.addStatPoints(-1);
-				s.addTempValue(1);
-			} 
+			if (!(charecter.getStatPoints() < amount)) {
+				charecter.addStatPoints(-amount);
+				s.addTempValue(amount);
+			} else {
+				s.addTempValue(charecter.getStatPoints());
+				charecter.setStatPoints(0);
+			}
 		} else {
 			if (!(s.getTempValue() <= 0)) {
-				charecter.addStatPoints(1);
-				s.addTempValue(-1);
+				charecter.addStatPoints(amount);
+				s.addTempValue(-amount);
+			} else {
+				charecter.addStatPoints(s.getTempValue());
+				s.setTempValue(0);
 			}
 		}
 		change.setText(s.getTempValue() + "");
@@ -941,7 +947,8 @@ public class BigBossGame extends Application {
 			case BLACK: 
 				root.getChildren().remove(root.getChildren().size() - 2);
 				root.getChildren().add(fightDisplayPane);
-				speak(last -> fadeToNext(nextScene, titleScreen, FadeTransitionResult.MENU, charecter, boss), postCombatResult(charecter, boss));
+				updatePreFightScreen();
+				speak(last -> fadeToNext(nextScene, preFightScreen, FadeTransitionResult.MENU, charecter, boss), postCombatResult(charecter, boss));
 				break;
 			case MENU:
 				fightDisplayPane.getChildren().clear();

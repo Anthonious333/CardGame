@@ -275,6 +275,10 @@ public abstract class AbstractCharecter {
 	public void addStatPoints(int statPoints) {
 		this.statPoints += statPoints;
 	}
+	
+	public void setStatPoints(int amount) {
+		this.statPoints = amount;
+	}
 
 	public boolean isDead() {
 		return isDead;

@@ -80,6 +80,10 @@ public class BigBossGame extends Application {
 	 * 
 	 * TODO add a boolean the makes you unable to press ANYTHING during animations
 	 * 
+	 * TODO fix back button in edit abilitys after unlocking abiloty keeps unlocking more
+	 * 
+	 * add a box / highlights to the edit abilitioes to imply interacability to the user
+	 * 
 	 * add ability roll tokens
 	 * 
 	 * add attack animations with enums in the move itself
@@ -91,6 +95,12 @@ public class BigBossGame extends Application {
 	 * make diologe better // add punctuation and names to things
 	 * 
 	 * make sure things are removed from the scene and dont pile up 
+	 * 
+	 * make post fight go back to pre fight menu
+	 * 
+	 * add plus 10 stat point buttons
+	 * 
+	 * 
 	 */
 	
 	StackPane root;
@@ -397,7 +407,7 @@ public class BigBossGame extends Application {
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
-//	    stage.setResizable(false);
+	    stage.setResizable(false);
 	    stage.show();
 	}
 	

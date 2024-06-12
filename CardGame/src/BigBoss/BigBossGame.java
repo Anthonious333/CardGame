@@ -90,7 +90,7 @@ public class BigBossGame extends Application {
 	 * 
 	 * make diologe better // add punctuation and names to things
 	 * 
-	 * 
+	 * make sure things are removed from the scene and dont pile up 
 	 */
 	
 	StackPane root;
@@ -636,6 +636,11 @@ public class BigBossGame extends Application {
 	public void editAbilities(Node thisScene, AbstractCharecter charecter) {
 		GridPane gp = new GridPane();
 		Button back = new Button("Back");
+		Button useRoll = new Button("Unlock New Ability : " + charecter.getRollTokens() + " Tokens.");//TODO make display the number of tokens
+		if (charecter.getRollTokens() < 1) {
+			useRoll.setDisable(true);
+		}
+		useRoll.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		Label ability1 = new Label(charecter.getAbility(0).getName());
 		Label ability2 = new Label(charecter.getAbility(1).getName());
@@ -656,8 +661,21 @@ public class BigBossGame extends Application {
 			leaveMods(gp, thisScene);
 		});
 		
+		useRoll.setOnAction(event -> {
+			if (charecter.getRollTokens() > 0) {
+				if (charecter.numberOfLockedAbilities() > 0 ) {
+					fixAbilities(charecter, ability1, ability2, ability3);
+					abilitySlotMachine(gp, charecter);				
+				} else {
+					FXDialog.print("You have unlocked all abilities! Your Roll Tokens have been conferted into " + charecter.getRollTokens() * 5 + " Skill Points!");
+					charecter.addStatPoints(charecter.getRollTokens());
+					charecter.addRollTokens(-charecter.getRollTokens());
+				}
+			}
+		});
+		
 		FlowPane activeAbilities = new FlowPane();
-		activeAbilities.getChildren().addAll(back, ability1, ability2, ability3);
+		activeAbilities.getChildren().addAll(back, ability1, ability2, ability3, useRoll);
 		gp.add(activeAbilities, 0, 0);
 		
 		gp.add(new Line(0, 0, IMAGE_WIDTH, 0), 0, 1);
@@ -685,6 +703,39 @@ public class BigBossGame extends Application {
 		gp.add(unlockedAbilities, 0, 2);
 		root.getChildren().add(gp);
 		nextMenu(thisScene, gp);
+	}
+	
+	public void abilitySlotMachine(Node thisScene, AbstractCharecter charecter) {
+		if (!FXDialog.askYesNoQuestion("Would you like to use a role to unlock an ability?")) {
+			return;
+		}
+		FlowPane fp = new FlowPane();
+		VBox vb = new VBox(fp);
+		vb.setAlignment(Pos.CENTER);
+		fp.setAlignment(Pos.CENTER);
+		fp.setHgap(10);
+		
+		ArrayList<AbstractAbility> list = new ArrayList<AbstractAbility>();
+		while (list.size() <charecter.numberOfLockedAbilities()) {
+			AbstractAbility a = charecter.getPosibleAbilities().get(randomNumber(0, charecter.getPosibleAbilities().size() - 1));
+			if (!a.isUnlocked() && !list.contains(a)) {
+				list.add(a);
+			}
+		}
+		for (AbstractAbility a : list) {
+			Button btn = new Button(a.getName());
+			btn.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			btn.setOnAction(event -> {
+				FXDialog.print("You have unlocked " + a.getName() + ".");
+				a.setUnlocked(true);
+				charecter.addRollTokens(-1);
+				editAbilities(vb, charecter);
+			});
+			fp.getChildren().add(btn);
+		}
+		
+		root.getChildren().add(vb);
+		leaveMods(thisScene, vb);
 	}
 	
 	public void fixAbilities(AbstractCharecter charecter, Label ability1, Label ability2, Label ability3) {
@@ -916,7 +967,7 @@ public class BigBossGame extends Application {
 	
 	public void startNewCombat (Node thisScene, AbstractCharecter charecter) {
 		Pane pane = new Pane();
-		BossEnemy boss = new BossEnemy();
+		BossEnemy boss = new BossEnemy(charecter.getWins());
 		ImageView enemyHolder = new ImageView(boss.getImageLocation());
 		ImageView playerHolder = new ImageView(charecter.getImageLocation());
 		
@@ -934,16 +985,8 @@ public class BigBossGame extends Application {
 	}
 	
 	public String[] postCombatResult(AbstractCharecter charecter, BossEnemy boss) {
-		int skillPoints = randomNumber(0, (100 - boss.getStat("HP")) / 5);
-		skillPoints +=5 ;
-		boolean abilityRoll; //TODO do i need this?
-		
-		if (randomNumber(0, boss.getStat("HP")) == 1) {
-			abilityRoll = true;
-		}
+		int skillPoints = randomNumber( (int) (20.0 - (boss.getStat("HP") / boss.findStat("HP").getMax() * 20.0) + 1), (int) (20.0 - (boss.getStat("HP") / boss.findStat("HP").getMax() * 20.0) + 5.0));
 
-		charecter.addStatPoints(skillPoints);
-		
 		ArrayList<String> toSay = new ArrayList<String>();
 		
 		if (charecter.isDead()) {
@@ -951,7 +994,7 @@ public class BigBossGame extends Application {
 			toSay.add("But don't be discouraged!");
 			toSay.add("You Earnt " + skillPoints + " to upgrade your charecter next time.");
 			if (randomNumber(1, 5) == 1) {
-				//TODO add a skill role feture
+				charecter.addRollTokens(1);
 				toSay.add("And a Ability Token to use in the prep menu.");
 			}
 			
@@ -959,17 +1002,19 @@ public class BigBossGame extends Application {
 		
 		if (boss.isDead()) {
 			skillPoints *= 2;
-			//TODO add a skill role feture
+			charecter.addRollTokens(1);
+			charecter.addWin();
 			toSay.add("Congradulations, you won!");
 			toSay.add("You have recived double points, bringin you to " + skillPoints + ", and a guarentied Ability Token to use in the prep menu.");
 			toSay.add("The Boss has aslow DOUBLED its stats for next fight!");
 		}
+		charecter.addStatPoints(skillPoints);
 		String[] ret = new String[toSay.size()];
 		for (int i = 0; i < toSay.size(); i++) {
 			ret[i] = toSay.get(i);
 		}
 		charecter.reset();
-		return ret; // make this good
+		return ret; 
 	}
 	
 	public void playerFightRound (Node thisScene, AbstractCharecter charecter, BossEnemy boss) {

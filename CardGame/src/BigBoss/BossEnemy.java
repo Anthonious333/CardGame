@@ -8,13 +8,15 @@ public class BossEnemy extends AbstractCharecter{
 
 	private AbstractAbility nextMove;
 	
-	public BossEnemy() {
+	public BossEnemy(int level) {
 		super("The Boss");
 		this.addStatsToList(
 				new Stat("ATK", 100), 
 				new Stat("HP", 100, 0, 100, true)
 				);
-		
+		for (Stat s : this.getStats()) {
+			s.setValue((int) (s.getValue() * Math.pow(2, level)));
+		}
 		this.setPosibleAbilities(new PunchAbility(this), new HealAbility(this, 10), new PowerUpAbility(this, 10));
 		for (AbstractAbility a : getPosibleAbilities()) {
 			a.setUnlocked(true);
@@ -29,6 +31,8 @@ public class BossEnemy extends AbstractCharecter{
 		return ret;			
 	}
 
+	
+	
 	public void choseNestMove () {
 		boolean deciding;
 		do {

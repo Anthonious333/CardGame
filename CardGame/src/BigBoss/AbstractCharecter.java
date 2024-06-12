@@ -23,6 +23,8 @@ public abstract class AbstractCharecter {
 	private String name;
 	private int statPoints;
 	private boolean isDead;
+	private int rollTokens = 0;
+	private int wins = 0;
 	
 	public AbstractCharecter (String name) {
 		this.setName(name);
@@ -41,7 +43,6 @@ public abstract class AbstractCharecter {
 		a2.setEquiped(true);
 		a3.setEquiped(true);
 		this.setPosibleAbilities(a1, a2, a3);
-
 	}
 	
 	public String getImageLocation() {
@@ -237,6 +238,16 @@ public abstract class AbstractCharecter {
 		}
 	}
 	
+	public int numberOfLockedAbilities() {
+		int ret = 0;
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			if (!a.isUnlocked() && ret < 3) {
+				ret++;
+			}
+		}
+		return ret;
+	}
+	
 	public ArrayList<AbstractAbility> getPosibleAbilities() {
 		return posibleAbilities;
 	}
@@ -271,6 +282,22 @@ public abstract class AbstractCharecter {
 
 	public void setDead(boolean isDead) {
 		this.isDead = isDead;
+	}
+
+	public int getRollTokens() {
+		return rollTokens;
+	}
+
+	public void addRollTokens(int rollTokens) {
+		this.rollTokens += rollTokens;
+	}
+
+	public int getWins() {
+		return wins;
+	}
+
+	public void addWin() {
+		this.wins++;
 	}
 
 

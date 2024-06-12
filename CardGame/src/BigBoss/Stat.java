@@ -84,6 +84,13 @@ public class Stat {
 		}
 	}
 	
+	public void setValue(int value) {
+		if (limited) {
+			max = value;
+		}
+		this.value = value;
+	}
+	
 	public int getTempValue() {
 		return tempValue;
 	}

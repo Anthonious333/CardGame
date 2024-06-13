@@ -757,8 +757,10 @@ public class BigBossGame1 extends Application {
 		if (!FXDialog.askYesNoQuestion("Would you like to use a role to unlock an ability?")) {
 			return;
 		}
+		ImageView img = new ImageView(getClass().getResource("/images/SlotMachine.png").toString());
 		FlowPane fp = new FlowPane();
 		VBox vb = new VBox(fp);
+		StackPane sp = new StackPane(img, vb);
 		vb.setAlignment(Pos.CENTER);
 		fp.setAlignment(Pos.CENTER);
 		fp.setHgap(10);
@@ -777,13 +779,13 @@ public class BigBossGame1 extends Application {
 				FXDialog.print("You have unlocked " + a.getName() + ".");
 				a.setUnlocked(true);
 				charecter.addRollTokens(-1);
-				editAbilities(vb, charecter);
+				editAbilities(sp, charecter);
 			});
 			fp.getChildren().add(btn);
 		}
 		
-		root.getChildren().add(vb);
-		leaveMods(thisScene, vb);
+		root.getChildren().add(sp);
+		leaveMods(thisScene, sp);
 	}
 	
 	public void fixAbilities(AbstractCharecter charecter, Label ability1, Label ability2, Label ability3) {

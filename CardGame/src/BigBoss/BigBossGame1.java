@@ -1210,7 +1210,6 @@ public class BigBossGame1 extends Application {
 	    tt1.play();
 	    tt1.setDelay(Duration.seconds(1));
 	    
-	    //TODO ask andrew what is better, apear during printing or after. and delay or no delay
 	    
 		Button btn = new Button();
 		btn.setOpacity(0);

@@ -7,6 +7,7 @@ import BigBoss.Abilities.PunchAbility;
 public class BossEnemy extends AbstractCharecter{
 
 	private AbstractAbility nextMove;
+	private int level;
 	
 	public BossEnemy(int level) {
 		super("The Boss");
@@ -17,6 +18,7 @@ public class BossEnemy extends AbstractCharecter{
 		for (Stat s : this.getStats()) {
 			s.setValue((int) (s.getValue() * Math.pow(2, level)));
 		}
+		this.level = level;
 		this.setPosibleAbilities(new PunchAbility(this), new HealAbility(this, 10), new PowerUpAbility(this, 10));
 		for (AbstractAbility a : getPosibleAbilities()) {
 			a.setUnlocked(true);
@@ -56,6 +58,11 @@ public class BossEnemy extends AbstractCharecter{
 
 	public void setNextMove(AbstractAbility nextMove) {
 		this.nextMove = nextMove;
+	}
+
+	@Override
+	protected Object clone() {
+		return new BossEnemy(this.level);
 	}
 
 	

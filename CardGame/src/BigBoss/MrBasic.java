@@ -45,6 +45,11 @@ public class MrBasic extends AbstractCharecter{
 		return super.getStat(ID) + (int)mightPower;
 	}
 
+	@Override
+	protected Object clone() {
+		return new MrBasic();
+	}
+
 
 	
 		

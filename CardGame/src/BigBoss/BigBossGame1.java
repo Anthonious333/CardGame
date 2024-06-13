@@ -157,10 +157,14 @@ public class BigBossGame1 extends Application {
 	public final static String unlockID = "UNLOCKED";
 	public static final int IMAGE_WIDTH = 1126;
 	public static final int IMAGE_HEIGHT = 634;
-	
+
 	
 	@Override
 	public void start(Stage stage) throws Exception {		
+		
+		//TODO add charecters here
+		final AbstractCharecter[] ALL_CHARECTERS = {new MrBasic(), new MrBasic()};
+		
 		
 		root = new StackPane();
 		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -231,17 +235,15 @@ public class BigBossGame1 extends Application {
 	    ScrollPane fpCharecterButtons = new ScrollPane(vbChrecterButtons);
 	    fpCharecterButtons.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 	    fpCharecterButtons.setPannable(true);
+	    	    
+	    for (AbstractCharecter a : ALL_CHARECTERS) {
+	    	Button newChecterButton = new Button(a.getName());
+		    newChecterButton.setOnAction(event -> setSelectedCharecter((AbstractCharecter) a.clone()));
+		    newChecterButton.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		    VBox.setMargin(newChecterButton, new Insets(10, 10, 10, 10));
+		    vbChrecterButtons.getChildren().add(newChecterButton); 
+	    }
 	    
-	    
-	    //TODO add characters here 
-	    
-	    Button selectMrBasic = new Button("Mr. Basic");
-	    selectMrBasic.setOnAction(event -> setSelectedCharecter(new MrBasic()));
-	    selectMrBasic.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    VBox.setMargin(selectMrBasic, new Insets(10, 10, 10, 10));
-	    
-	    
-	    vbChrecterButtons.getChildren().add(selectMrBasic); //TODO add charecter here
 	    charSelectScreen.getChildren().addAll(selectAndBackBtns, lblSelectionDescription, saveNamingLine, fpCharecterButtons);
 	    
 	    
@@ -297,7 +299,7 @@ public class BigBossGame1 extends Application {
 	    Button btnFight = new Button("FIGHT!");
 	    btnFight.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
 	    btnFight.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
-	    btnFight.setOnAction(event -> startNewCombat(preFightScreen, selectedSave.getCharecter())); //TODO make this fight scene not title screen
+	    btnFight.setOnAction(event -> startNewCombat(preFightScreen, selectedSave.getCharecter())); 
 	    
 	    //back button
 	    Button btnPreFightBack = new Button("Back");

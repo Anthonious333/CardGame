@@ -303,6 +303,8 @@ public abstract class AbstractCharecter {
 	public void addWin() {
 		this.wins++;
 	}
-
+	
+	@Override
+	protected abstract Object clone();
 
 }

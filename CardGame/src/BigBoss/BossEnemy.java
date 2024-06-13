@@ -36,7 +36,7 @@ public class BossEnemy extends AbstractCharecter{
 	public void choseNestMove () {
 		boolean deciding;
 		do {
-			int i = BigBossGame.randomNumber(0, getPosibleAbilities().size() - 1);
+			int i = BigBossGame1.randomNumber(0, getPosibleAbilities().size() - 1);
 			
 			if (this.getPosibleAbilities().get(i).canSelect() ) {
 				deciding = false;

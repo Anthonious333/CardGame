@@ -98,7 +98,7 @@ public abstract class AbstractCharecter {
 	public String getStatsAsString () {
 		String ret = "";
 		for (Stat s : stats) {
-			ret += getStatAsString(s.getName());
+			ret += getStatAsString(s.getName()) + "\n";
 		}
 		return ret;
 	}

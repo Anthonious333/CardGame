@@ -8,23 +8,38 @@ public class Stat {
 	private int min, max;
 	private int tempValue = 0;
 	private boolean resets;
+	private String toolTip;
 	
 	public Stat (String name, int value) {
 		this(name, value, -1, -1, false);
 		limited = false;
 	}
 	
-	public Stat (String name, int value, int min, int max) {
-		this(name, value);
+	public Stat (String name, String toolTip, int value) {
+		this(name, toolTip, value, -1, -1, false);
+		limited = false;
 	}
 	
+	public Stat (String name, int value, int min, int max) {
+		this(name, value, min, max, false);
+	}
+	
+	public Stat (String name, String toolTip, int value, int min, int max) {
+		this(name, toolTip, value, min, max, false);
+		}
+	
 	public Stat (String name, int value, int min, int max, boolean reset) {
+		this(name, "NONE", value, min, max, false);
+	}
+	
+	public Stat (String name, String toolTip, int value, int min, int max, boolean reset) {
 		this.name = name;
 		this.value = value;
 		this.max = max;
 		this.min = min;
 		limited = true;
 		this.resets = reset;
+		this.setToolTip(toolTip);
 	}
 
 	public int getValue() {
@@ -109,6 +124,14 @@ public class Stat {
 
 	public void setResets(boolean resets) {
 		this.resets = resets;
+	}
+
+	public String getToolTip() {
+		return toolTip;
+	}
+
+	public void setToolTip(String toolTip) {
+		this.toolTip = toolTip;
 	}
 
 }

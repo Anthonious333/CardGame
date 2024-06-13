@@ -37,6 +37,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -46,6 +47,8 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -70,27 +73,23 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import simpleIO.FXDialog;
 
-public class BigBossGame extends Application {
+public class BigBossGame1 extends Application {
 
 
 	/*
-	 * TODO add descriptions and coment things
+	 * TODO add descriptions and coment things in the code
 	 * 
 	 * TODO add sounds
 	 * 
 	 * TODO add a boolean the makes you unable to press ANYTHING during animations
 	 *  
-	 * add a box / highlights to the edit abilitioes to imply interacability to the user
-	 * 
-	 * add attack animations with enums in the move itself
+	 * add attack animations 
 	 * 
 	 * fix all menus look nicer
 	 * 
-	 * make buttons look nicer
+	 * make buttons look nicer?
 	 * 
 	 * make diologe better // add punctuation and names to things
-	 * 
-	 * make sure things are removed from the scene and dont pile up 
 	 */
 	
 	StackPane root;
@@ -107,7 +106,7 @@ public class BigBossGame extends Application {
 	TextField txtSaveName;
 	Button btnCharSelectScreenSelect;
 	HBox charSelectScreenAndDescription;
-	GridPane preFightScreen;
+	AnchorPane preFightScreen;
 	Label lblDisplayStats;
 	Label lblDisplayAbilities;
 	Label lblDisplayMods;
@@ -139,6 +138,7 @@ public class BigBossGame extends Application {
 	final int TEXT_FONT_SIZE = 20;
 	final int MOD_BUTTON_SIZE = 100;
 	final int MOD_GAP = 100;
+	final int PREFIGHT_TEXT_SIZE = 50;
 
 
 	//inner finals
@@ -158,11 +158,7 @@ public class BigBossGame extends Application {
 	
 	
 	@Override
-	public void start(Stage stage) throws Exception {
-	
-	
-		AbstractCharecter[] ALL_CHARECTERS = {new MrBasic()};
-		
+	public void start(Stage stage) throws Exception {		
 		
 		root = new StackPane();
 		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -211,9 +207,12 @@ public class BigBossGame extends Application {
 	    HBox selectAndBackBtns = new HBox();
 	    Label lblName = new Label("Save Name:");
 	    lblName.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    Label lblSelectionDescription= new Label("Name your save and select a charecter to play, then click the select button.");
+	    lblSelectionDescription.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    lblSelectionDescription.setWrapText(true);
 	    Button btnCharSelectScreenBack = new Button("Back");
 	    btnCharSelectScreenBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    btnCharSelectScreenBack.setOnAction(event -> backMenu(charSelectScreenAndDescription));
+	    btnCharSelectScreenBack.setOnAction(event -> nextMenu(charSelectScreenAndDescription, selectScreen));
 	    selectAndBackBtns.getChildren().addAll(btnCharSelectScreenBack, lblName);
 
 	    HBox saveNamingLine = new HBox();
@@ -226,26 +225,32 @@ public class BigBossGame extends Application {
 	    txtSaveName.setOnKeyTyped(event -> updateSelectButton());
 	    saveNamingLine.getChildren().addAll(txtSaveName, btnCharSelectScreenSelect);
 
-
-	    charSelectScreen.getChildren().addAll(selectAndBackBtns, saveNamingLine);
+	    VBox vbChrecterButtons = new VBox();
+	    ScrollPane fpCharecterButtons = new ScrollPane(vbChrecterButtons);
+	    fpCharecterButtons.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+	    fpCharecterButtons.setPannable(true);
 	    
-	    for (AbstractCharecter a : ALL_CHARECTERS) {
-	    	AbstractCharecter charecter = (AbstractCharecter) Class.forName(a.getClass().getName()).newInstance();
-	    	Button selectChar = new Button(a.getName());
-	    	selectChar.setOnAction(event -> setSelectedCharecter(charecter));
-	    	selectChar.setFont(Font.font(FONT, MENU_FONT_SIZE));
-	    	
-	    }
-
-
+	    
+	    //TODO add characters here 
+	    
+	    Button selectMrBasic = new Button("Mr. Basic");
+	    selectMrBasic.setOnAction(event -> setSelectedCharecter(new MrBasic()));
+	    selectMrBasic.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    VBox.setMargin(selectMrBasic, new Insets(10, 10, 10, 10));
+	    
+	    
+	    vbChrecterButtons.getChildren().add(selectMrBasic); //TODO add charecter here
+	    charSelectScreen.getChildren().addAll(selectAndBackBtns, lblSelectionDescription, saveNamingLine, fpCharecterButtons);
+	    
+	    
 	    charSelectScreenAndDescription = new HBox();
 	    StackPane.setMargin(charSelectScreenAndDescription, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 	    charSelectScreenAndDescription.setVisible(false);
 	    charSelectScreenAndDescription.setMaxSize(MENU_WIDTH * 2, MENU_HEIGHT * 2);
 	    lblShowCharDescription = new Label("");
 	    charSelectScreenAndDescription.getChildren().addAll(charSelectScreen, lblShowCharDescription);
-	    
-	    
+
+
 	    //Save selection screen
 	    selectScreen = new VBox();
 	    selectScreen.setVisible(false);
@@ -279,9 +284,7 @@ public class BigBossGame extends Application {
 	    selectScreen.getChildren().addAll(btnSelectScreenBack, btnSave1, btnSave2, btnSave3);
 	    
 	    //preFight screen
-	    preFightScreen = new GridPane();
-	    preFightScreen.setVgap(MENU_GAP);
-	    preFightScreen.setHgap(MENU_GAP);
+	    preFightScreen = new AnchorPane();
 	    preFightScreen.setPadding(new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 	    preFightScreen.setVisible(false);
 	    preFightScreen.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -291,22 +294,25 @@ public class BigBossGame extends Application {
 
 	    Button btnFight = new Button("FIGHT!");
 	    btnFight.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
-	    btnFight.setFont(Font.font(FONT, BTN_FONT_SIZE));
+	    btnFight.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    btnFight.setOnAction(event -> startNewCombat(preFightScreen, selectedSave.getCharecter())); //TODO make this fight scene not title screen
 	    
 	    //back button
 	    Button btnPreFightBack = new Button("Back");
-	    btnPreFightBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
+	    btnPreFightBack.setFont(Font.font(FONT, BTN_FONT_SIZE));
 	    btnPreFightBack.setOnAction(event -> nextMenu(preFightScreen, selectScreen));
 	    
 	    VBox statsSection = new VBox();
 	    
 	    Button btnEditStats = new Button("Stats");
-	    btnEditStats.setFont(Font.font(FONT, BTN_FONT_SIZE));
+	    btnEditStats.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    btnEditStats.setOnAction(event -> editStats(preFightScreen, selectedSave.getCharecter())); 
 	    
+	    ScrollPane spDisplayStats = new ScrollPane(lblDisplayStats);
+	    spDisplayStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+	    spDisplayStats.setPannable(true);
 	    lblDisplayStats = new Label();
-	    lblDisplayStats.setFont(Font.font(FONT, TEXT_FONT_SIZE));
+	    lblDisplayStats.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    
 	    VBox abilitySection = new VBox();
 	    
@@ -315,7 +321,7 @@ public class BigBossGame extends Application {
 	    btnEditAbility.setOnAction(event -> editAbilities(preFightScreen, selectedSave.getCharecter())); 
 	    
 	    lblDisplayAbilities = new Label();
-	    lblDisplayAbilities.setFont(Font.font(FONT, TEXT_FONT_SIZE));
+	    lblDisplayAbilities.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    
 	    VBox modSection = new VBox();
 	    
@@ -324,16 +330,26 @@ public class BigBossGame extends Application {
 	    btnEditMod.setOnAction(event -> editMods(preFightScreen, selectedSave.getCharecter()));
 	    
 	    lblDisplayMods = new Label();
-	    lblDisplayMods.setFont(Font.font(FONT, TEXT_FONT_SIZE));
+	    lblDisplayMods.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    
 	    fightSection.getChildren().addAll(btnFight, btnPreFightBack);
 	    statsSection.getChildren().addAll(btnEditStats, lblDisplayStats);
 	    abilitySection.getChildren().addAll(btnEditAbility, lblDisplayAbilities);
 	    modSection.getChildren().addAll(btnEditMod, lblDisplayMods);
-	    preFightScreen.add(fightSection, 0, 0);
-	    preFightScreen.add(statsSection, 1, 0);
-	    preFightScreen.add(abilitySection, 0, 1);
-	    preFightScreen.add(modSection, 1, 1);
+	    
+	    AnchorPane.setTopAnchor(fightSection, MENU_GAP + .0);
+	    AnchorPane.setLeftAnchor(fightSection, MENU_GAP * 3 + .0);
+
+	    AnchorPane.setTopAnchor(statsSection, MENU_GAP + .0);
+	    AnchorPane.setRightAnchor(statsSection, MENU_GAP * 3 + .0);
+
+	    AnchorPane.setBottomAnchor(abilitySection, MENU_GAP * 6 + .0);
+	    AnchorPane.setLeftAnchor(abilitySection, MENU_GAP * 3 + .0);
+	    
+	    AnchorPane.setBottomAnchor(modSection, MENU_GAP * 6+ .0);
+	    AnchorPane.setRightAnchor(modSection, MENU_GAP * 15 + .0);
+	    
+	    preFightScreen.getChildren().addAll(fightSection, statsSection, abilitySection, modSection);
 
 	    //options screen
 	    VBox optionsScreen = new VBox();
@@ -574,11 +590,13 @@ public class BigBossGame extends Application {
 		
 		//TODO orgonize and coment this 
 		GridPane gpStats = new GridPane();
+		gpStats.setVgap(TITLE_GAP);
+		gpStats.setHgap(TITLE_GAP);
 		ScrollPane sp = new ScrollPane(gpStats);
 		sp.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 		Button back = new Button("Back");
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		Button commmitAll = new Button("Commmit All");
+		Button commmitAll = new Button("Commit All");
 		commmitAll.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		commmitAll.setOnAction(event -> {
 			for (int i = 0; i < charecter.getStats().size(); i++) {
@@ -626,6 +644,7 @@ public class BigBossGame extends Application {
 				s.commitTempStat();
 				changeTempStats(s, charecter, change, stat, lblTotalPoints, false, 1);
 			});
+
 			changeTempStats(s, charecter, change, stat, lblTotalPoints, false, 1);
 			gp.add(subTen, 0, 0);
 			gp.add(sub, 1, 0);
@@ -633,7 +652,7 @@ public class BigBossGame extends Application {
 			gp.add(add, 3, 0);
 			gp.add(addTen, 4, 0);
 			gp.add(commit, 5, 0);
-			gp.add(stat, 0, 1, 6, 1);
+			gp.add(stat, 6, 0);
 			gpStats.add(gp, 0, gpStats.getChildren().size() + 1, 2, 1);
 		}
 		
@@ -649,9 +668,10 @@ public class BigBossGame extends Application {
 	}
 	
 	public void editAbilities(Node thisScene, AbstractCharecter charecter) {
-		GridPane gp = new GridPane();
+		VBox gp = new VBox();
+		gp.setAlignment(Pos.CENTER);
 		Button back = new Button("Back");
-		Button useRoll = new Button("Unlock New Ability : " + charecter.getRollTokens() + " Tokens.");//TODO make display the number of tokens
+		Button useRoll = new Button("Unlock New Ability : " + charecter.getRollTokens() + " Tokens.");
 		if (charecter.getRollTokens() < 1) {
 			useRoll.setDisable(true);
 		}
@@ -691,13 +711,19 @@ public class BigBossGame extends Application {
 		});
 		
 		FlowPane activeAbilities = new FlowPane();
+		activeAbilities.setMaxWidth(IMAGE_WIDTH / 2); 
 		activeAbilities.getChildren().addAll(back, ability1, ability2, ability3, useRoll);
-		gp.add(activeAbilities, 0, 0);
+		gp.getChildren().add(activeAbilities);
+		gp.getChildren().add(new Line(0, 0, IMAGE_WIDTH, 0));
 		
-		gp.add(new Line(0, 0, IMAGE_WIDTH, 0), 0, 1);
 		
 		FlowPane unlockedAbilities = new FlowPane();
-		unlockedAbilities.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+		ScrollPane spAbilities = new ScrollPane(unlockedAbilities);
+		spAbilities.setMaxSize(IMAGE_WIDTH / 2, IMAGE_HEIGHT);
+		spAbilities.setPannable(true);
+		spAbilities.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		
+		
 		for (AbstractAbility a : charecter.getPosibleAbilities()) {
 			if (a.isUnlocked() && !a.isEquiped()) {
 				Label ability = new Label(a.getName());
@@ -709,14 +735,16 @@ public class BigBossGame extends Application {
 		}
 		for (AbstractAbility a : charecter.getPosibleAbilities()) {
 			if (!a.isUnlocked()) {
-				Label ability = new Label("???");
+				Label ability = new Label("   ???   ");
 				FlowPane.setMargin(ability, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 				ability.setFont(Font.font(FONT, MENU_FONT_SIZE));
 				unlockedAbilities.getChildren().add(ability);
 			}
 		}
-		
-		gp.add(unlockedAbilities, 0, 2);
+		for (Node l : unlockedAbilities.getChildren()) {
+			((Label) l).setTextFill(Color.BLACK);
+		}
+		gp.getChildren().add(spAbilities);
 		root.getChildren().add(gp);
 		nextMenu(thisScene, gp);
 	}
@@ -766,6 +794,15 @@ public class BigBossGame extends Application {
 	}
 	
 	public void setUpLabel(Label lbl) {
+		
+		lbl.setOnMouseEntered(event -> {
+			lbl.setStyle("-fx-border-color: black;");
+		});
+		
+		lbl.setOnMouseExited(event -> {
+			lbl.setStyle("-fx-border-color: transparent;");
+		});
+		
 		
 			lbl.setOnDragDetected(new EventHandler <MouseEvent>() {
 	            public void handle(MouseEvent event) {

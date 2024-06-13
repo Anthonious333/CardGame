@@ -87,9 +87,11 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * fix all menus look nicer
 	 * 
-	 * make buttons look nicer?
+	 * make buttons look mroe 8bit
 	 * 
-	 * make diologe better // add punctuation and names to things
+	 * make diologe better // add punctuation and names to things // change font ot look more rustic/8bit
+	 * 
+	 * 
 	 */
 	
 	StackPane root;

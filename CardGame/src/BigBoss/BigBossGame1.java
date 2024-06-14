@@ -840,6 +840,9 @@ public class BigBossGame1 extends Application {
 		}
 		
 		img.setOnMouseClicked(event -> {
+			for (ParallelTransition t : slotParallelTransList) {
+				t.stop();
+			}
 			for (ImageView i : imgToRemove) {
 				sp.getChildren().remove(i);
 			}
@@ -848,9 +851,6 @@ public class BigBossGame1 extends Application {
 			}
 			for (ParallelTransition t : btnParallelTransList) {
 				t.play();
-			}
-			for (ParallelTransition t : slotParallelTransList) {
-				t.stop();
 			}
 		});
 		//TODO make them happen one at a time

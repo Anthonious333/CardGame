@@ -757,13 +757,10 @@ public class BigBossGame1 extends Application {
 		if (!FXDialog.askYesNoQuestion("Would you like to use a role to unlock an ability?")) {
 			return;
 		}
-		ImageView img = new ImageView(getClass().getResource("/images/SlotMachine.png").toString());
-		FlowPane fp = new FlowPane();
-		VBox vb = new VBox(fp);
-		StackPane sp = new StackPane(img, vb);
-		vb.setAlignment(Pos.CENTER);
-		fp.setAlignment(Pos.CENTER);
-		fp.setHgap(10);
+		ImageView img = new ImageView(getClass().getResource("/images/SlotMachineTest2.png").toString());
+		Pane fp = new Pane();
+		StackPane sp = new StackPane();
+		
 		
 		ArrayList<AbstractAbility> list = new ArrayList<AbstractAbility>();
 		while (list.size() <charecter.numberOfLockedAbilities()) {
@@ -772,18 +769,49 @@ public class BigBossGame1 extends Application {
 				list.add(a);
 			}
 		}
+		sp.getChildren().add(fp);
 		for (AbstractAbility a : list) {
-			Button btn = new Button(a.getName());
-			btn.setFont(Font.font(FONT, MENU_FONT_SIZE));
-			btn.setOnAction(event -> {
+			ImageView img1 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
+			ImageView img2 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
+			
+			TranslateTransition SlotTrans = new TranslateTransition(Duration.seconds(.5), img1);
+			SlotTrans.setFromY(-284);
+			SlotTrans.setToY(0);
+			SlotTrans.setFromX(-340 + list.indexOf(a) * 294);
+			SlotTrans.setToX(-340 + list.indexOf(a) * 294);
+			SlotTrans.setInterpolator(Interpolator.LINEAR);
+			SlotTrans.setCycleCount(Animation.INDEFINITE);
+			SlotTrans.setDelay(Duration.seconds(2 * this.animationSpeedMultiplyer));
+		    TranslateTransition SlotTrans2 = new TranslateTransition(Duration.seconds(.5), img2);
+		    SlotTrans2.setFromY(0);
+		    SlotTrans2.setToY(284);
+		    SlotTrans2.setFromX(-340 + list.indexOf(a) * 294);
+		    SlotTrans2.setToX(-340 + list.indexOf(a) * 294);
+		    SlotTrans2.setCycleCount(Animation.INDEFINITE);
+		    SlotTrans2.setInterpolator(Interpolator.LINEAR);
+			SlotTrans2.setDelay(Duration.seconds(2 * this.animationSpeedMultiplyer));
+		    ParallelTransition slotParallelTrans = new ParallelTransition(SlotTrans, SlotTrans2);
+		    slotParallelTrans.play();
+		    
+			StackPane btn = new StackPane();
+			btn.setLayoutX(149 + list.indexOf(a) * 293);
+			btn.setLayoutY(144);
+			ImageView iv = new ImageView(getClass().getResource("/images/Slot.jpg").toString());
+			Label lbl = new Label(a.getName());
+			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
+			btn.setOnMouseClicked(event -> {
 				FXDialog.print("You have unlocked " + a.getName() + ".");
 				a.setUnlocked(true);
 				charecter.addRollTokens(-1);
 				editAbilities(sp, charecter);
 			});
-			fp.getChildren().add(btn);
+			btn.getChildren().addAll(iv, lbl);
+			fp.getChildren().addAll(btn, img1, img2);
+			sp.getChildren().addAll(img1, img2);
 		}
 		
+		sp.getChildren().add(img);
+
 		root.getChildren().add(sp);
 		leaveMods(thisScene, sp);
 	}

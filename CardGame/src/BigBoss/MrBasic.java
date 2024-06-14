@@ -12,6 +12,7 @@ public class MrBasic extends AbstractCharecter{
 				new Stat("ATK", 100), 
 				new Stat("HP", "Dont let it drop!", 100, 0, 100, true)
 				);
+		this.addRollTokens(100);
 		//TODO fix this, default ability should be a moethod of some sort or param 
 		this.addStatPoints(10);
 		AbstractAbility punch = new PunchAbility(this);

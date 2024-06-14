@@ -91,7 +91,7 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * make diologe better // add punctuation and names to things // change font ot look more rustic/8bit
 	 * 
-	 * 
+	 * add totorial
 	 */
 	
 	StackPane root;
@@ -758,9 +758,10 @@ public class BigBossGame1 extends Application {
 			return;
 		}
 		ImageView img = new ImageView(getClass().getResource("/images/SlotMachineTest2.png").toString());
-		Pane fp = new Pane();
 		StackPane sp = new StackPane();
-		
+		ArrayList<ParallelTransition> btnParallelTransList = new ArrayList<ParallelTransition>();
+		ArrayList<ParallelTransition> slotParallelTransList = new ArrayList<ParallelTransition>();
+		ArrayList<ImageView> imgToRemove = new ArrayList<ImageView>();
 		
 		ArrayList<AbstractAbility> list = new ArrayList<AbstractAbility>();
 		while (list.size() <charecter.numberOfLockedAbilities()) {
@@ -769,12 +770,13 @@ public class BigBossGame1 extends Application {
 				list.add(a);
 			}
 		}
-		sp.getChildren().add(fp);
 		for (AbstractAbility a : list) {
 			ImageView img1 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
 			ImageView img2 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
+			ImageView img3 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
+
 			
-			TranslateTransition SlotTrans = new TranslateTransition(Duration.seconds(.5), img1);
+			TranslateTransition SlotTrans = new TranslateTransition(Duration.seconds(.1), img1);
 			SlotTrans.setFromY(-284);
 			SlotTrans.setToY(0);
 			SlotTrans.setFromX(-340 + list.indexOf(a) * 294);
@@ -782,7 +784,7 @@ public class BigBossGame1 extends Application {
 			SlotTrans.setInterpolator(Interpolator.LINEAR);
 			SlotTrans.setCycleCount(Animation.INDEFINITE);
 			SlotTrans.setDelay(Duration.seconds(2 * this.animationSpeedMultiplyer));
-		    TranslateTransition SlotTrans2 = new TranslateTransition(Duration.seconds(.5), img2);
+		    TranslateTransition SlotTrans2 = new TranslateTransition(Duration.seconds(.1), img2);
 		    SlotTrans2.setFromY(0);
 		    SlotTrans2.setToY(284);
 		    SlotTrans2.setFromX(-340 + list.indexOf(a) * 294);
@@ -794,8 +796,8 @@ public class BigBossGame1 extends Application {
 		    slotParallelTrans.play();
 		    
 			StackPane btn = new StackPane();
-			btn.setLayoutX(149 + list.indexOf(a) * 293);
-			btn.setLayoutY(144);
+			btn.setVisible(false);
+			img3.setVisible(false);
 			ImageView iv = new ImageView(getClass().getResource("/images/Slot.jpg").toString());
 			Label lbl = new Label(a.getName());
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -805,10 +807,53 @@ public class BigBossGame1 extends Application {
 				charecter.addRollTokens(-1);
 				editAbilities(sp, charecter);
 			});
+			
+			int x = -50;
+			
+			TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
+			btnTrans.setFromY(-284 + x);
+			btnTrans.setToY(0 + x);
+			btnTrans.setFromX(-340 + list.indexOf(a) * 294);
+			btnTrans.setToX(-340 + list.indexOf(a) * 294);
+			btnTrans.setInterpolator(Interpolator.LINEAR);
+			btnTrans.setCycleCount(1);
+
+		    TranslateTransition btnTrans2 = new TranslateTransition(Duration.seconds(.1), img3);
+		    btnTrans2.setFromY(0 + x);
+		    btnTrans2.setToY(284 + x);
+		    btnTrans2.setFromX(-340 + list.indexOf(a) * 294);
+		    btnTrans2.setToX(-340 + list.indexOf(a) * 294);
+		    btnTrans2.setCycleCount(1);
+		    btnTrans2.setInterpolator(Interpolator.LINEAR);
+		    ParallelTransition btnParallelTrans = new ParallelTransition(btnTrans, btnTrans2);
+		    
+		    btnParallelTransList.add(btnParallelTrans);
+		    slotParallelTransList.add(slotParallelTrans);
+		    imgToRemove.add(img1);
+		    imgToRemove.add(img2);
+
+		    
 			btn.getChildren().addAll(iv, lbl);
-			fp.getChildren().addAll(btn, img1, img2);
 			sp.getChildren().addAll(img1, img2);
+			sp.getChildren().addAll(btn, img3);
+
 		}
+		
+		img.setOnMouseClicked(event -> {
+			for (ImageView i : imgToRemove) {
+				sp.getChildren().remove(i);
+			}
+			for (Node n : sp.getChildren()) {
+				n.setVisible(true);
+			}
+			for (ParallelTransition t : btnParallelTransList) {
+				t.play();
+			}
+			for (ParallelTransition t : slotParallelTransList) {
+				t.stop();
+			}
+		});
+		//TODO make them happen one at a time
 		
 		sp.getChildren().add(img);
 

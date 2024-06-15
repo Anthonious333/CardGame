@@ -38,7 +38,7 @@ public class Stat {
 		this.max = max;
 		this.min = min;
 		limited = true;
-		this.resets = reset;
+		this.resets = reset; //TODO this dosent work
 		this.setToolTip(toolTip);
 	}
 

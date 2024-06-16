@@ -33,7 +33,9 @@ public class BossEnemy extends AbstractCharecter{
 		return ret;			
 	}
 
-	
+	public String getIntent() {
+		return this.getNextMove().getIntent();
+	}
 	
 	public void choseNestMove () {
 		boolean deciding;

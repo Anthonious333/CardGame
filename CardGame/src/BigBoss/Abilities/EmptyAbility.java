@@ -9,7 +9,7 @@ public class EmptyAbility extends AbstractAbility{
 	public static int identifier = 0;
 	
 	public EmptyAbility(AbstractCharecter owner) {
-		super("Empty " + identifier, owner);
+		super("Empty " + identifier, "no intent",  owner);
 		identifier++;
 	}
 

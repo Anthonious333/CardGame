@@ -8,7 +8,7 @@ public class HealAbility extends AbstractAbility{
 	private int power;
 	
 	public HealAbility(AbstractCharecter owner, int power) {
-		super("Heal", owner);
+		super("Heal", "Recover", owner);
 		this.power = power;
 	}
 

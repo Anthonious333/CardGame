@@ -10,7 +10,7 @@ public class PowerUpAbility extends AbstractAbility{
 	
 	
 	public PowerUpAbility(AbstractCharecter owner, int power) {
-		super("Power Up", owner);
+		super("Power Up", "Buff", owner);
 		this.power = power;
 		setRoleDifficulty(1);
 	}

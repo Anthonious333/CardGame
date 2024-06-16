@@ -10,17 +10,20 @@ public abstract class AbstractAbility {
 	//intedded for boss and canselect
 	private int roleDifficulty;
 	private int roleNumber;
+	private String intent;
 	
-	public AbstractAbility(String name, AbstractCharecter owner) {
+	public AbstractAbility(String name, String intent, AbstractCharecter owner) {
 		this.setName(name);
 		this.setOwner(owner);
 		this.setUnlocked(false);
 		this.setEquiped(false);
 		this.setRoleDifficulty(0);
 		this.setRoleNumber(0);
+		this.setIntent(intent);
 	}
 
 	public abstract String use(AbstractCharecter target);
+	
 
 	//to make it harder / more cinditions for the boss not meant for charecters
 	public boolean canSelect () {
@@ -85,5 +88,13 @@ public abstract class AbstractAbility {
 
 	public void setRoleNumber(int roleNumber) {
 		this.roleNumber = roleNumber;
+	}
+
+	public String getIntent() {
+		return intent;
+	}
+
+	public void setIntent(String intent) {
+		this.intent = intent;
 	}
 }

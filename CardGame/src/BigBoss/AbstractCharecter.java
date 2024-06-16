@@ -238,6 +238,8 @@ public abstract class AbstractCharecter {
 		}
 	}
 	
+
+	
 	public int numberOfLockedAbilities() {
 		int ret = 0;
 		for (AbstractAbility a : this.getPosibleAbilities()) {

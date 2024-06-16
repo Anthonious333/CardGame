@@ -1,0 +1,15 @@
+package BigBoss;
+
+public enum AbilityTypes {
+	ATTACK,
+	ATTACK_PLUS_BUFF,
+	ATTACK_PLUS_DEBUFF,
+	DEFEND,
+	DEFEND_PLUS_BUFF,
+	DEFEND_PLUS_DEBUFF,
+	BUFF,
+	DEBUFF,
+	BUFF_PLUS_DEBUFF,
+	UNKNOWN,
+	
+}

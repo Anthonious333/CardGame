@@ -842,7 +842,7 @@ public class BigBossGame1 extends Application {
 				timer.setOnFinished(event1 -> sp.getChildren().get((i * 3) + 2).setVisible(true));
 				
 			    ParallelTransition tAndTimer = new ParallelTransition(t, timer);
-			    tAndTimer.setDelay(Duration.seconds(i * 1));
+			    tAndTimer.setDelay(Duration.seconds(i * .5));
 				
 				
 				t.setOnFinished(event1 -> {
@@ -1214,6 +1214,10 @@ public class BigBossGame1 extends Application {
 
 		
 		VBox bossFP = new VBox();
+		Label lblIntent = new Label("Intent: " + boss.getIntent());
+		lblIntent.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		lblIntent.setTextFill(Color.BLACK);
+		bossFP.getChildren().add(lblIntent);
 		for(Stat s : boss.getStats()) {
 			Label lbl = new Label(boss.getStatAsString(s.getName()));
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));

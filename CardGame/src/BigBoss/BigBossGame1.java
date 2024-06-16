@@ -82,6 +82,8 @@ public class BigBossGame1 extends Application {
 	 * TODO add sounds
 	 * 
 	 * TODO add a boolean the makes you unable to press ANYTHING during animations
+	 * 
+	 * add a button on top of the lever on the slot machine to pull slots
 	 *  
 	 * add attack animations 
 	 * 
@@ -759,7 +761,7 @@ public class BigBossGame1 extends Application {
 		}
 		ImageView img = new ImageView(getClass().getResource("/images/SlotMachineTest2.png").toString());
 		StackPane sp = new StackPane();
-		ArrayList<ParallelTransition> btnParallelTransList = new ArrayList<ParallelTransition>();
+		ArrayList<TranslateTransition> btnTransList = new ArrayList<TranslateTransition>();
 		ArrayList<ParallelTransition> slotParallelTransList = new ArrayList<ParallelTransition>();
 		ArrayList<ImageView> imgToRemove = new ArrayList<ImageView>();
 		
@@ -773,7 +775,6 @@ public class BigBossGame1 extends Application {
 		for (AbstractAbility a : list) {
 			ImageView img1 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
 			ImageView img2 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
-			ImageView img3 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
 
 			
 			TranslateTransition SlotTrans = new TranslateTransition(Duration.seconds(.1), img1);
@@ -782,22 +783,20 @@ public class BigBossGame1 extends Application {
 			SlotTrans.setFromX(-340 + list.indexOf(a) * 294);
 			SlotTrans.setToX(-340 + list.indexOf(a) * 294);
 			SlotTrans.setInterpolator(Interpolator.LINEAR);
-			SlotTrans.setCycleCount(Animation.INDEFINITE);
-			SlotTrans.setDelay(Duration.seconds(2 * this.animationSpeedMultiplyer));
+			SlotTrans.setCycleCount(1);
 		    TranslateTransition SlotTrans2 = new TranslateTransition(Duration.seconds(.1), img2);
 		    SlotTrans2.setFromY(0);
 		    SlotTrans2.setToY(284);
 		    SlotTrans2.setFromX(-340 + list.indexOf(a) * 294);
 		    SlotTrans2.setToX(-340 + list.indexOf(a) * 294);
-		    SlotTrans2.setCycleCount(Animation.INDEFINITE);
+		    SlotTrans2.setCycleCount(1);
 		    SlotTrans2.setInterpolator(Interpolator.LINEAR);
-			SlotTrans2.setDelay(Duration.seconds(2 * this.animationSpeedMultiplyer));
 		    ParallelTransition slotParallelTrans = new ParallelTransition(SlotTrans, SlotTrans2);
+		    slotParallelTrans.setDelay(Duration.seconds(2 * this.animationSpeedMultiplyer));
+		    slotParallelTrans.setCycleCount(Animation.INDEFINITE);
 		    slotParallelTrans.play();
 		    
 			StackPane btn = new StackPane();
-			btn.setVisible(false);
-			img3.setVisible(false);
 			ImageView iv = new ImageView(getClass().getResource("/images/Slot.jpg").toString());
 			Label lbl = new Label(a.getName());
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -808,7 +807,7 @@ public class BigBossGame1 extends Application {
 				editAbilities(sp, charecter);
 			});
 			
-			int x = -50;
+			int x = -34;
 			
 			TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
 			btnTrans.setFromY(-284 + x);
@@ -817,43 +816,45 @@ public class BigBossGame1 extends Application {
 			btnTrans.setToX(-340 + list.indexOf(a) * 294);
 			btnTrans.setInterpolator(Interpolator.LINEAR);
 			btnTrans.setCycleCount(1);
-
-		    TranslateTransition btnTrans2 = new TranslateTransition(Duration.seconds(.1), img3);
-		    btnTrans2.setFromY(0 + x);
-		    btnTrans2.setToY(284 + x);
-		    btnTrans2.setFromX(-340 + list.indexOf(a) * 294);
-		    btnTrans2.setToX(-340 + list.indexOf(a) * 294);
-		    btnTrans2.setCycleCount(1);
-		    btnTrans2.setInterpolator(Interpolator.LINEAR);
-		    ParallelTransition btnParallelTrans = new ParallelTransition(btnTrans, btnTrans2);
 		    
-		    btnParallelTransList.add(btnParallelTrans);
+		    btnTransList.add(btnTrans);
 		    slotParallelTransList.add(slotParallelTrans);
 		    imgToRemove.add(img1);
 		    imgToRemove.add(img2);
-
+		    
+		    btn.setVisible(false);
 		    
 			btn.getChildren().addAll(iv, lbl);
 			sp.getChildren().addAll(img1, img2);
-			sp.getChildren().addAll(btn, img3);
+			sp.getChildren().addAll(btn);
 
+			
 		}
 		
 		img.setOnMouseClicked(event -> {
-			for (ParallelTransition t : slotParallelTransList) {
-				t.stop();
+			
+			
+
+			for (TranslateTransition t : btnTransList) {
+				int i = btnTransList.indexOf(t);
+				
+				TranslateTransition timer = new TranslateTransition(Duration.ZERO);
+				timer.setOnFinished(event1 -> sp.getChildren().get((i * 3) + 2).setVisible(true));
+				
+			    ParallelTransition tAndTimer = new ParallelTransition(t, timer);
+			    tAndTimer.setDelay(Duration.seconds(i * 1));
+				
+				
+				t.setOnFinished(event1 -> {
+					imgToRemove.remove(0);
+					imgToRemove.remove(0);
+					slotParallelTransList.get(i).stop();
+				});
+				tAndTimer.play();
 			}
-			for (ImageView i : imgToRemove) {
-				sp.getChildren().remove(i);
-			}
-			for (Node n : sp.getChildren()) {
-				n.setVisible(true);
-			}
-			for (ParallelTransition t : btnParallelTransList) {
-				t.play();
-			}
+
 		});
-		//TODO make them happen one at a time
+
 		
 		sp.getChildren().add(img);
 
@@ -1069,8 +1070,8 @@ public class BigBossGame1 extends Application {
 			case BLACK: 
 				root.getChildren().remove(root.getChildren().size() - 2);
 				root.getChildren().add(fightDisplayPane);
-				updatePreFightScreen();
 				speak(last -> fadeToNext(nextScene, preFightScreen, FadeTransitionResult.MENU, charecter, boss), postCombatResult(charecter, boss));
+				updatePreFightScreen();
 				break;
 			case MENU:
 				fightDisplayPane.getChildren().clear();

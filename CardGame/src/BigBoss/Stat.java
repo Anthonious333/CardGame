@@ -95,6 +95,7 @@ public class Stat {
 	
 	public void reset() {
 		if (this.resets()) {
+			System.out.print("out");
 			this.value = max;
 		}
 	}

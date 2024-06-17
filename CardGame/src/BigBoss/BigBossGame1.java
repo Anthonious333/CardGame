@@ -85,7 +85,7 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * add a button on top of the lever on the slot machine to pull slots
 	 *  
-	 * add attack animations 
+	 * add attack animations // maybe
 	 * 
 	 * fix all menus look nicer
 	 * 

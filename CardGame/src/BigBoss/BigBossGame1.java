@@ -81,7 +81,7 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * TODO add sounds
 	 * 
-	 * TODO add a boolean the makes you unable to press ANYTHING during animations
+	 * TODO find out how to make the user unable to click anything while animation is playing
 	 * 
 	 * add a button on top of the lever on the slot machine to pull slots
 	 *  
@@ -430,6 +430,7 @@ public class BigBossGame1 extends Application {
 	}
 	
 	public void nextMenu(Node screen, Node newScreen) {
+		
 		newScreen.setVisible(true);
 		TranslateTransition buttonsTrans2 = new TranslateTransition(Duration.seconds(1.25 * animationSpeedMultiplyer), screen);
 		buttonsTrans2.setFromY(-100);
@@ -1214,10 +1215,11 @@ public class BigBossGame1 extends Application {
 
 		
 		VBox bossFP = new VBox();
-		Label lblIntent = new Label("Intent: " + boss.getIntent());
+		Label lblIntent = new Label("Intent: " + boss.getIntent().name());
+		HBox hb = new HBox(lblIntent, getIntentImage(boss.getIntent()));
 		lblIntent.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		lblIntent.setTextFill(Color.BLACK);
-		bossFP.getChildren().add(lblIntent);
+		bossFP.getChildren().add(hb);
 		for(Stat s : boss.getStats()) {
 			Label lbl = new Label(boss.getStatAsString(s.getName()));
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -1319,6 +1321,23 @@ public class BigBossGame1 extends Application {
 
 	}
 	
+	public ImageView getIntentImage(AbilityType a) {
+		switch(a) {
+		case ATTACK:
+			return new ImageView(getClass().getResource("/images/RedFistSm.png").toString());
+		case BUFF:
+			return new ImageView(getClass().getResource("/images/GreenArrowSm.png").toString());
+		case DEBUFF:
+			return new ImageView(getClass().getResource("/images/PurpleArrowSm.png").toString());
+		case DEFEND:
+			return new ImageView(getClass().getResource("/images/BlueShieldSm.png").toString());
+		case UNKNOWN:
+			return new ImageView(getClass().getResource("/images/RedFistSm.png").toString());
+		default:
+			return new ImageView(getClass().getResource("/images/RedFistSm.png").toString());
+			
+		}
+	}
 	
 	// from workspace
 		public static int randomNumber(int a, int b) {

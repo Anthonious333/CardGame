@@ -33,7 +33,7 @@ public class BossEnemy extends AbstractCharecter{
 		return ret;			
 	}
 
-	public String getIntent() {
+	public AbilityType getIntent() {
 		return this.getNextMove().getIntent();
 	}
 	

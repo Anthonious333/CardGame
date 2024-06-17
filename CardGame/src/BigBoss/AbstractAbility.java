@@ -10,9 +10,9 @@ public abstract class AbstractAbility {
 	//intedded for boss and canselect
 	private int roleDifficulty;
 	private int roleNumber;
-	private String intent;
+	private AbilityType intent;
 	
-	public AbstractAbility(String name, String intent, AbstractCharecter owner) {
+	public AbstractAbility(String name, AbilityType intent, AbstractCharecter owner) {
 		this.setName(name);
 		this.setOwner(owner);
 		this.setUnlocked(false);
@@ -90,11 +90,11 @@ public abstract class AbstractAbility {
 		this.roleNumber = roleNumber;
 	}
 
-	public String getIntent() {
+	public AbilityType getIntent() {
 		return intent;
 	}
 
-	public void setIntent(String intent) {
+	public void setIntent(AbilityType intent) {
 		this.intent = intent;
 	}
 }

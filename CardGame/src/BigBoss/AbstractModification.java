@@ -75,11 +75,16 @@ public abstract class AbstractModification {
 	public boolean isUnlocked() {
 		return unlocked;
 	}
-
+	
+	public void onUnlock() {
+		
+	}
+	
 	public boolean unlock() {
 		if (!unlocked && canUnlock()) {			
 			this.unlocked = true;
 			this.setPath();
+			onUnlock();
 			return true;
 		}
 		return false;

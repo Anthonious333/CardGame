@@ -85,8 +85,6 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * TODO find out how to make the user unable to click anything while animation is playing
 	 * 
-	 * add physical and non phisical atk types
-	 * 
 	 * add a button on top of the lever on the slot machine to pull slots
 	 *  
 	 * add attack animations // maybe

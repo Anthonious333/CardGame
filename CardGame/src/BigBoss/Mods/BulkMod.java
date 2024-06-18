@@ -2,6 +2,7 @@ package BigBoss.Mods;
 
 import BigBoss.AbstractCharecter;
 import BigBoss.AbstractModification;
+import BigBoss.Stat;
 
 public class BulkMod extends AbstractModification{
 
@@ -28,4 +29,12 @@ public class BulkMod extends AbstractModification{
 		return false;
 	}
 
+	@Override
+	public void onUnlock() {
+		
+		Stat hp = owner.findStat("HP");
+		hp.addTempValue((int) this.getMagicNumber());
+		hp.commitTempStat();
+		
+	}
 }

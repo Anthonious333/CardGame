@@ -33,7 +33,6 @@ public class BossEnemy extends AbstractCharecter{
 	
 	public String play(AbstractCharecter player) {
 		String ret = nextMove.use(player);
-		System.out.print(nextMove.getName());
 		choseNestMove();
 		return ret;			
 	}

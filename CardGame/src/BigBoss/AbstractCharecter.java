@@ -117,6 +117,8 @@ public abstract class AbstractCharecter {
 		return -this.findStat(id).addValue(-amount);
 	}
 	
+
+	
 	//returns the amount of damage taken (positive)
 	public int damage (int amount, boolean physical) {
 		return this.reduceStat("HP", amount);

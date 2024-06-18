@@ -20,6 +20,7 @@ public abstract class AbstractCharecter {
 	private ArrayList<AbstractAbility> abilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
+
 	private String name;
 	private int statPoints;
 	private boolean isDead;
@@ -117,7 +118,7 @@ public abstract class AbstractCharecter {
 	}
 	
 	//returns the amount of damage taken (positive)
-	public int damage (int amount) {
+	public int damage (int amount, boolean physical) {
 		return this.reduceStat("HP", amount);
 	}
 	
@@ -309,4 +310,5 @@ public abstract class AbstractCharecter {
 	@Override
 	protected abstract Object clone();
 
+	
 }

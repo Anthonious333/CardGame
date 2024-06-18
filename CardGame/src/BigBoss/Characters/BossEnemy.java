@@ -1,5 +1,10 @@
-package BigBoss;
+package BigBoss.Characters;
 
+import BigBoss.AbilityType;
+import BigBoss.AbstractAbility;
+import BigBoss.AbstractCharecter;
+import BigBoss.BigBossGame1;
+import BigBoss.Stat;
 import BigBoss.Abilities.HealAbility;
 import BigBoss.Abilities.PowerUpAbility;
 import BigBoss.Abilities.PunchAbility;
@@ -12,7 +17,7 @@ public class BossEnemy extends AbstractCharecter{
 	public BossEnemy(int level) {
 		super("The Boss");
 		this.addStatsToList(
-				new Stat("ATK", 100), 
+				new Stat("ATK", 50), 
 				new Stat("HP", 100, 0, 100, true)
 				);
 		for (Stat s : this.getStats()) {

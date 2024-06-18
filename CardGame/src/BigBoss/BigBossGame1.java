@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import BigBoss.Characters.BossEnemy;
+import BigBoss.Characters.MrBasic;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
@@ -83,6 +85,8 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * TODO find out how to make the user unable to click anything while animation is playing
 	 * 
+	 * add physical and non phisical atk types
+	 * 
 	 * add a button on top of the lever on the slot machine to pull slots
 	 *  
 	 * add attack animations // maybe
@@ -94,6 +98,8 @@ public class BigBossGame1 extends Application {
 	 * make diologe better // add punctuation and names to things // change font ot look more rustic/8bit
 	 * 
 	 * add totorial
+	 * 
+	 * add ability to see enemies and your mods and skills and whatnoits 
 	 */
 	
 	StackPane root;
@@ -580,7 +586,9 @@ public class BigBossGame1 extends Application {
 		StackPane.setAlignment(back, Pos.TOP_LEFT);
 		Rectangle block = new Rectangle();
 		block.setOpacity(100);
+		
 		group.getChildren().addAll(findModLayout(charecter.getMods().get(0), (IMAGE_WIDTH / 2), 0));
+		
 		group.getChildren().add(block);
 		back.setLayoutX(IMAGE_WIDTH / 2 - (MOD_BUTTON_SIZE / 2));
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -985,7 +993,7 @@ public class BigBossGame1 extends Application {
 			}
 		}
 		change.setText(s.getTempValue() + "");
-		stat.setText("New Total: " + charecter.getStatAsString(s.getName()));
+		stat.setText("New Total: " + charecter.getStatAsString(s.getName()) + "\n" + s.getToolTip());
 		lblTotalPoints.setText("Stat Points Avalable: " + charecter.getStatPoints() + "");
 	}
 	
@@ -1021,13 +1029,14 @@ public class BigBossGame1 extends Application {
 	}
 
 	
+	
 	public ArrayList<Node> findModLayout (AbstractModification mod, double xPos, double yPos) {
 		ArrayList<Node> ret = new ArrayList<Node>();
 		
-		Button btn = new Button(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" :"" ));
+		Button btn = new Button(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" : "" ));
 		btn.setOnAction(event -> {
 			if (mod.unlock()) {
-				btn.setText(mod.getName() + "\nUNLOCKED");
+				btn.setText(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" : "" ));
 			}
 		});
 		btn.setLayoutX(xPos - (MOD_BUTTON_SIZE / 2));

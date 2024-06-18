@@ -10,33 +10,40 @@ public abstract class AbstractModification {
 	private ArrayList<AbstractModification> next = new ArrayList<AbstractModification>();
 	private AbstractModification last;
 	private double magicNumber;
+	private boolean locksOnLast;
 
 	public AbstractModification (String name, AbstractModification last) {
+		this(name, last, true);
+	}
+	
+	public AbstractModification (String name, AbstractModification last, boolean locks) {
 		this.setUnlockable(true);
 		this.setLast(last);
 		this.name = name;
 		unlocked = false;
+		setLocksOnLast(locks);
 	}
 	
-	
-	
+
 	public void setPath() {
-		for (AbstractModification m : last.getNext()) {
-			if (!m.equals(this)) {
-				m.closePath();
+		if (last != null) {
+			for (AbstractModification m : last.getNext()) {
+				if (!m.equals(this) && locksOnLast && !m.isUnlocked()) {
+					m.closePath();
+				}
 			}
 		}
 	}
-	
+
 	public void closePath() {
 		this.setUnlockable(false);
 		for(AbstractModification m : next) {
 			m.closePath();
 		}
 	}
-	
-	
-	
+
+
+
 	@Override
 	public String toString () {
 		return name;
@@ -44,9 +51,9 @@ public abstract class AbstractModification {
 
 	public boolean canUnlock() {
 		if (this.getLast() == null) {
-			return (this.isUnlockable());			
+			return (this.isUnlockConditionMet() && isUnlockable());			
 		}
-		return (this.isUnlockable() && getLast().isUnlocked());			
+		return (this.isUnlockConditionMet() && getLast().isUnlocked() && isUnlockable());			
 
 	}
 	
@@ -72,6 +79,7 @@ public abstract class AbstractModification {
 	public boolean unlock() {
 		if (!unlocked && canUnlock()) {			
 			this.unlocked = true;
+			this.setPath();
 			return true;
 		}
 		return false;
@@ -121,12 +129,23 @@ public abstract class AbstractModification {
 
 
 
-	public abstract boolean isUnlockable();
+	public abstract boolean isUnlockConditionMet();
 
+	public boolean isUnlockable() {
+		return unlockable;
+	}
 
 
 	public void setUnlockable(boolean unlockable) {
 		this.unlockable = unlockable;
+	}
+
+	public boolean isLocksOnLast() {
+		return locksOnLast;
+	}
+
+	public void setLocksOnLast(boolean locksOnLast) {
+		this.locksOnLast = locksOnLast;
 	}
 	
 }

@@ -85,6 +85,8 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * TODO find out how to make the user unable to click anything while animation is playing
 	 * 
+	 * TODO add the thing that whrights to a save
+	 * 
 	 * add a button on top of the lever on the slot machine to pull slots
 	 *  
 	 * add attack animations // maybe
@@ -100,6 +102,7 @@ public class BigBossGame1 extends Application {
 	 * add ability to see enemies and your mods and skills and whatnoits 
 	 */
 	
+	//Global objects
 	StackPane root;
 	Label title;
 	Button btnSave1;
@@ -126,7 +129,7 @@ public class BigBossGame1 extends Application {
 	Image fightBackgroundI = new Image(getClass().getResource("/images/fight room.png").toString());
 	Pane fightDisplayPane = new Pane();
 	
-	//visual finals
+	//Visual finals
 	final int TITLE_GAP = 50;
 	final int TITLE_POS = 160;
 	final int TITLE_SIZE = 100;
@@ -149,17 +152,17 @@ public class BigBossGame1 extends Application {
 	final int PREFIGHT_TEXT_SIZE = 50;
 
 
-	//inner finals
+	//Inner finals
 	final double SLOW_ANIMATION_SPEED = 1;
 	final double FAST_ANIMATION_SPEED = 0.25;
 	
-	//inner variables
+	//Inner variables
 	int timer = 0;
 	AbstractCharecter selectedCharecter;
 	double animationSpeedMultiplyer = FAST_ANIMATION_SPEED; 
 	
 	
-	//global vars
+	//Global variabls
 	public final static String unlockID = "UNLOCKED";
 	public static final int IMAGE_WIDTH = 1126;
 	public static final int IMAGE_HEIGHT = 634;
@@ -175,7 +178,7 @@ public class BigBossGame1 extends Application {
 		root = new StackPane();
 		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		
-		//background images
+		//Background Images
 		mainBackgroundV = new ImageView(mainBackgroundI);
 		mainBackgroundV2 = new ImageView(mainBackgroundI);
 		//background animation
@@ -227,6 +230,7 @@ public class BigBossGame1 extends Application {
 	    btnCharSelectScreenBack.setOnAction(event -> nextMenu(charSelectScreenAndDescription, selectScreen));
 	    selectAndBackBtns.getChildren().addAll(btnCharSelectScreenBack, lblName);
 
+	    //The character select screen
 	    HBox saveNamingLine = new HBox();
 	    btnCharSelectScreenSelect = new Button("Select");
 	    btnCharSelectScreenSelect.setDisable(true);
@@ -237,11 +241,13 @@ public class BigBossGame1 extends Application {
 	    txtSaveName.setOnKeyTyped(event -> updateSelectButton());
 	    saveNamingLine.getChildren().addAll(txtSaveName, btnCharSelectScreenSelect);
 
+	    //the holder for buttons that select the charecters
 	    VBox vbChrecterButtons = new VBox();
 	    ScrollPane fpCharecterButtons = new ScrollPane(vbChrecterButtons);
 	    fpCharecterButtons.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 	    fpCharecterButtons.setPannable(true);
 	    	    
+	    //for each charecter in the array make a new button that makes a copy of it
 	    for (AbstractCharecter a : ALL_CHARECTERS) {
 	    	Button newChecterButton = new Button(a.getName());
 		    newChecterButton.setOnAction(event -> setSelectedCharecter((AbstractCharecter) a.clone()));
@@ -252,7 +258,7 @@ public class BigBossGame1 extends Application {
 	    
 	    charSelectScreen.getChildren().addAll(selectAndBackBtns, lblSelectionDescription, saveNamingLine, fpCharecterButtons);
 	    
-	    
+	    //the contents of the charecter select screen
 	    charSelectScreenAndDescription = new HBox();
 	    StackPane.setMargin(charSelectScreenAndDescription, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 	    charSelectScreenAndDescription.setVisible(false);
@@ -271,6 +277,7 @@ public class BigBossGame1 extends Application {
 	    btnSelectScreenBack.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSelectScreenBack.setOnAction(event -> backMenu(selectScreen));
 	    
+	    //each button selects what save to wright to 
 	    btnSave1 = new Button(save1.getName());
 	    btnSave1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    btnSave1.setPrefSize(SELECT_BTN_WIDTH, SELECT_BTN_HEIGHT);
@@ -289,8 +296,8 @@ public class BigBossGame1 extends Application {
 	    btnSave3.setOnAction(event -> selectSave(save3));
 	    VBox.setMargin(btnSave3, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 
-	    btnCharSelectScreenSelect.setOnAction(event -> wrightSave());
 	    
+	    btnCharSelectScreenSelect.setOnAction(event -> wrightSave());
 	    selectScreen.getChildren().addAll(btnSelectScreenBack, btnSave1, btnSave2, btnSave3);
 	    
 	    //preFight screen
@@ -300,8 +307,8 @@ public class BigBossGame1 extends Application {
 	    preFightScreen.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 	    preFightScreen.setMinSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 
+	    //fight(top left) corner of the prefight menu
 	    VBox fightSection = new VBox();
-
 	    Button btnFight = new Button("FIGHT!");
 	    btnFight.setPrefSize(BTN_WIDTH, BTN_HEIGHT);
 	    btnFight.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
@@ -312,41 +319,45 @@ public class BigBossGame1 extends Application {
 	    btnPreFightBack.setFont(Font.font(FONT, BTN_FONT_SIZE));
 	    btnPreFightBack.setOnAction(event -> nextMenu(preFightScreen, selectScreen));
 	    
+	    //stat(top right) corner of the prefight menu
 	    VBox statsSection = new VBox();
-	    
 	    Button btnEditStats = new Button("Stats");
 	    btnEditStats.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    btnEditStats.setOnAction(event -> editStats(preFightScreen, selectedSave.getCharecter())); 
 	    
+	    //the scrollPane that displays the stats under the button
 	    ScrollPane spDisplayStats = new ScrollPane(lblDisplayStats);
 	    spDisplayStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 	    spDisplayStats.setPannable(true);
 	    lblDisplayStats = new Label();
 	    lblDisplayStats.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    
+	    //ability(bottom left) corner of the prefight menu
 	    VBox abilitySection = new VBox();
-	    
 	    Button btnEditAbility = new Button("Ability"); // just able to view and move them, and see their description
 	    btnEditAbility.setFont(Font.font(FONT, BTN_FONT_SIZE));
 	    btnEditAbility.setOnAction(event -> editAbilities(preFightScreen, selectedSave.getCharecter())); 
-	    
+	    //displays the current abilities of the selected charecter
 	    lblDisplayAbilities = new Label();
 	    lblDisplayAbilities.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    
+	    //mod(bottom right) corner of the prefight menu
 	    VBox modSection = new VBox();
-	    
 	    Button btnEditMod = new Button("Mods"); // just able to view and move them, and see their description
 	    btnEditMod.setFont(Font.font(FONT, BTN_FONT_SIZE));
 	    btnEditMod.setOnAction(event -> editMods(preFightScreen, selectedSave.getCharecter()));
 	    
+	    //displays the last mod unlocked of the selected charecter
 	    lblDisplayMods = new Label();
 	    lblDisplayMods.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    
+	    //adds all the pecies of the menu to each "section"
 	    fightSection.getChildren().addAll(btnFight, btnPreFightBack);
 	    statsSection.getChildren().addAll(btnEditStats, lblDisplayStats);
 	    abilitySection.getChildren().addAll(btnEditAbility, lblDisplayAbilities);
 	    modSection.getChildren().addAll(btnEditMod, lblDisplayMods);
 	    
+	    //sets every section to the right (or left) side of the screen 
 	    AnchorPane.setTopAnchor(fightSection, MENU_GAP + .0);
 	    AnchorPane.setLeftAnchor(fightSection, MENU_GAP * 3 + .0);
 
@@ -359,6 +370,7 @@ public class BigBossGame1 extends Application {
 	    AnchorPane.setBottomAnchor(modSection, MENU_GAP * 6+ .0);
 	    AnchorPane.setRightAnchor(modSection, MENU_GAP * 15 + .0);
 	    
+	    //places each section into the AnchorPane
 	    preFightScreen.getChildren().addAll(fightSection, statsSection, abilitySection, modSection);
 
 	    //options screen
@@ -433,7 +445,13 @@ public class BigBossGame1 extends Application {
 	    stage.show();
 	}
 	
+	
+	//moves the first node from on the screen to off the screen, and moves the second from off the screen to on the screen
 	public void nextMenu(Node screen, Node newScreen) {
+		//so the user can't click anything while in Transition
+		Rectangle rect = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+		rect.setOpacity(0);
+		root.getChildren().add(rect);
 		
 		newScreen.setVisible(true);
 		TranslateTransition buttonsTrans2 = new TranslateTransition(Duration.seconds(1.25 * animationSpeedMultiplyer), screen);
@@ -460,10 +478,19 @@ public class BigBossGame1 extends Application {
 		});
 		
 		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans1);
+		parTrans.setOnFinished(event -> {
+			root.getChildren().remove(rect);
+		});
 		parTrans.play();
 	}
 	
+	//moves the first node from on the screen to off the screen, and moves the title screen from off the screen to on the screen
 	public void backMenu (Node n) {
+		//so the user can't click anything while in transition
+		Rectangle rect = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+		rect.setOpacity(0);
+		root.getChildren().add(rect);
+		
 		TranslateTransition buttonsTrans = new TranslateTransition(Duration.seconds(2 * animationSpeedMultiplyer), titleScreen);
 		buttonsTrans.setFromY(1000);
 		buttonsTrans.setToY(0);
@@ -481,26 +508,33 @@ public class BigBossGame1 extends Application {
 		});
 		
 		ParallelTransition parTrans = new ParallelTransition(newSceneTrans, buttonsTrans);
+		parTrans.setOnFinished(event -> {
+			root.getChildren().remove(rect);
+		});
 		parTrans.play();
 	}
 	
+	//toggles the animation speed multiplier
 	public void changeAnimationSpeed () {
 		if (animationSpeedMultiplyer == SLOW_ANIMATION_SPEED) {
 			animationSpeedMultiplyer = FAST_ANIMATION_SPEED;
 		} else {
 			animationSpeedMultiplyer = SLOW_ANIMATION_SPEED;
-
 		}
 	}
 	
+	//updates the volume meater visual
 	public void changeVolume() {
 		lblVolumeSlider.setText("Volume (" + ((int)volumeSlider.getValue()) + "%)" );
 	}
 	
+	//sets selected charecter to the charecter represented in the button calling it or passed
 	public void setSelectedCharecter(AbstractCharecter charecter) {
 		selectedCharecter = charecter;
 		updateSelectButton();
 		lblShowCharDescription.setText("");
+		
+		//reads the file with the same name as the charecter plus description and prints it to the screen
 		FileReader description;
 		BufferedReader descriptionReader;
 		String line;
@@ -513,7 +547,6 @@ public class BigBossGame1 extends Application {
 			while ((line = descriptionReader.readLine()) != null) {
 				lblShowCharDescription.setText(lblShowCharDescription.getText() + line + "\n");
 			}
-
 		} catch (FileNotFoundException e) {
 			System.out.print("No file was found: " + e.getMessage());
 		} catch (IOException e) {
@@ -521,12 +554,17 @@ public class BigBossGame1 extends Application {
 		}
 	}
 	
+	//either selects the epty save that the user clicks on and takes them to the charecter selection screen
+	//or takes them to the pre fight screen with the selected charecters information
 	public void selectSave (Save save) {
+		//select new charecter
 		if (save.getIsEmpty()) {
     		lblShowCharDescription.setText("");
     		selectedSave = save;
-    		
     		nextMenu(selectScreen, charSelectScreenAndDescription);
+    		
+    	//play: takes you to prefight screen
+    	//Delete: removes the informaiton from the save
     	} else {
     		switch(FXDialog.chooseOption("What would you like to do?", "Play", "Delete")) {
     		case"Play" :
@@ -542,6 +580,7 @@ public class BigBossGame1 extends Application {
     	}
 	}
 	
+	//updates the prefight screen to show the information for the selected charecter
 	public void updatePreFightScreen () {
 		lblDisplayStats.setText(selectedSave.getCharecter().getStatsAsString());
 		lblDisplayAbilities.setText(selectedSave.getCharecter().getAbilitiesAsString());
@@ -549,6 +588,7 @@ public class BigBossGame1 extends Application {
 
 	}
 	
+	//places all the information aquired into the selected save
 	public void wrightSave () {
 		nextMenu(charSelectScreenAndDescription, selectScreen);
 		selectedSave.setIsEmpty(false);
@@ -560,6 +600,7 @@ public class BigBossGame1 extends Application {
 		updateButtonNames();
 	}
 	
+	//checks if the user has a selected charecter and has typed a name for the save or not and sets it accordingly
 	public void updateSelectButton () {
 		if (!txtSaveName.getText().equals("") && selectedCharecter != null) {
     	    btnCharSelectScreenSelect.setDisable(false);
@@ -568,65 +609,87 @@ public class BigBossGame1 extends Application {
     	}
 	}
 	
+	//sets the names of the save buttons to refect the information in the save
 	public void updateButtonNames() {
 		btnSave1.setText(save1.getName());
 		btnSave2.setText(save2.getName());
 		btnSave3.setText(save3.getName());
 	}
 	
+	//brings you to the edit mod screen(made here) 
 	public void editMods(Node thisScene, AbstractCharecter charecter) {
-		
-		//TODO orgonize and coment this 
+		//the pane all of the scene will rest on 
 		StackPane stack = new StackPane();
 		stack.setPrefSize(IMAGE_WIDTH, IMAGE_HEIGHT);
-		Group group = new Group();
-		Button back = new Button("Back");
-		StackPane.setAlignment(back, Pos.TOP_LEFT);
-		Rectangle block = new Rectangle();
-		block.setOpacity(100);
 		
+		//the group that the mod buttons will rest
+		Group group = new Group();
 		group.getChildren().addAll(findModLayout(charecter.getMods().get(0), (IMAGE_WIDTH / 2), 0));
 		
-		group.getChildren().add(block);
+		//the button that returns you to the last screen
+		Button back = new Button("Back");
+		StackPane.setAlignment(back, Pos.TOP_LEFT);
 		back.setLayoutX(IMAGE_WIDTH / 2 - (MOD_BUTTON_SIZE / 2));
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		ScrollPane scrollPane = new ScrollPane(group);
 		back.setOnAction(event -> leaveMods(stack, thisScene)); // make animations finish before removing group - on finish aciton for transition 
+		
+		//the backing to group used to center the tree
+		Rectangle block = new Rectangle();
+		block.setOpacity(100);
+		group.getChildren().add(block);
+		
+		//the scrollpane used to let the user to get to all the mods even form off screen
+		ScrollPane scrollPane = new ScrollPane(group);
 		scrollPane.setPannable(true);
 		scrollPane.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+
+		//adding all the loose bits to the stack(new screen) then to the root and changin to that screen
 		stack.getChildren().addAll(scrollPane, back);
 		root.getChildren().add(stack);
 		nextMenu(thisScene, stack);
 	}
 	
+	//makes then takes the user to the edit stats screen
 	public void editStats (Node thisScene, AbstractCharecter charecter) {
 		
-		//TODO orgonize and coment this 
+		//the pane most of everything will rest on 
 		GridPane gpStats = new GridPane();
 		gpStats.setVgap(TITLE_GAP);
 		gpStats.setHgap(TITLE_GAP);
+		gpStats.setHgap(MENU_GAP);
+		
+		//the scroll pane that the grid pane will rest on to allow scrolling
 		ScrollPane sp = new ScrollPane(gpStats);
 		sp.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		
+		//the button that takes you back to the last screen
 		Button back = new Button("Back");
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		
+		//commits all the stats for the charecter
 		Button commmitAll = new Button("Commit All");
 		commmitAll.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		commmitAll.setOnAction(event -> {
+			
 			for (int i = 0; i < charecter.getStats().size(); i++) {
 				Stat s = charecter.getStats().get(i);
 				s.commitTempStat();
+				//locates the change label in the grid pane to change it to the new amount
 				((Label) ((GridPane) gpStats.getChildren().get(i + 3)).getChildren().get(2)).setText(s.getTempValue() + "");
 			}
 		});
+		
+		//displays the total points the character has to spend
 		Label lblTotalPoints = new Label();
 		lblTotalPoints.setTextFill(Color.BLACK);
 		lblTotalPoints.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		
+		//adds all the loose bits to the grid pane
 		gpStats.add(back, 0, 0);
 		gpStats.add(lblTotalPoints, 1, 0);
 		gpStats.add(commmitAll, 2, 0);
-		gpStats.setHgap(MENU_GAP);
 		
-		
+		//makes a section for each stat the charcter has and adds it to the grid pane
 		for (Stat s : charecter.getStats()) {
 			Button subTen = new Button("-10");
 			Button sub = new Button("-");
@@ -676,20 +739,32 @@ public class BigBossGame1 extends Application {
 			}
 			leaveMods(sp, thisScene);
 		});
+		
+		
 		root.getChildren().add(sp);
 		nextMenu(thisScene, sp);
 	}
 	
+	//makes then takes the user to the abilities select screen
 	public void editAbilities(Node thisScene, AbstractCharecter charecter) {
-		VBox gp = new VBox();
-		gp.setAlignment(Pos.CENTER);
+		
+		//the vbox most things will rest on 
+		VBox abilityScreen = new VBox();
+		abilityScreen.setAlignment(Pos.CENTER);
+		
+		//the button that returns you to the previous screen
 		Button back = new Button("Back");
+		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		
+		//the button that takes you to the slot machine screen
 		Button useRoll = new Button("Unlock New Ability : " + charecter.getRollTokens() + " Tokens.");
+		useRoll.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		//can only be used if the charecter has a rolltoken 
 		if (charecter.getRollTokens() < 1) {
 			useRoll.setDisable(true);
 		}
-		useRoll.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		
+		//the labels used to represent the three equipped abilities (dose not mean they are currently equipped, jest represented)
 		Label ability1 = new Label(charecter.getAbility(0).getName());
 		Label ability2 = new Label(charecter.getAbility(1).getName());
 		Label ability3 = new Label(charecter.getAbility(2).getName());
@@ -700,21 +775,25 @@ public class BigBossGame1 extends Application {
 		FlowPane.setMargin(ability2, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 		FlowPane.setMargin(ability3, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 
+		//adds the drag and drop functionality to the labels
 		setUpLabel(ability1);
 		setUpLabel(ability2);
 		setUpLabel(ability3);
 
+		//makes sure each ability is representing the right thing in the charecters data
 		back.setOnAction(event -> {
 			fixAbilities(charecter, ability1, ability2, ability3);
 			updatePreFightScreen();
-			leaveMods(gp, preFightScreen);
+			leaveMods(abilityScreen, preFightScreen);
 		});
 		
+		//if you can unlock another ability it takes one token and 
+		//TODO keep commenting 
 		useRoll.setOnAction(event -> {
 			if (charecter.getRollTokens() > 0) {
 				if (charecter.numberOfLockedAbilities() > 0 ) {
 					fixAbilities(charecter, ability1, ability2, ability3);
-					abilitySlotMachine(gp, charecter);				
+					abilitySlotMachine(abilityScreen, charecter);				
 				} else {
 					FXDialog.print("You have unlocked all abilities! Your Roll Tokens have been conferted into " + charecter.getRollTokens() * 5 + " Skill Points!");
 					charecter.addStatPoints(charecter.getRollTokens());
@@ -726,8 +805,8 @@ public class BigBossGame1 extends Application {
 		FlowPane activeAbilities = new FlowPane();
 		activeAbilities.setMaxWidth(IMAGE_WIDTH / 2); 
 		activeAbilities.getChildren().addAll(back, ability1, ability2, ability3, useRoll);
-		gp.getChildren().add(activeAbilities);
-		gp.getChildren().add(new Line(0, 0, IMAGE_WIDTH, 0));
+		abilityScreen.getChildren().add(activeAbilities);
+		abilityScreen.getChildren().add(new Line(0, 0, IMAGE_WIDTH, 0));
 		
 		
 		FlowPane unlockedAbilities = new FlowPane();
@@ -757,9 +836,9 @@ public class BigBossGame1 extends Application {
 		for (Node l : unlockedAbilities.getChildren()) {
 			((Label) l).setTextFill(Color.BLACK);
 		}
-		gp.getChildren().add(spAbilities);
-		root.getChildren().add(gp);
-		nextMenu(thisScene, gp);
+		abilityScreen.getChildren().add(spAbilities);
+		root.getChildren().add(abilityScreen);
+		nextMenu(thisScene, abilityScreen);
 	}
 	
 	public void abilitySlotMachine(Node thisScene, AbstractCharecter charecter) {

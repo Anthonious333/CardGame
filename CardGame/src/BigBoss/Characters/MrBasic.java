@@ -22,7 +22,7 @@ public class MrBasic extends AbstractCharecter{
 		this.addRollTokens(100);
 		this.addStatPoints(10);
 		AbstractAbility punch = new PunchAbility(this);
-		this.setPosibleAbilities(punch, new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this), new EmptyAbility(this));
+		this.setPosibleAbilities(punch, new EmptyAbility(this), new EmptyAbility(this));
 		this.equipAbility(punch, 0);
 		
 		OriginMod start = new OriginMod("Mr . Basic\nOrigin", null);

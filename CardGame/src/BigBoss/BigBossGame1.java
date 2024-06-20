@@ -787,8 +787,7 @@ public class BigBossGame1 extends Application {
 			leaveMods(abilityScreen, preFightScreen);
 		});
 		
-		//if you can unlock another ability it takes one token and 
-		//TODO keep commenting 
+		//if you can unlock another ability it takes one token and if you cant it turns all tokens into skill points
 		useRoll.setOnAction(event -> {
 			if (charecter.getRollTokens() > 0) {
 				if (charecter.numberOfLockedAbilities() > 0 ) {
@@ -802,20 +801,21 @@ public class BigBossGame1 extends Application {
 			}
 		});
 		
+		//the flow pane that contains the buttons and labels that dont change (back / abilities / roll button)
 		FlowPane activeAbilities = new FlowPane();
 		activeAbilities.setMaxWidth(IMAGE_WIDTH / 2); 
 		activeAbilities.getChildren().addAll(back, ability1, ability2, ability3, useRoll);
-		abilityScreen.getChildren().add(activeAbilities);
-		abilityScreen.getChildren().add(new Line(0, 0, IMAGE_WIDTH, 0));
 		
-		
+		//the flow pane to hold all the avalable abilities 
 		FlowPane unlockedAbilities = new FlowPane();
+	
+		//placing everything on a scroll pane to be able to pane around
 		ScrollPane spAbilities = new ScrollPane(unlockedAbilities);
 		spAbilities.setMaxSize(IMAGE_WIDTH / 2, IMAGE_HEIGHT);
 		spAbilities.setPannable(true);
 		spAbilities.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 		
-		
+		//for every ability a charecter has, if it is unlocked and not one of the first three(equiped) ones, make a label with its name and add it to the flow pane
 		for (AbstractAbility a : charecter.getPosibleAbilities()) {
 			if (a.isUnlocked() && !a.isEquiped()) {
 				Label ability = new Label(a.getName());
@@ -825,6 +825,8 @@ public class BigBossGame1 extends Application {
 				unlockedAbilities.getChildren().add(ability);
 			}
 		}
+		
+		//for every ability, if it is locked, and therfore not equiped, make a label with ??? on it and add it to the list
 		for (AbstractAbility a : charecter.getPosibleAbilities()) {
 			if (!a.isUnlocked()) {
 				Label ability = new Label("   ???   ");
@@ -833,48 +835,73 @@ public class BigBossGame1 extends Application {
 				unlockedAbilities.getChildren().add(ability);
 			}
 		}
+		
+		//color correcting all the text to black
 		for (Node l : unlockedAbilities.getChildren()) {
 			((Label) l).setTextFill(Color.BLACK);
 		}
+		
+		//adding everything to the screen
+		abilityScreen.getChildren().add(activeAbilities);
+		abilityScreen.getChildren().add(new Line(0, 0, IMAGE_WIDTH, 0));
 		abilityScreen.getChildren().add(spAbilities);
 		root.getChildren().add(abilityScreen);
 		nextMenu(thisScene, abilityScreen);
 	}
 	
+	//creates a screen with a slot machine and three abilitys to unlock
 	public void abilitySlotMachine(Node thisScene, AbstractCharecter charecter) {
+		//makes sure the user wants to continue
 		if (!FXDialog.askYesNoQuestion("Would you like to use a role to unlock an ability?")) {
 			return;
 		}
-		ImageView img = new ImageView(getClass().getResource("/images/SlotMachineTest2.png").toString());
-		StackPane sp = new StackPane();
+		//the picture of the slot machine with holes in it to allow for the buttons to show
+		ImageView imgSlotMachine = new ImageView(getClass().getResource("/images/SlotMachineTest2.png").toString());
+		
+		//a copy of the image to be placed under the one with holes to serve as a not avalable options
+		ImageView imgSlotMachineBase = new ImageView(getClass().getResource("/images/SlotMachine.png").toString());
+
+		//the stackpane everything else will sit on
+		StackPane stackPane = new StackPane(imgSlotMachineBase);
+		
+		//used to keep track of the object that need to be manipulated in some way after the Slot Machine has been pulled
+		//to keep trach of the transition that moves the ability / select button
 		ArrayList<TranslateTransition> btnTransList = new ArrayList<TranslateTransition>();
+		//used to keep track of the animation that makes the machine look like its spinning 
 		ArrayList<ParallelTransition> slotParallelTransList = new ArrayList<ParallelTransition>();
+		//used to keep track of the images that will be removed once the machine stops
 		ArrayList<ImageView> imgToRemove = new ArrayList<ImageView>();
 		
-		ArrayList<AbstractAbility> list = new ArrayList<AbstractAbility>();
-		while (list.size() <charecter.numberOfLockedAbilities()) {
+		//used to keep track of the abilities that the user can choose from
+		ArrayList<AbstractAbility> abilityOptions = new ArrayList<AbstractAbility>();
+		
+		//picks 3 abilities that are locked and have not already been chosen
+		//if there are less than three it picks the remaining ones
+		while (abilityOptions.size() <charecter.numberOfLockedAbilities()) {
 			AbstractAbility a = charecter.getPosibleAbilities().get(randomNumber(0, charecter.getPosibleAbilities().size() - 1));
-			if (!a.isUnlocked() && !list.contains(a)) {
-				list.add(a);
+			if (!a.isUnlocked() && !abilityOptions.contains(a)) {
+				abilityOptions.add(a);
 			}
 		}
-		for (AbstractAbility a : list) {
+		
+		//creates the animations and buttons for each of the selected abilities
+		//TODO keep comenting
+		for (AbstractAbility a : abilityOptions) {
 			ImageView img1 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
 			ImageView img2 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
 
-			
 			TranslateTransition SlotTrans = new TranslateTransition(Duration.seconds(.1), img1);
 			SlotTrans.setFromY(-284);
 			SlotTrans.setToY(0);
-			SlotTrans.setFromX(-340 + list.indexOf(a) * 294);
-			SlotTrans.setToX(-340 + list.indexOf(a) * 294);
+			SlotTrans.setFromX(-340 + abilityOptions.indexOf(a) * 294);
+			SlotTrans.setToX(-340 + abilityOptions.indexOf(a) * 294);
 			SlotTrans.setInterpolator(Interpolator.LINEAR);
 			SlotTrans.setCycleCount(1);
 		    TranslateTransition SlotTrans2 = new TranslateTransition(Duration.seconds(.1), img2);
 		    SlotTrans2.setFromY(0);
 		    SlotTrans2.setToY(284);
-		    SlotTrans2.setFromX(-340 + list.indexOf(a) * 294);
-		    SlotTrans2.setToX(-340 + list.indexOf(a) * 294);
+		    SlotTrans2.setFromX(-340 + abilityOptions.indexOf(a) * 294);
+		    SlotTrans2.setToX(-340 + abilityOptions.indexOf(a) * 294);
 		    SlotTrans2.setCycleCount(1);
 		    SlotTrans2.setInterpolator(Interpolator.LINEAR);
 		    ParallelTransition slotParallelTrans = new ParallelTransition(SlotTrans, SlotTrans2);
@@ -890,7 +917,7 @@ public class BigBossGame1 extends Application {
 				FXDialog.print("You have unlocked " + a.getName() + ".");
 				a.setUnlocked(true);
 				charecter.addRollTokens(-1);
-				editAbilities(sp, charecter);
+				editAbilities(stackPane, charecter);
 			});
 			
 			int x = -34;
@@ -898,8 +925,8 @@ public class BigBossGame1 extends Application {
 			TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
 			btnTrans.setFromY(-284 + x);
 			btnTrans.setToY(0 + x);
-			btnTrans.setFromX(-340 + list.indexOf(a) * 294);
-			btnTrans.setToX(-340 + list.indexOf(a) * 294);
+			btnTrans.setFromX(-340 + abilityOptions.indexOf(a) * 294);
+			btnTrans.setToX(-340 + abilityOptions.indexOf(a) * 294);
 			btnTrans.setInterpolator(Interpolator.LINEAR);
 			btnTrans.setCycleCount(1);
 		    
@@ -911,21 +938,18 @@ public class BigBossGame1 extends Application {
 		    btn.setVisible(false);
 		    
 			btn.getChildren().addAll(iv, lbl);
-			sp.getChildren().addAll(img1, img2);
-			sp.getChildren().addAll(btn);
+			stackPane.getChildren().addAll(img1, img2);
+			stackPane.getChildren().addAll(btn);
 
 			
 		}
 		
-		img.setOnMouseClicked(event -> {
-			
-			
-
+		imgSlotMachine.setOnMouseClicked(event -> {
 			for (TranslateTransition t : btnTransList) {
 				int i = btnTransList.indexOf(t);
 				
 				TranslateTransition timer = new TranslateTransition(Duration.ZERO);
-				timer.setOnFinished(event1 -> sp.getChildren().get((i * 3) + 2).setVisible(true));
+				timer.setOnFinished(event1 -> stackPane.getChildren().get((i * 3) + 3).setVisible(true));
 				
 			    ParallelTransition tAndTimer = new ParallelTransition(t, timer);
 			    tAndTimer.setDelay(Duration.seconds(i * .5));
@@ -942,10 +966,10 @@ public class BigBossGame1 extends Application {
 		});
 
 		
-		sp.getChildren().add(img);
+		stackPane.getChildren().add(imgSlotMachine);
 
-		root.getChildren().add(sp);
-		leaveMods(thisScene, sp);
+		root.getChildren().add(stackPane);
+		leaveMods(thisScene, stackPane);
 	}
 	
 	public void fixAbilities(AbstractCharecter charecter, Label ability1, Label ability2, Label ability3) {

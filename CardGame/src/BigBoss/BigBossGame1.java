@@ -887,9 +887,11 @@ public class BigBossGame1 extends Application {
 		//creates the animations and buttons for each of the selected abilities
 		//TODO keep comenting
 		for (AbstractAbility a : abilityOptions) {
+			//images for the spinging animation
 			ImageView img1 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
 			ImageView img2 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
 
+			//the spinging animations
 			TranslateTransition SlotTrans = new TranslateTransition(Duration.seconds(.1), img1);
 			SlotTrans.setFromY(-284);
 			SlotTrans.setToY(0);
@@ -909,6 +911,7 @@ public class BigBossGame1 extends Application {
 		    slotParallelTrans.setCycleCount(Animation.INDEFINITE);
 		    slotParallelTrans.play();
 		    
+		    //the "Button" that unnlocks the ability being looked at 
 			StackPane btn = new StackPane();
 			ImageView iv = new ImageView(getClass().getResource("/images/Slot.jpg").toString());
 			Label lbl = new Label(a.getName());
@@ -920,16 +923,16 @@ public class BigBossGame1 extends Application {
 				editAbilities(stackPane, charecter);
 			});
 			
-			int x = -34;
-			
+			//the animation that plays so the button falls into place
 			TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
-			btnTrans.setFromY(-284 + x);
-			btnTrans.setToY(0 + x);
-			btnTrans.setFromX(-340 + abilityOptions.indexOf(a) * 294);
-			btnTrans.setToX(-340 + abilityOptions.indexOf(a) * 294);
+			btnTrans.setFromY(-318);
+			btnTrans.setToY(-34);
+			btnTrans.setFromX(-374 + abilityOptions.indexOf(a) * 294);
+			btnTrans.setToX(-374 + abilityOptions.indexOf(a) * 294);
 			btnTrans.setInterpolator(Interpolator.LINEAR);
 			btnTrans.setCycleCount(1);
 		    
+			//adding everything to the tracking lists
 		    btnTransList.add(btnTrans);
 		    slotParallelTransList.add(slotParallelTrans);
 		    imgToRemove.add(img1);
@@ -937,6 +940,7 @@ public class BigBossGame1 extends Application {
 		    
 		    btn.setVisible(false);
 		    
+		    //adds everything to the screen
 			btn.getChildren().addAll(iv, lbl);
 			stackPane.getChildren().addAll(img1, img2);
 			stackPane.getChildren().addAll(btn);
@@ -944,21 +948,24 @@ public class BigBossGame1 extends Application {
 			
 		}
 		
+		//plays the slot animation
 		imgSlotMachine.setOnMouseClicked(event -> {
 			for (TranslateTransition t : btnTransList) {
-				int i = btnTransList.indexOf(t);
+				int index = btnTransList.indexOf(t);
 				
+				//used to make the image visable at the start of the animation 
 				TranslateTransition timer = new TranslateTransition(Duration.ZERO);
-				timer.setOnFinished(event1 -> stackPane.getChildren().get((i * 3) + 3).setVisible(true));
+				timer.setOnFinished(event1 -> stackPane.getChildren().get((index * 3) + 3).setVisible(true));
 				
+				//plays the timer and the animation at the same time, basically just makes the image visible at the start of the animation
 			    ParallelTransition tAndTimer = new ParallelTransition(t, timer);
-			    tAndTimer.setDelay(Duration.seconds(i * .5));
+			    tAndTimer.setDelay(Duration.seconds(index * .5));
 				
-				
+				//removes the images from the screen once the animation is finished playing over it 
 				t.setOnFinished(event1 -> {
 					imgToRemove.remove(0);
 					imgToRemove.remove(0);
-					slotParallelTransList.get(i).stop();
+					slotParallelTransList.get(index).stop();
 				});
 				tAndTimer.play();
 			}
@@ -972,6 +979,7 @@ public class BigBossGame1 extends Application {
 		leaveMods(thisScene, stackPane);
 	}
 	
+	//unequips all the charecters abilities, then equipes all the abilities represented by each label. NOTE it is important that no label be named the same as another
 	public void fixAbilities(AbstractCharecter charecter, Label ability1, Label ability2, Label ability3) {
 		for (AbstractAbility a : charecter.getPosibleAbilities()) {
 			if (a.isUnlocked()) {
@@ -983,97 +991,95 @@ public class BigBossGame1 extends Application {
 		charecter.equipAbility(ability3.getText(), 2);
 	}
 	
+	//adds the ability for the label to be draged and droped aswell as resive other drag and droped labels
 	public void setUpLabel(Label lbl) {
 		
+		//makes a border around the label when hovered
 		lbl.setOnMouseEntered(event -> {
 			lbl.setStyle("-fx-border-color: black;");
 		});
-		
+
+		//removes the border around the label when unhovered
 		lbl.setOnMouseExited(event -> {
 			lbl.setStyle("-fx-border-color: transparent;");
 		});
-		
-		
-			lbl.setOnDragDetected(new EventHandler <MouseEvent>() {
-	            public void handle(MouseEvent event) {
-	                
-	                Dragboard db = lbl.startDragAndDrop(TransferMode.ANY);
-	                
-	                ClipboardContent content = new ClipboardContent();
-	                content.putString(lbl.getText());
-	                db.setContent(content);
-	                
-	                event.consume();
-	            }
-	        });
-		  
-			lbl.setOnDragOver(new EventHandler <DragEvent>() {
-	            public void handle(DragEvent event) {
-	            
-	            	
-	                if (event.getGestureSource() != lbl) {
-	                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-	                    
 
-	                }
-	                event.consume();
-	            }
-	        });
+		//adds the string on the label to the clipBoard once drag starts
+		lbl.setOnDragDetected(new EventHandler <MouseEvent>() {
+			public void handle(MouseEvent event) {
 
-			lbl.setOnDragEntered(new EventHandler <DragEvent>() {
-	            public void handle(DragEvent event) {
-	                
-	                if (event.getGestureSource() != lbl) {
-	                	lbl.setTextFill(Color.GREEN);
-	                
-	                }
-	                
-	                event.consume();
-	            }
-	        });
+				Dragboard db = lbl.startDragAndDrop(TransferMode.ANY);
 
-			lbl.setOnDragExited(new EventHandler <DragEvent>() {
-	            public void handle(DragEvent event) {
-	            	lbl.setTextFill(Color.BLACK);
-	            	System.out.print("exit");
+				ClipboardContent content = new ClipboardContent();
+				content.putString(lbl.getText());
+				db.setContent(content);
 
-	                event.consume();
-	            }
-	        });
-	        
-			lbl.setOnDragDropped(new EventHandler <DragEvent>() {
-	            public void handle(DragEvent event) {
-	            	
-	                Dragboard db = event.getDragboard();
-	                ClipboardContent content = new ClipboardContent();
-                	content.putString(db.getString() + ":" + lbl.getText());
-                	db.setContent(content);
-                	
-	                boolean success = false;
-	                if (db.hasString() && db.getString().contains(":")) {
-	                	lbl.setText(db.getString().substring(0, db.getString().indexOf(":")));
-	                	System.out.print(db.getString().substring(0, db.getString().indexOf(":")));
-	                    success = true;
-	                }
-	                event.setDropCompleted(success);
-	                
-	                event.consume();
-	            }
-	        });
+				event.consume();
+			}
+		});
 
-			lbl.setOnDragDone(new EventHandler <DragEvent>() {
-	            public void handle(DragEvent event) {
-	                Dragboard db = event.getDragboard();
-	                if (event.getTransferMode() == TransferMode.MOVE) {
-	                	lbl.setText(db.getString().substring((db.getString().indexOf(":") + 1)));
-	                	System.out.print(db.getString().substring((db.getString().indexOf(":") + 1)));
+		//acceptance mode set i think 
+		lbl.setOnDragOver(new EventHandler <DragEvent>() {
+			public void handle(DragEvent event) {
+				if (event.getGestureSource() != lbl) {
+					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+				}
+				event.consume();
+			}
+		});
 
-	                }
-	                event.consume();
-	            }
-	        });
+		//makes the label green when hovered by a drag event
+		lbl.setOnDragEntered(new EventHandler <DragEvent>() {
+			public void handle(DragEvent event) {
+				if (event.getGestureSource() != lbl) {
+					lbl.setTextFill(Color.GREEN);
+				}
+				event.consume();
+			}
+		});
+
+		//changes the label back to black once exited
+		lbl.setOnDragExited(new EventHandler <DragEvent>() {
+			public void handle(DragEvent event) {
+				lbl.setTextFill(Color.BLACK);
+				event.consume();
+			}
+		});
+
+		//adds the text from the label to the clipBoard seperated by a ':'
+		//then adds the first part to the hovered label
+		lbl.setOnDragDropped(new EventHandler <DragEvent>() {
+			public void handle(DragEvent event) {
+
+				Dragboard db = event.getDragboard();
+				ClipboardContent content = new ClipboardContent();
+				content.putString(db.getString() + ":" + lbl.getText());
+				db.setContent(content);
+
+				boolean success = false;
+				if (db.hasString() && db.getString().contains(":")) {
+					lbl.setText(db.getString().substring(0, db.getString().indexOf(":")));
+					success = true;
+				}
+				event.setDropCompleted(success);
+
+				event.consume();
+			}
+		});
+
+		//adds the part following the ':' on the clipboard to the label once event is finished
+		lbl.setOnDragDone(new EventHandler <DragEvent>() {
+			public void handle(DragEvent event) {
+				Dragboard db = event.getDragboard();
+				if (event.getTransferMode() == TransferMode.MOVE) {
+					lbl.setText(db.getString().substring((db.getString().indexOf(":") + 1)));
+				}
+				event.consume();
+			}
+		});
 	}
-	
+
+	//TODO keep commenting
 	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, boolean adding, int amount) {
 
 		if (adding) {

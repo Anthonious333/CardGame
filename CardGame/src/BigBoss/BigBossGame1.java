@@ -631,7 +631,7 @@ public class BigBossGame1 extends Application {
 		StackPane.setAlignment(back, Pos.TOP_LEFT);
 		back.setLayoutX(IMAGE_WIDTH / 2 - (MOD_BUTTON_SIZE / 2));
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		back.setOnAction(event -> leaveMods(stack, thisScene)); // make animations finish before removing group - on finish aciton for transition 
+		back.setOnAction(event -> leaveTempScene(stack, thisScene)); // make animations finish before removing group - on finish aciton for transition 
 		
 		//the backing to group used to center the tree
 		Rectangle block = new Rectangle();
@@ -737,7 +737,7 @@ public class BigBossGame1 extends Application {
 				charecter.addStatPoints(s.getTempValue());
 				s.setTempValue(0);
 			}
-			leaveMods(sp, thisScene);
+			leaveTempScene(sp, thisScene);
 		});
 		
 		
@@ -784,7 +784,7 @@ public class BigBossGame1 extends Application {
 		back.setOnAction(event -> {
 			fixAbilities(charecter, ability1, ability2, ability3);
 			updatePreFightScreen();
-			leaveMods(abilityScreen, preFightScreen);
+			leaveTempScene(abilityScreen, preFightScreen);
 		});
 		
 		//if you can unlock another ability it takes one token and if you cant it turns all tokens into skill points
@@ -885,7 +885,6 @@ public class BigBossGame1 extends Application {
 		}
 		
 		//creates the animations and buttons for each of the selected abilities
-		//TODO keep comenting
 		for (AbstractAbility a : abilityOptions) {
 			//images for the spinging animation
 			ImageView img1 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
@@ -976,7 +975,7 @@ public class BigBossGame1 extends Application {
 		stackPane.getChildren().add(imgSlotMachine);
 
 		root.getChildren().add(stackPane);
-		leaveMods(thisScene, stackPane);
+		leaveTempScene(thisScene, stackPane);
 	}
 	
 	//unequips all the charecters abilities, then equipes all the abilities represented by each label. NOTE it is important that no label be named the same as another
@@ -1079,7 +1078,7 @@ public class BigBossGame1 extends Application {
 		});
 	}
 
-	//TODO keep commenting
+	//adjusts the stat (s) by amount and updates the visuals to represent that information
 	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, boolean adding, int amount) {
 
 		if (adding) {
@@ -1104,7 +1103,13 @@ public class BigBossGame1 extends Application {
 		lblTotalPoints.setText("Stat Points Avalable: " + charecter.getStatPoints() + "");
 	}
 	
-	public void leaveMods(Node screen, Node newScreen) {
+	//transitions from screen to new Screen and removes screen from root
+	public void leaveTempScene(Node screen, Node newScreen) {
+		//so the user can't click anything while in Transition
+		Rectangle rect = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
+		rect.setOpacity(0);
+		root.getChildren().add(rect);
+		
 		newScreen.setVisible(true);
 		TranslateTransition buttonsTrans2 = new TranslateTransition(Duration.seconds(1.25 * animationSpeedMultiplyer), screen);
 		buttonsTrans2.setFromY(-100);
@@ -1113,6 +1118,7 @@ public class BigBossGame1 extends Application {
 		buttonsTrans2.setOnFinished(event -> {
 			screen.setLayoutY(1000);
 			root.getChildren().remove(screen);
+			root.getChildren().remove(rect);
 		});
 		TranslateTransition buttonsTrans1 = new TranslateTransition(Duration.seconds(.75 * animationSpeedMultiplyer), screen);
 		buttonsTrans1.setFromY(0);
@@ -1135,11 +1141,12 @@ public class BigBossGame1 extends Application {
 		updatePreFightScreen();
 	}
 
-	
-	
+	//returns and arraylist of buttons with their layouts set to form a tree pattern. NOTE only works for trees with no more than two branches from any one note.
 	public ArrayList<Node> findModLayout (AbstractModification mod, double xPos, double yPos) {
+		//the button(s) currently being returned
 		ArrayList<Node> ret = new ArrayList<Node>();
 		
+		//makes a new button that tries to unlock the corresponding ability when clicked
 		Button btn = new Button(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" : "" ));
 		btn.setOnAction(event -> {
 			if (mod.unlock()) {
@@ -1151,17 +1158,26 @@ public class BigBossGame1 extends Application {
 		btn.setPrefSize(MOD_BUTTON_SIZE, MOD_BUTTON_SIZE);
 		ret.add(btn);
 		
+		//if there is at least one other mod in the data structure...
 		if (!mod.getNext().isEmpty()) {
+			//if the amount is 1
 			if (mod.getNext().size() == 1) {
+				//add a line starting just under and in the middle of the button
 				ret.add(new Line(xPos, yPos + MOD_BUTTON_SIZE, xPos, yPos + MOD_GAP + MOD_BUTTON_SIZE));
+				//then call the method again on the next mod to have it placed in the array with its layout set
 				ret.addAll(findModLayout(mod.getNext().get(0), xPos, yPos + MOD_GAP + MOD_BUTTON_SIZE));
+			//if the amount is 2...
 			} else if (mod.getNext().size() == 2) {
+				//make 2 new lines, one to go to the left and the other go to the right
+				//this monstrosity of a line of code uses the image width and the number of "end points" the data structure or tree will have, and how 
+				//far along it is to determing the x coorinate of the next two buttons
 				ret.add(new Line(xPos - (MOD_BUTTON_SIZE / 2), yPos + MOD_BUTTON_SIZE, xPos - (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
 				ret.add(new Line(xPos + (MOD_BUTTON_SIZE / 2), yPos + MOD_BUTTON_SIZE, xPos + (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
+				//then call the method again once for each next in the data structure
 				ret.addAll(findModLayout(mod.getNext().get(0), xPos - (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
 				ret.addAll(findModLayout(mod.getNext().get(1), xPos + (IMAGE_WIDTH / 8 * ((int)((mod.endPoints() + 1) / 2))), yPos + MOD_GAP + MOD_BUTTON_SIZE));
 			} else {
-				
+				//nothing yet...
 			}
 		}
 		
@@ -1169,27 +1185,35 @@ public class BigBossGame1 extends Application {
 		
 	}
 	
+	
 	public void fadeToNext(Node thisScene, Node nextScene, FadeTransitionResult next, AbstractCharecter charecter, BossEnemy boss) {
+		//the black screen to fade in and out
 		Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 		
+		//the fade out animation
 		FadeTransition ft2 = new FadeTransition(Duration.seconds(1.5), rect);
 		ft2.setFromValue(1.0);
 		ft2.setToValue(0.0);
 		ft2.setCycleCount(1);
 		ft2.setDelay(Duration.seconds(2));
 		ft2.setOnFinished(event -> {
+			//remove the rectangle so user can click on the screen again
 			root.getChildren().remove(rect);
 			
+			//depending on the desired result of the fade...
 			switch(next) {
+			//Begin the fight round loop
 			case FIGHT:
 				speak(last -> playerFightRound(thisScene, charecter, boss), charecter.getFightIntro());				
 				break;
+			//remove the fight pane, then add the display pane and speak the post combate results. followed by fading again to menu
 			case BLACK: 
 				root.getChildren().remove(root.getChildren().size() - 2);
 				root.getChildren().add(fightDisplayPane);
 				speak(last -> fadeToNext(nextScene, preFightScreen, FadeTransitionResult.MENU, charecter, boss), postCombatResult(charecter, boss));
 				updatePreFightScreen();
 				break;
+			//clears the display pane's contents
 			case MENU:
 				fightDisplayPane.getChildren().clear();
 				break;
@@ -1197,12 +1221,16 @@ public class BigBossGame1 extends Application {
 			}
 		});
 		
+		//the fade in animation
 		FadeTransition ft = new FadeTransition(Duration.seconds(1), rect);
 		ft.setFromValue(0.0);
 		ft.setToValue(1.0);
 		ft.setCycleCount(1);
 		ft.setOnFinished(event -> {
+			//litterally just moves the menu off the screen because it didnt work when i tired to code it again
 			nextMenu(thisScene, nextScene);
+			
+			//if going to fight set the background to the fight one, otherwise make it the scrolling one
 			switch(next) {
 			case FIGHT:
 				backgroundParallelTrans.jumpTo(Duration.seconds(-1));
@@ -1213,8 +1241,10 @@ public class BigBossGame1 extends Application {
 				mainBackgroundV.setImage(mainBackgroundI);
 				backgroundParallelTrans.play();
 			}
+			
 			ft2.play();
 		});
+		//remove the display pane (this happens after the speak in the BLACK case has happened)
 		if (root.getChildren().contains(fightDisplayPane)) {
 			root.getChildren().remove(fightDisplayPane); 			
 		}
@@ -1222,6 +1252,7 @@ public class BigBossGame1 extends Application {
 	    root.getChildren().add(rect);
 	}
 	
+	//creates the screen for a new combat, with a new boss and changes to that screen
 	public void startNewCombat (Node thisScene, AbstractCharecter charecter) {
 		Pane pane = new Pane();
 		BossEnemy boss = new BossEnemy(charecter.getWins());
@@ -1241,11 +1272,17 @@ public class BigBossGame1 extends Application {
 		
 	}
 	
+	//calculates the results of the combat
+	//then returns an array of strings describing the results of the combat.
 	public String[] postCombatResult(AbstractCharecter charecter, BossEnemy boss) {
+		// this number is the amount of point the player will earn by default and follows the formula:
+		//0-20(based on the percent missing health of the boss) + 1-5 (random)
 		int skillPoints = randomNumber( (int) (20.0 - (boss.getStat("HP") / boss.findStat("HP").getMax() * 20.0) + 1), (int) (20.0 - (boss.getStat("HP") / boss.findStat("HP").getMax() * 20.0) + 5.0));
 
+		//what will be returned
 		ArrayList<String> toSay = new ArrayList<String>();
 		
+		//if the player lost give them their points then give them a one in five chance to get an ability token 
 		if (charecter.isDead()) {
 			toSay.add("You lost...");
 			toSay.add("But don't be discouraged!");
@@ -1257,6 +1294,7 @@ public class BigBossGame1 extends Application {
 			
 		}
 		
+		//if the player won double the points they would have earnt and give then an ability token
 		if (boss.isDead()) {
 			skillPoints *= 2;
 			charecter.addRollTokens(1);
@@ -1265,15 +1303,20 @@ public class BigBossGame1 extends Application {
 			toSay.add("You have recived double points, bringin you to " + skillPoints + ", and a guarentied Ability Token to use in the prep menu.");
 			toSay.add("The Boss has aslow DOUBLED its stats for next fight!");
 		}
+		//give player points
 		charecter.addStatPoints(skillPoints);
+		
+		//changes the arraylist to a String[] to be returned
 		String[] ret = new String[toSay.size()];
 		for (int i = 0; i < toSay.size(); i++) {
 			ret[i] = toSay.get(i);
 		}
+		
 		charecter.reset();
 		return ret; 
 	}
 	
+	//TODO keep commenting
 	public void playerFightRound (Node thisScene, AbstractCharecter charecter, BossEnemy boss) {
 		if (deathCheck(charecter)) {
 			Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);

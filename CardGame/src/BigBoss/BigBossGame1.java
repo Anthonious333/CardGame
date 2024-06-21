@@ -79,8 +79,6 @@ public class BigBossGame1 extends Application {
 
 
 	/*
-	 * TODO add descriptions and coment things in the code
-	 * 
 	 * TODO add sounds
 	 * 
 	 * TODO find out how to make the user unable to click anything while animation is playing
@@ -1316,9 +1314,11 @@ public class BigBossGame1 extends Application {
 		return ret; 
 	}
 	
-	//TODO keep commenting
+	//adds to the fight screen, the player and the boss's stats as well as lists the players options 
 	public void playerFightRound (Node thisScene, AbstractCharecter charecter, BossEnemy boss) {
-		if (deathCheck(charecter)) {
+		//if the player has lost continue to the next screen
+		if (charecter.isDead()) {
+			//adds the black screen displayed during the post combat rewards screen
 			Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 			rect.setVisible(false);
 		    root.getChildren().add(rect);
@@ -1326,139 +1326,152 @@ public class BigBossGame1 extends Application {
 		    return;
 		}
 		
-		
+		//removes anything from the display pane
 		fightDisplayPane.getChildren().clear();
 		
-		ImageView display = new ImageView(getClass().getResource("/images/TextDisplayWithStats.jpg").toString());
+		//the image to hold the players stats, boss stats and players actions
+		ImageView imgTextDisplayWithStats = new ImageView(getClass().getResource("/images/TextDisplayWithStats.jpg").toString());
 		
-		AnchorPane bp = new AnchorPane();
-		bp.setPrefSize(505, 134);
-		bp.setLayoutX(310);
+		//holds the buttons containing the players options 
+		AnchorPane playerOptionsPane = new AnchorPane();
+		playerOptionsPane.setPrefSize(505, 134);
+		playerOptionsPane.setLayoutX(310);
 		
+		//the players first ability
 		Button ability1 = new Button(charecter.getAbility(0).getName());
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		AnchorPane.setLeftAnchor(ability1, 10.0);
 		AnchorPane.setTopAnchor(ability1, 10.0);
 		ability1.setOnAction(event -> useAbility(thisScene, charecter.getAbility(0), boss));
 		
+		//the players second ability
 		Button ability2 = new Button(charecter.getAbility(1).getName());
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		AnchorPane.setRightAnchor(ability2, 10.0);
 		AnchorPane.setTopAnchor(ability2, 10.0);
 		ability2.setOnAction(event -> useAbility(thisScene, charecter.getAbility(1), boss));
 		
+		//the players third ability (placed on another pane to fix position)
 		Button ability3 = new Button(charecter.getAbility(2).getName());
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		HBox p = new HBox(ability3);
-		p.setAlignment(Pos.BOTTOM_CENTER);
-		AnchorPane.setBottomAnchor(p, 10.0);
-		AnchorPane.setRightAnchor(p, 10.0);
-		AnchorPane.setLeftAnchor(p, 10.0);
+		HBox thirdOptionPane = new HBox(ability3);
+		thirdOptionPane.setAlignment(Pos.BOTTOM_CENTER);
+		AnchorPane.setBottomAnchor(thirdOptionPane, 10.0);
+		AnchorPane.setRightAnchor(thirdOptionPane, 10.0);
+		AnchorPane.setLeftAnchor(thirdOptionPane, 10.0);
 		ability3.setOnAction(event -> useAbility(thisScene, charecter.getAbility(2), boss));
 		
-		bp.getChildren().addAll(ability1, ability2, p);
+		playerOptionsPane.getChildren().addAll(ability1, ability2, thirdOptionPane);
 		
-		
-		VBox playerFP = new VBox();
+		//holds the labels of the players stats
+		VBox vbPlayerStats = new VBox();
 		for(Stat s : charecter.getStats()) {
 			Label lbl = new Label(charecter.getStatAsString(s.getName()));
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			lbl.setTextFill(Color.BLACK);
-			playerFP.getChildren().add(lbl);
+			vbPlayerStats.getChildren().add(lbl);
 		}
-		ScrollPane playerStats = new ScrollPane(playerFP);
+		
+		//adds the VBox to a scroll pane so the user can see all of them
+		ScrollPane playerStats = new ScrollPane(vbPlayerStats);
 		playerStats.setPannable(true);
 		playerStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
-		playerFP.setPrefSize(295, 134);
+		vbPlayerStats.setPrefSize(295, 134);
 		playerStats.setLayoutX(10);
 
+		//holds the labels of the boss stats and its intent
+		VBox vbBossStats = new VBox();
 		
-		VBox bossFP = new VBox();
+		//intent label 
 		Label lblIntent = new Label("Intent: " + boss.getIntent().name());
-		HBox hb = new HBox(lblIntent, getIntentImage(boss.getIntent()));
+		//intent label and the image beside it 
+		HBox intentPlusImg = new HBox(lblIntent, getIntentImage(boss.getIntent()));
 		lblIntent.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		lblIntent.setTextFill(Color.BLACK);
-		bossFP.getChildren().add(hb);
+		vbBossStats.getChildren().add(intentPlusImg);
+		
+		//adds the boss stats to labels and into the pane
 		for(Stat s : boss.getStats()) {
 			Label lbl = new Label(boss.getStatAsString(s.getName()));
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			lbl.setTextFill(Color.BLACK);
-			bossFP.getChildren().add(lbl);
+			vbBossStats.getChildren().add(lbl);
 		}
-		ScrollPane bossStats = new ScrollPane(bossFP);
+		
+		//adds the VBox to a scroll pane so the user can see all of them
+		ScrollPane bossStats = new ScrollPane(vbBossStats);
 		bossStats.setPannable(true);
 		bossStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
-		bossFP.setPrefSize(295, 134);
+		vbBossStats.setPrefSize(295, 134);
 		bossStats.setLayoutX(825);
 
-		
-		fightDisplayPane.getChildren().addAll(display, bp, playerStats, bossStats);
+		fightDisplayPane.getChildren().addAll(imgTextDisplayWithStats, playerOptionsPane, playerStats, bossStats);
 
 	}
 	
+	//if the boss is dead it continues, other wise it plays the boss's move and starts a new player turn
 	public void bossFightRound(Node thisScene, AbstractCharecter charecter, BossEnemy boss) {
-		if (deathCheck(boss)) {
+		if (boss.isDead()) {
+			//adds the black screen displayed during the post combat rewards screen
 			Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 			rect.setVisible(false);
 			root.getChildren().add(rect);
 			fadeToNext(thisScene, rect, FadeTransitionResult.BLACK, charecter, boss);
 			return;
 		}
+		//plays the boss move and then starts a new player turn
 		speak(event -> playerFightRound(thisScene, charecter, boss), boss.play(charecter));
 	}
 	
+	//uses and ability then speaks the result
 	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss) {
-		
 		speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), ability.use(boss));
-		
 	}
 	
-	public boolean deathCheck(AbstractCharecter target) {
-		if (target.isDead()) {
-			return true;
-		} else {
-			return false;			
-		}
-	}
-	
-	
+	//makes a game style text box that prints a string one at a time for every string in toSay
 	public void speak(EventHandler<ActionEvent> next, String... toSay) {
 		fightDisplayPane.getChildren().clear();
 		
+		//label the string will print to
 		Label lbl = new Label();
 		lbl.setWrapText(true);
 		lbl.setMaxWidth(1000);
 		lbl.setLayoutX(10);
 		lbl.setLayoutY(10);
 		lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		
+		//the image of the text box
 		ImageView display = new ImageView(getClass().getResource("/images/TextDisplay.jpg").toString());
 		
+		//the arrow at the bottom right corner indicating the ability to continue or skip printing of the text
 		ImageView displayArrow = new ImageView(getClass().getResource("/images/DisplayArrow.jpg").toString());
 		displayArrow.setLayoutX(-100);
 		displayArrow.setLayoutY(99);
 		
-		TranslateTransition tt1 = new TranslateTransition(Duration.seconds(1), displayArrow);
-		TranslateTransition tt2 = new TranslateTransition(Duration.seconds(1), displayArrow);
-	    tt1.setFromX(1192);
-	    tt1.setToX(1182);
-	    tt1.setCycleCount(1);
-	    tt1.setInterpolator(Interpolator.LINEAR);
-	    tt1.setOnFinished(event -> tt2.play());
-	    tt2.setFromX(1182);
-	    tt2.setToX(1192);
-	    tt2.setCycleCount(1);
-	    tt2.setInterpolator(Interpolator.LINEAR);
-	    tt2.setDelay(Duration.seconds(1));
-	    tt2.setOnFinished(event -> tt1.play());
-	    tt1.play();
-	    tt1.setDelay(Duration.seconds(1));
+		//the transitions used to move the arrow
+		TranslateTransition arrowRightTransition = new TranslateTransition(Duration.seconds(1), displayArrow);
+		TranslateTransition arrowLeftTransition = new TranslateTransition(Duration.seconds(1), displayArrow);
+	    arrowRightTransition.setFromX(1192);
+	    arrowRightTransition.setToX(1182);
+	    arrowRightTransition.setCycleCount(1);
+	    arrowRightTransition.setInterpolator(Interpolator.LINEAR);
+	    arrowRightTransition.setOnFinished(event -> arrowLeftTransition.play());
+	    arrowLeftTransition.setFromX(1182);
+	    arrowLeftTransition.setToX(1192);
+	    arrowLeftTransition.setCycleCount(1);
+	    arrowLeftTransition.setInterpolator(Interpolator.LINEAR);
+	    arrowLeftTransition.setDelay(Duration.seconds(1));
+	    arrowLeftTransition.setOnFinished(event -> arrowRightTransition.play());
+	    arrowRightTransition.play();
+	    arrowRightTransition.setDelay(Duration.seconds(1));
 	    
-	    
+	    //and invisable button over the while display pane to skip/continue the text (just setting the image to be clicked on wasnt working)
 		Button btn = new Button();
 		btn.setOpacity(0);
 		btn.setPrefSize(IMAGE_WIDTH, 134);
 		fightDisplayPane.getChildren().addAll(display, lbl, displayArrow, btn);
 
+		//java docs code to print the message : https://javadoc.io/static/org.openjfx/javafx-media/17-ea+3/javafx.graphics/javafx/animation/Transition.html
 		final Animation animation = new Transition() {
 			{
 				setCycleDuration(Duration.seconds(1));
@@ -1466,20 +1479,28 @@ public class BigBossGame1 extends Application {
 			protected void interpolate(double frac) {
 				final int length = toSay[0].length();
 				final int n = Math.round(length * (float) frac);
+				//onl prints the first string in the array
 				lbl.setText(toSay[0].substring(0, n));
 			}
 		};
+		
+		//if there are more strings to print...
 		if (toSay.length > 1) {
+			//make the button call a new speak without the first string(index 0)
 			animation.setOnFinished(event -> btn.setOnAction(event2 -> speak(next, Arrays.copyOfRange(toSay, 1, toSay.length))));		
 		} else {
+			//make the button play the action to be performed after the speak
 			animation.setOnFinished(event -> btn.setOnAction(next));
 		}
+		
+		//makes the button force finish the animation
 		btn.setOnMouseClicked(event -> animation.jumpTo(Duration.INDEFINITE));
 		
 		animation.play();
 
 	}
 	
+	//returns an image corresponding to the intent type
 	public ImageView getIntentImage(AbilityType a) {
 		switch(a) {
 		case ATTACK:
@@ -1494,11 +1515,10 @@ public class BigBossGame1 extends Application {
 			return new ImageView(getClass().getResource("/images/RedFistSm.png").toString());
 		default:
 			return new ImageView(getClass().getResource("/images/RedFistSm.png").toString());
-			
 		}
 	}
 	
-	// from workspace
+	// From Karen Spindler's Grade 11 U computer science course
 		public static int randomNumber(int a, int b) {
 			int highNum = Math.max(a, b);
 			int lowNum = Math.min(a, b);
@@ -1508,7 +1528,7 @@ public class BigBossGame1 extends Application {
 	
 	@Override
 	public void stop() throws Exception {
-		
+		//TODO add charecter save data and shi
 	}
 
 	public static void main(String[] args) {

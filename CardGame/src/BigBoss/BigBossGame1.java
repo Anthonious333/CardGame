@@ -81,9 +81,11 @@ public class BigBossGame1 extends Application {
 
 
 	/*
-	 * TODO add sounds - implement main theme - add functionality to vol slider
+	 * TODO add sounds - add functionality to vol slider
 	 *  
 	 * TODO add the thing that whrights to a save
+	 * 
+	 * add highlights to buttons when you have shit to spend
 	 * 
 	 * add a button on top of the lever on the slot machine to pull slots
 	 *  
@@ -128,6 +130,7 @@ public class BigBossGame1 extends Application {
 	Pane fightDisplayPane = new Pane();
 	MediaPlayer buttonClickSound = new MediaPlayer(new Media(getClass().getResource("/sounds/KeyBoardSFX1.mp3").toString()));
 	MediaPlayer bossTheme = new MediaPlayer(new Media(getClass().getResource("/sounds/BossTheme.mp3").toString()));
+	MediaPlayer mainTheme = new MediaPlayer(new Media(getClass().getResource("/sounds/MainTheme.mp3").toString()));
 
 	
 	//Visual finals
@@ -187,12 +190,21 @@ public class BigBossGame1 extends Application {
 			}
 		});
 		
+		bossTheme.setStopTime(Duration.millis(19500));
 		bossTheme.setOnEndOfMedia(new Runnable() {
 			@Override
 			public void run() {
-				buttonClickSound.seek(Duration.ZERO);
+				bossTheme.seek(Duration.ZERO);
 			}
 		});
+		
+		mainTheme.setOnEndOfMedia(new Runnable() {
+			@Override
+			public void run() {
+				mainTheme.seek(Duration.ZERO);
+			}
+		});
+		mainTheme.play();
 		
 		//Background Images
 		mainBackgroundV = new ImageView(mainBackgroundI);
@@ -1213,8 +1225,22 @@ public class BigBossGame1 extends Application {
 		//the black screen to fade in and out
 		Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 		
-		//fades out the music when going to black screen
-		if (next == FadeTransitionResult.BLACK) {
+		switch(next) {
+		//fades out the main music when going to fight screen
+		case FIGHT:
+			final Animation MainThemeFadeOut = new Transition() {
+				{
+					setCycleDuration(Duration.seconds(2));
+					setOnFinished(event -> mainTheme.stop());
+				}
+				protected void interpolate(double frac) {
+					mainTheme.setVolume(1 - frac);
+				}
+			};
+			MainThemeFadeOut.play();	
+			break;
+			//fades out the boss music when going to black screen
+		case BLACK: 
 			final Animation bossThemeFadeOut = new Transition() {
 				{
 					setCycleDuration(Duration.seconds(2));
@@ -1225,7 +1251,25 @@ public class BigBossGame1 extends Application {
 				}
 			};
 			bossThemeFadeOut.play();
+			break;
+		case MENU:
+			//fades in the main theme when returning to menu
+			final Animation mainThemeFadeIn = new Transition() {
+				{
+					setCycleDuration(Duration.seconds(2));
+					mainTheme.setVolume(0);
+					mainTheme.play();
+				}
+				protected void interpolate(double frac) {
+					mainTheme.setVolume(frac);
+				}
+			};
+			mainThemeFadeIn.play();
+			break;
+		
 		}
+		
+		
 
 		//the fade out animation
 		FadeTransition ft2 = new FadeTransition(Duration.seconds(1.5), rect);

@@ -129,6 +129,8 @@ public class BigBossGame1 extends Application {
 	Image fightBackgroundI = new Image(getClass().getResource("/images/fight room.png").toString());
 	Pane fightDisplayPane = new Pane();
 	MediaPlayer buttonClickSound = new MediaPlayer(new Media(getClass().getResource("/sounds/KeyBoardSFX1.mp3").toString()));
+	MediaPlayer bossTheme = new MediaPlayer(new Media(getClass().getResource("/sounds/BossTheme.mp3").toString()));
+
 	
 	//Visual finals
 	final int TITLE_GAP = 50;
@@ -180,13 +182,18 @@ public class BigBossGame1 extends Application {
 		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		
 		buttonClickSound.setOnEndOfMedia(new Runnable() {
-
 			@Override
 			public void run() {
 				buttonClickSound.seek(Duration.ZERO);
 				buttonClickSound.stop();
 			}
-			
+		});
+		
+		bossTheme.setOnEndOfMedia(new Runnable() {
+			@Override
+			public void run() {
+				buttonClickSound.seek(Duration.ZERO);
+			}
 		});
 		
 		//Background Images
@@ -1202,12 +1209,26 @@ public class BigBossGame1 extends Application {
 		return ret;
 		
 	}
-	
-	
+
+
 	public void fadeToNext(Node thisScene, Node nextScene, FadeTransitionResult next, AbstractCharecter charecter, BossEnemy boss) {
 		//the black screen to fade in and out
 		Rectangle rect = new Rectangle (0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 		
+		//fades out the music when going to black screen
+		if (next == FadeTransitionResult.BLACK) {
+			final Animation bossThemeFadeOut = new Transition() {
+				{
+					setCycleDuration(Duration.seconds(2));
+					setOnFinished(event -> bossTheme.stop());
+				}
+				protected void interpolate(double frac) {
+					bossTheme.setVolume(1 - frac);
+				}
+			};
+			bossThemeFadeOut.play();
+		}
+
 		//the fade out animation
 		FadeTransition ft2 = new FadeTransition(Duration.seconds(1.5), rect);
 		ft2.setFromValue(1.0);
@@ -1251,6 +1272,20 @@ public class BigBossGame1 extends Application {
 			//if going to fight set the background to the fight one, otherwise make it the scrolling one
 			switch(next) {
 			case FIGHT:
+				
+				//fades in the boss theme when entering
+				final Animation bossThemeFadeIn = new Transition() {
+					{
+						setCycleDuration(Duration.seconds(2));
+						bossTheme.setVolume(0);
+						bossTheme.play();
+					}
+					protected void interpolate(double frac) {
+						bossTheme.setVolume(frac);
+					}
+				};
+				bossThemeFadeIn.play();
+				
 				backgroundParallelTrans.jumpTo(Duration.seconds(-1));
 				backgroundParallelTrans.stop();
 				mainBackgroundV.setImage(fightBackgroundI);

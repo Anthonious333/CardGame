@@ -81,7 +81,7 @@ public class BigBossGame1 extends Application {
 
 
 	/*
-	 * TODO add sounds
+	 * TODO add sounds - implement main theme - add functionality to vol slider
 	 * 
 	 * TODO find out how to make the user unable to click anything while animation is playing
 	 * 

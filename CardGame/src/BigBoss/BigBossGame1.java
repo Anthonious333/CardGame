@@ -82,9 +82,7 @@ public class BigBossGame1 extends Application {
 
 	/*
 	 * TODO add sounds - implement main theme - add functionality to vol slider
-	 * 
-	 * TODO find out how to make the user unable to click anything while animation is playing
-	 * 
+	 *  
 	 * TODO add the thing that whrights to a save
 	 * 
 	 * add a button on top of the lever on the slot machine to pull slots

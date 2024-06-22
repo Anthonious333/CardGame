@@ -59,6 +59,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.CubicCurveTo;
@@ -126,6 +128,7 @@ public class BigBossGame1 extends Application {
 	Image mainBackgroundI2 = new Image(getClass().getResource("/images/Background8Bit.png").toString());
 	Image fightBackgroundI = new Image(getClass().getResource("/images/fight room.png").toString());
 	Pane fightDisplayPane = new Pane();
+	MediaPlayer buttonClickSound = new MediaPlayer(new Media(getClass().getResource("/sounds/KeyBoardSFX1.mp3").toString()));
 	
 	//Visual finals
 	final int TITLE_GAP = 50;
@@ -175,6 +178,16 @@ public class BigBossGame1 extends Application {
 		
 		root = new StackPane();
 		root.setMaxSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+		
+		buttonClickSound.setOnEndOfMedia(new Runnable() {
+
+			@Override
+			public void run() {
+				buttonClickSound.seek(Duration.ZERO);
+				buttonClickSound.stop();
+			}
+			
+		});
 		
 		//Background Images
 		mainBackgroundV = new ImageView(mainBackgroundI);
@@ -446,6 +459,8 @@ public class BigBossGame1 extends Application {
 	
 	//moves the first node from on the screen to off the screen, and moves the second from off the screen to on the screen
 	public void nextMenu(Node screen, Node newScreen) {
+		buttonClickSound.play();
+		
 		//so the user can't click anything while in Transition
 		Rectangle rect = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
 		rect.setOpacity(0);
@@ -484,6 +499,7 @@ public class BigBossGame1 extends Application {
 	
 	//moves the first node from on the screen to off the screen, and moves the title screen from off the screen to on the screen
 	public void backMenu (Node n) {
+		buttonClickSound.play();
 		//so the user can't click anything while in transition
 		Rectangle rect = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
 		rect.setOpacity(0);
@@ -528,6 +544,7 @@ public class BigBossGame1 extends Application {
 	
 	//sets selected charecter to the charecter represented in the button calling it or passed
 	public void setSelectedCharecter(AbstractCharecter charecter) {
+		buttonClickSound.play();
 		selectedCharecter = charecter;
 		updateSelectButton();
 		lblShowCharDescription.setText("");
@@ -556,6 +573,7 @@ public class BigBossGame1 extends Application {
 	//or takes them to the pre fight screen with the selected charecters information
 	public void selectSave (Save save) {
 		//select new charecter
+		buttonClickSound.play();
 		if (save.getIsEmpty()) {
     		lblShowCharDescription.setText("");
     		selectedSave = save;
@@ -668,7 +686,6 @@ public class BigBossGame1 extends Application {
 		Button commmitAll = new Button("Commit All");
 		commmitAll.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		commmitAll.setOnAction(event -> {
-			
 			for (int i = 0; i < charecter.getStats().size(); i++) {
 				Stat s = charecter.getStats().get(i);
 				s.commitTempStat();
@@ -787,6 +804,7 @@ public class BigBossGame1 extends Application {
 		
 		//if you can unlock another ability it takes one token and if you cant it turns all tokens into skill points
 		useRoll.setOnAction(event -> {
+			buttonClickSound.play();
 			if (charecter.getRollTokens() > 0) {
 				if (charecter.numberOfLockedAbilities() > 0 ) {
 					fixAbilities(charecter, ability1, ability2, ability3);
@@ -1078,7 +1096,7 @@ public class BigBossGame1 extends Application {
 
 	//adjusts the stat (s) by amount and updates the visuals to represent that information
 	public void changeTempStats (Stat s, AbstractCharecter charecter, Label change, Label stat, Label lblTotalPoints, boolean adding, int amount) {
-
+		buttonClickSound.play();
 		if (adding) {
 			if (!(charecter.getStatPoints() < amount)) {
 				charecter.addStatPoints(-amount);
@@ -1103,6 +1121,7 @@ public class BigBossGame1 extends Application {
 	
 	//transitions from screen to new Screen and removes screen from root
 	public void leaveTempScene(Node screen, Node newScreen) {
+		buttonClickSound.play();
 		//so the user can't click anything while in Transition
 		Rectangle rect = new Rectangle(IMAGE_WIDTH, IMAGE_HEIGHT);
 		rect.setOpacity(0);
@@ -1147,6 +1166,7 @@ public class BigBossGame1 extends Application {
 		//makes a new button that tries to unlock the corresponding ability when clicked
 		Button btn = new Button(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" : "" ));
 		btn.setOnAction(event -> {
+			buttonClickSound.play();
 			if (mod.unlock()) {
 				btn.setText(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" : "" ));
 			}
@@ -1252,6 +1272,7 @@ public class BigBossGame1 extends Application {
 	
 	//creates the screen for a new combat, with a new boss and changes to that screen
 	public void startNewCombat (Node thisScene, AbstractCharecter charecter) {
+		buttonClickSound.play();
 		Pane pane = new Pane();
 		BossEnemy boss = new BossEnemy(charecter.getWins());
 		ImageView enemyHolder = new ImageView(boss.getImageLocation());
@@ -1425,6 +1446,7 @@ public class BigBossGame1 extends Application {
 	
 	//uses and ability then speaks the result
 	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss) {
+		buttonClickSound.play();
 		speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), ability.use(boss));
 	}
 	
@@ -1477,12 +1499,16 @@ public class BigBossGame1 extends Application {
 				setCycleDuration(Duration.seconds(1));
 			}
 			protected void interpolate(double frac) {
+				String preText = lbl.getText();
+				
 				final int length = toSay[0].length();
 				final int n = Math.round(length * (float) frac);
-				//onl prints the first string in the array
+				//only prints the first string in the array
 				lbl.setText(toSay[0].substring(0, n));
 			}
 		};
+		
+		
 		
 		//if there are more strings to print...
 		if (toSay.length > 1) {
@@ -1496,7 +1522,12 @@ public class BigBossGame1 extends Application {
 		//makes the button force finish the animation
 		btn.setOnMouseClicked(event -> animation.jumpTo(Duration.INDEFINITE));
 		
+		//TODO make this one better (dose work tho)
+		MediaPlayer clickSound = new MediaPlayer(new Media(getClass().getResource("/sounds/KeyBoardTypingSFX.mp3").toString()));
+		clickSound.setStopTime(Duration.seconds(1));
+		clickSound.play();
 		animation.play();
+		
 
 	}
 	
@@ -1528,6 +1559,7 @@ public class BigBossGame1 extends Application {
 	
 	@Override
 	public void stop() throws Exception {
+		
 		//TODO add charecter save data and shi
 	}
 

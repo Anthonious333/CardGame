@@ -5,14 +5,13 @@ import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
 import BigBoss.BigBossGame1;
 import BigBoss.Stat;
-import BigBoss.Abilities.HealAbility;
-import BigBoss.Abilities.PowerUpAbility;
-import BigBoss.Abilities.PunchAbility;
+import BigBoss.Abilities.*;
 
 public class BossEnemy extends AbstractCharecter{
 
 	private AbstractAbility nextMove;
 	private int level;
+	private boolean cantrip = false;
 	
 	public BossEnemy(int level) {
 		super("The Boss");
@@ -32,6 +31,10 @@ public class BossEnemy extends AbstractCharecter{
 	}
 	
 	public String play(AbstractCharecter player) {
+		if (cantrip) {
+			cantrip = !cantrip;
+			return new CantripAbility(this).use(player);
+		}
 		String ret = nextMove.use(player);
 		choseNestMove();
 		return ret;			
@@ -65,7 +68,11 @@ public class BossEnemy extends AbstractCharecter{
 	public void setNextMove(AbstractAbility nextMove) {
 		this.nextMove = nextMove;
 	}
-
+	
+	public void cantrip() {
+		this.cantrip = true;
+	}
+	
 	@Override
 	protected Object clone() {
 		return new BossEnemy(this.level);

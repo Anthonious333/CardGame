@@ -258,6 +258,23 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
+	public void unlockAbility(String name) {
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			if (a.getName().equals(name)) {
+				a.setUnlocked(true);
+			}
+		}
+	}
+	
+	public AbstractAbility getAbility(String name) {
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			if ( a.getName().equals(name)) {
+				return a;
+			}
+		}
+		return null;
+	}
+	
 	public ArrayList<AbstractAbility> getPosibleAbilities() {
 		return posibleAbilities;
 	}

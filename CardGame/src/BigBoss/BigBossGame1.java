@@ -66,6 +66,8 @@ public class BigBossGame1 extends Application {
 
 
 	/*
+	 * TODO fix slot machine not selecting the right ability
+	 * 
 	 * TODO finish Mr Basic
 	 * 
 	 * TODO add sounds - hit / block / effect
@@ -456,7 +458,7 @@ public class BigBossGame1 extends Application {
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
-	    stage.setResizable(false);
+//	    stage.setResizable(false);
 	    stage.show();
 	}
 	
@@ -947,18 +949,24 @@ public class BigBossGame1 extends Application {
 		    slotParallelTrans.setCycleCount(Animation.INDEFINITE);
 		    slotParallelTrans.play();
 		    
-		    //the "Button" that unnlocks the ability being looked at 
+		    //the "Button" that unlocks the ability being looked at 
 			StackPane btn = new StackPane();
 			ImageView iv = new ImageView(getClass().getResource("/images/Slot.jpg").toString());
 			Label lbl = new Label(a.getName());
+			System.out.print(a.getName());
+
 			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
 			btn.setOnMouseClicked(event -> {
-				FXDialog.print("You have unlocked " + a.getName() + ".");
-				a.setUnlocked(true);
+				FXDialog.print("You have unlocked " + lbl.getText() + ".");
+				System.out.print(lbl.getText());
+				charecter.getAbility(lbl.getText()).setUnlocked(true);
 				charecter.addRollTokens(-1);
 				editAbilities(stackPane, charecter);
 			});
-			
+			btn.setOnMouseEntered(event -> {
+				System.out.print(lbl.getText());
+			});
+
 			//the animation that plays so the button falls into place
 			TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
 			btnTrans.setFromY(-318);
@@ -988,10 +996,10 @@ public class BigBossGame1 extends Application {
 		imgSlotMachine.setOnMouseClicked(event -> {
 			for (TranslateTransition t : btnTransList) {
 				int index = btnTransList.indexOf(t);
-				
+				imgSlotMachine.setOnMouseClicked(null);
 				//used to make the image visable at the start of the animation 
 				TranslateTransition timer = new TranslateTransition(Duration.ZERO);
-				timer.setOnFinished(event1 -> stackPane.getChildren().get((index * 3) + 3).setVisible(true));
+				timer.setOnFinished(event1 -> stackPane.getChildren().get((index) + 3).setVisible(true));
 				
 				//plays the timer and the animation at the same time, basically just makes the image visible at the start of the animation
 			    ParallelTransition tAndTimer = new ParallelTransition(t, timer);
@@ -999,15 +1007,16 @@ public class BigBossGame1 extends Application {
 				
 				//removes the images from the screen once the animation is finished playing over it 
 				t.setOnFinished(event1 -> {
-					imgToRemove.remove(0);
-					imgToRemove.remove(0);
 					slotParallelTransList.get(index).stop();
+					stackPane.getChildren().remove(imgToRemove.get(0));
+					imgToRemove.remove(0);
+					stackPane.getChildren().remove(imgToRemove.get(0));
+					imgToRemove.remove(0);
 				});
 				tAndTimer.play();
 			}
 
 		});
-
 		
 		stackPane.getChildren().add(imgSlotMachine);
 
@@ -1569,6 +1578,8 @@ public class BigBossGame1 extends Application {
 	
 	//makes a game style text box that prints a string one at a time for every string in toSay
 	public void speak(EventHandler<ActionEvent> next, String... toSay) {
+		
+		
 		fightDisplayPane.getChildren().clear();
 		
 		//label the string will print to
@@ -1623,17 +1634,6 @@ public class BigBossGame1 extends Application {
 			}
 		};
 		
-		
-		
-		//if there are more strings to print...
-		if (toSay.length > 1) {
-			//make the button call a new speak without the first string(index 0)
-			animation.setOnFinished(event -> btn.setOnAction(event2 -> speak(next, Arrays.copyOfRange(toSay, 1, toSay.length))));		
-		} else {
-			//make the button play the action to be performed after the speak
-			animation.setOnFinished(event -> btn.setOnAction(next));
-		}
-		
 		//makes the button force finish the animation
 		btn.setOnMouseClicked(event -> animation.jumpTo(Duration.INDEFINITE));
 		
@@ -1641,8 +1641,9 @@ public class BigBossGame1 extends Application {
 		MediaPlayer clickSound = new MediaPlayer(new Media(getClass().getResource("/sounds/KeyBoardTypingSFX.mp3").toString()));
 		clickSound.setStopTime(Duration.seconds(1));
 		clickSound.play();
+
 		animation.play();
-		
+
 
 	}
 	

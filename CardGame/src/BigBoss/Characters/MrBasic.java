@@ -25,7 +25,15 @@ public class MrBasic extends AbstractCharecter{
 		AbstractAbility kick = new KickAbility(this);
 		AbstractAbility avaid = new AvaidAbility(this);
 
-		this.setPosibleAbilities(punch, kick, avaid, new ParryAbility(this), new UppercutAbility(this));
+		this.setPosibleAbilities(
+				punch,
+				kick,
+				avaid,
+				new ParryAbility(this),
+				new UppercutAbility(this),
+				new JabAbility(this),
+				new EmptyAbility(this)
+				);
 		this.equipAbility(punch, 0);
 		this.equipAbility(kick, 1);
 		this.equipAbility(avaid, 2);

@@ -94,7 +94,7 @@ public class BigBossGame1 extends Application {
 	 *  
 	 * add attack animations // maybe
 	 * 
-	 * fix all menus look nicer
+	 * fix all menus look nicer - the player fight options need to be on a scroll pane / in a line again
 	 * 
 	 * make buttons look mroe 8bit
 	 * 

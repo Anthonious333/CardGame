@@ -116,9 +116,7 @@ public abstract class AbstractCharecter {
 		}
 		return -this.findStat(id).addValue(-amount);
 	}
-	
 
-	
 	//returns the amount of damage taken (positive)
 	public int damage (int amount, boolean physical) {
 		return this.reduceStat("HP", amount);
@@ -167,6 +165,7 @@ public abstract class AbstractCharecter {
 	}
 	
 	public void equipAbility(AbstractAbility a, int index) {
+		
 		a.setUnlocked(true);
 		a.setEquiped(true);
 		unequipAbility(index);
@@ -174,6 +173,9 @@ public abstract class AbstractCharecter {
 	}
 	
 	public void unequipAbility(int index) {
+		if (abilities.get(index).getClass() == EmptyAbility.class) {
+			this.getPosibleAbilities().remove(abilities.get(index));
+		}
 		abilities.get(index).setEquiped(false);
 		abilities.set(index, new EmptyAbility(this));
 	}
@@ -239,6 +241,9 @@ public abstract class AbstractCharecter {
 		for (Stat s : this.getStats()) {
 			s.reset();
 		}
+		for (AbstractAbility a : abilities) {
+			a.setCooldown(0);
+		}
 	}
 	
 
@@ -271,6 +276,20 @@ public abstract class AbstractCharecter {
 		for (AbstractModification m : mods) {
 			this.mods.add(m);
 		}
+	}
+	
+	public void reduceCooldown(int i) {
+		for (AbstractAbility a : abilities) {
+			a.reduceCooldown(i);
+		}
+	}
+	
+	public void reduceCooldown() {
+		reduceCooldown(1);
+	}
+	
+	public boolean allAbilitiesOnCooldown() {
+		return getAbility(0).isOnCooldown() && getAbility(1).isOnCooldown() && getAbility(2).isOnCooldown();
 	}
 
 	public int getStatPoints() {
@@ -312,5 +331,4 @@ public abstract class AbstractCharecter {
 	@Override
 	protected abstract Object clone();
 
-	
 }

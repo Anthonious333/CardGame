@@ -11,7 +11,7 @@ public class PowerUpAbility extends AbstractAbility{
 	
 	
 	public PowerUpAbility(AbstractCharecter owner, int power) {
-		super("Power Up", AbilityType.BUFF, owner);
+		super("Power Up", "Icrease ATK by " + power + ".", AbilityType.BUFF, owner);
 		this.power = power;
 		setRoleDifficulty(1);
 	}

@@ -8,7 +8,7 @@ import BigBoss.Characters.BossEnemy;
 public class PunchAbility extends AbstractAbility{
 
 	public PunchAbility(AbstractCharecter owner) {
-		super("Punch", AbilityType.ATTACK, owner);
+		super("Punch", "Deal danage equal to your ATK.", AbilityType.ATTACK, owner);
 	}
 
 	@Override

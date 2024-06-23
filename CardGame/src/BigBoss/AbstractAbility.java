@@ -7,12 +7,14 @@ public abstract class AbstractAbility {
 	private AbstractCharecter owner;
 	private boolean unlocked;
 	private boolean equiped;
+	private String toolTip;
 	//intedded for boss and canselect
 	private int roleDifficulty;
 	private int roleNumber;
 	private AbilityType intent;
+	private int cooldown;
 	
-	public AbstractAbility(String name, AbilityType intent, AbstractCharecter owner) {
+	public AbstractAbility(String name, String toolTip, AbilityType intent, AbstractCharecter owner) {
 		this.setName(name);
 		this.setOwner(owner);
 		this.setUnlocked(false);
@@ -20,8 +22,14 @@ public abstract class AbstractAbility {
 		this.setRoleDifficulty(0);
 		this.setRoleNumber(0);
 		this.setIntent(intent);
+		this.setToolTip(toolTip);
+		this.setCooldown(0);
 	}
 
+	public AbstractAbility(String name, AbilityType intent, AbstractCharecter owner) {
+		this(name, "NONE", intent, owner);
+	}
+	
 	public abstract String use(AbstractCharecter target);
 	
 
@@ -96,5 +104,32 @@ public abstract class AbstractAbility {
 
 	public void setIntent(AbilityType intent) {
 		this.intent = intent;
+	}
+
+	public String getToolTip() {
+		return toolTip;
+	}
+
+	public void setToolTip(String toolTip) {
+		this.toolTip = toolTip;
+	}
+
+	public int getCooldown() {
+		return cooldown;
+	}
+
+	public void setCooldown(int cooldown) {
+		this.cooldown = cooldown;
+	}
+	
+	public void reduceCooldown(int i) {
+		this.setCooldown(this.getCooldown() - i);
+	}
+	
+	public boolean isOnCooldown () {
+		if (cooldown > 0) {
+			return true;
+		}
+		return false;
 	}
 }

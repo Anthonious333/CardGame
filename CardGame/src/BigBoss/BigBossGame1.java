@@ -34,6 +34,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -81,7 +82,9 @@ public class BigBossGame1 extends Application {
 
 
 	/*
-	 * TODO add sounds - add functionality to vol slider
+	 * TODO finish Mr Basic
+	 * 
+	 * TODO add sounds - hit / block / effect
 	 *  
 	 * TODO add the thing that whrights to a save
 	 * 
@@ -99,7 +102,7 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * add totorial
 	 * 
-	 * add ability to see enemies and your mods and skills and whatnoits 
+	 * add ability to see enemy and your mods and skills and attacks 
 	 */
 	
 	//Global objects
@@ -429,7 +432,7 @@ public class BigBossGame1 extends Application {
 	    lblVolumeSlider.setMinWidth(225);
 	    lblVolumeSlider.setFont(Font.font(FONT, MENU_FONT_SIZE));
 	    HBox.setMargin(lblVolumeSlider, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
-	    volumeSlider = new Slider(0, 200, 100);
+	    volumeSlider = new Slider(0, 100, 100);
 	    volumeSlider.setOnMouseDragged(event -> changeVolume());
 	    HBox.setMargin(volumeSlider, new Insets(MENU_GAP * 2.5, MENU_GAP, MENU_GAP, MENU_GAP));
 	    volumeOption.getChildren().addAll(lblVolumeSlider, volumeSlider);
@@ -557,6 +560,11 @@ public class BigBossGame1 extends Application {
 	//updates the volume meater visual
 	public void changeVolume() {
 		lblVolumeSlider.setText("Volume (" + ((int)volumeSlider.getValue()) + "%)" );
+		buttonClickSound.setVolume(volumeSlider.getValue() / 100);
+		bossTheme.setVolume(volumeSlider.getValue() / 100);
+		mainTheme.setVolume(volumeSlider.getValue() / 100);
+		
+		
 	}
 	
 	//sets selected charecter to the charecter represented in the button calling it or passed
@@ -803,6 +811,9 @@ public class BigBossGame1 extends Application {
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		setUpToolTip(ability1, charecter.getAbility(0));
+		setUpToolTip(ability2, charecter.getAbility(1));
+		setUpToolTip(ability3, charecter.getAbility(2));
 		FlowPane.setMargin(ability1, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 		FlowPane.setMargin(ability2, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 		FlowPane.setMargin(ability3, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
@@ -828,8 +839,9 @@ public class BigBossGame1 extends Application {
 					abilitySlotMachine(abilityScreen, charecter);				
 				} else {
 					FXDialog.print("You have unlocked all abilities! Your Roll Tokens have been conferted into " + charecter.getRollTokens() * 5 + " Skill Points!");
-					charecter.addStatPoints(charecter.getRollTokens());
+					charecter.addStatPoints(charecter.getRollTokens() * 5);
 					charecter.addRollTokens(-charecter.getRollTokens());
+					useRoll.setText("Unlock New Ability : " + charecter.getRollTokens() + " Tokens.");
 				}
 			}
 		});
@@ -855,6 +867,7 @@ public class BigBossGame1 extends Application {
 				FlowPane.setMargin(ability, new Insets(MENU_GAP, MENU_GAP, MENU_GAP, MENU_GAP));
 				ability.setFont(Font.font(FONT, MENU_FONT_SIZE));
 				setUpLabel(ability);
+				setUpToolTip(ability, a);
 				unlockedAbilities.getChildren().add(ability);
 			}
 		}
@@ -880,6 +893,13 @@ public class BigBossGame1 extends Application {
 		abilityScreen.getChildren().add(spAbilities);
 		root.getChildren().add(abilityScreen);
 		nextMenu(thisScene, abilityScreen);
+	}
+	
+	//adds the tool tip from the ability that apears instantly
+	public void setUpToolTip (Control node, AbstractAbility a) {
+			node.setTooltip(new Tooltip(a.getToolTip()));
+			node.getTooltip().setShowDelay(Duration.ZERO);
+			node.getTooltip().setFont(Font.font(FONT, TEXT_FONT_SIZE));
 	}
 	
 	//creates a screen with a slot machine and three abilitys to unlock
@@ -1036,16 +1056,15 @@ public class BigBossGame1 extends Application {
 			lbl.setStyle("-fx-border-color: transparent;");
 		});
 
-		//adds the string on the label to the clipBoard once drag starts
+		//adds the string on the label and its tool tip to the clipBoard once drag starts
 		lbl.setOnDragDetected(new EventHandler <MouseEvent>() {
 			public void handle(MouseEvent event) {
 
 				Dragboard db = lbl.startDragAndDrop(TransferMode.ANY);
 
 				ClipboardContent content = new ClipboardContent();
-				content.putString(lbl.getText());
+				content.putString(lbl.getText() + "*;" +lbl.getTooltip().getText());
 				db.setContent(content);
-
 				event.consume();
 			}
 		});
@@ -1078,19 +1097,22 @@ public class BigBossGame1 extends Application {
 			}
 		});
 
-		//adds the text from the label to the clipBoard seperated by a ':'
-		//then adds the first part to the hovered label
+		//Label text 1 "*;" Tooltip 1 ":" Label text 2 ";*" Tooltip 2
+		//adds label text 1 to the label, then sets its tool tip's text to tooltip 1
 		lbl.setOnDragDropped(new EventHandler <DragEvent>() {
 			public void handle(DragEvent event) {
 
 				Dragboard db = event.getDragboard();
 				ClipboardContent content = new ClipboardContent();
-				content.putString(db.getString() + ":" + lbl.getText());
+				content.putString(db.getString() + ":" + lbl.getText() + ";*" + lbl.getTooltip().getText());
 				db.setContent(content);
 
 				boolean success = false;
 				if (db.hasString() && db.getString().contains(":")) {
-					lbl.setText(db.getString().substring(0, db.getString().indexOf(":")));
+					//label
+					lbl.setText(db.getString().substring(0, db.getString().indexOf("*;")));
+					//tooltip
+					lbl.getTooltip().setText(db.getString().substring(db.getString().indexOf("*;") + 2, db.getString().indexOf(":")));
 					success = true;
 				}
 				event.setDropCompleted(success);
@@ -1099,12 +1121,17 @@ public class BigBossGame1 extends Application {
 			}
 		});
 
-		//adds the part following the ':' on the clipboard to the label once event is finished
+		//Label text 1 "*;" Tooltip 1 ":" Label text 2 ";*" Tooltip 2
+		//adds label text 2 to the label, then sets its tool tip's text to tooltip 2
 		lbl.setOnDragDone(new EventHandler <DragEvent>() {
 			public void handle(DragEvent event) {
 				Dragboard db = event.getDragboard();
 				if (event.getTransferMode() == TransferMode.MOVE) {
-					lbl.setText(db.getString().substring((db.getString().indexOf(":") + 1)));
+					//label
+					lbl.setText(db.getString().substring(db.getString().indexOf(":") + 1, (db.getString().indexOf(";*"))));
+					//tooltip
+					lbl.getTooltip().setText(db.getString().substring(db.getString().indexOf(";*") + 2));
+
 				}
 				event.consume();
 			}
@@ -1234,7 +1261,7 @@ public class BigBossGame1 extends Application {
 					setOnFinished(event -> mainTheme.stop());
 				}
 				protected void interpolate(double frac) {
-					mainTheme.setVolume(1 - frac);
+					mainTheme.setVolume((volumeSlider.getValue() / 100) - frac);
 				}
 			};
 			MainThemeFadeOut.play();	
@@ -1247,7 +1274,7 @@ public class BigBossGame1 extends Application {
 					setOnFinished(event -> bossTheme.stop());
 				}
 				protected void interpolate(double frac) {
-					bossTheme.setVolume(1 - frac);
+					bossTheme.setVolume((volumeSlider.getValue() / 100) - frac);
 				}
 			};
 			bossThemeFadeOut.play();
@@ -1437,21 +1464,36 @@ public class BigBossGame1 extends Application {
 		
 		//the players first ability
 		Button ability1 = new Button(charecter.getAbility(0).getName());
+		if (charecter.getAbility(0).isOnCooldown()) {
+			ability1.setText(ability1.getText() + "\nOn Cooldown" + charecter.getAbility(0).getCooldown());
+			ability1.setDisable(true);
+		}
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		setUpToolTip(ability1, charecter.getAbility(0));
 		AnchorPane.setLeftAnchor(ability1, 10.0);
 		AnchorPane.setTopAnchor(ability1, 10.0);
 		ability1.setOnAction(event -> useAbility(thisScene, charecter.getAbility(0), boss));
 		
 		//the players second ability
 		Button ability2 = new Button(charecter.getAbility(1).getName());
+		if (charecter.getAbility(1).isOnCooldown()) {
+			ability2.setText(ability2.getText() + "\nOn Cooldown: " + charecter.getAbility(1).getCooldown());
+			ability2.setDisable(true);
+		}
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		setUpToolTip(ability2, charecter.getAbility(1));
 		AnchorPane.setRightAnchor(ability2, 10.0);
 		AnchorPane.setTopAnchor(ability2, 10.0);
 		ability2.setOnAction(event -> useAbility(thisScene, charecter.getAbility(1), boss));
 		
 		//the players third ability (placed on another pane to fix position)
 		Button ability3 = new Button(charecter.getAbility(2).getName());
+		if (charecter.getAbility(2).isOnCooldown()) {
+			ability3.setText(ability3.getText() + "\nOn Cooldown" + charecter.getAbility(2).getCooldown());
+			ability3.setDisable(true);
+		}
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		setUpToolTip(ability3, charecter.getAbility(2));
 		HBox thirdOptionPane = new HBox(ability3);
 		thirdOptionPane.setAlignment(Pos.BOTTOM_CENTER);
 		AnchorPane.setBottomAnchor(thirdOptionPane, 10.0);
@@ -1502,7 +1544,21 @@ public class BigBossGame1 extends Application {
 		bossStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 		vbBossStats.setPrefSize(295, 134);
 		bossStats.setLayoutX(825);
-
+		
+		if (charecter.allAbilitiesOnCooldown()) {
+			final Animation animation = new Transition() {
+				{
+					setCycleDuration(Duration.seconds(3));
+					setOnFinished(finish -> speak(event -> bossFightRound(thisScene, charecter, boss), charecter.getName() + " is on cooldown."));
+				}
+				@Override
+				protected void interpolate(double frac) {}
+			};
+			animation.play();
+		}
+		//reduces any colldowns the player may have at the start of their turn (allows the buttons to be dissabled // allAbilitiesOnCooldown to happen first)
+		charecter.reduceCooldown();
+		
 		fightDisplayPane.getChildren().addAll(imgTextDisplayWithStats, playerOptionsPane, playerStats, bossStats);
 
 	}

@@ -4,7 +4,10 @@ import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
 import BigBoss.AbstractModification;
 import BigBoss.Stat;
+import BigBoss.Abilities.AvaidAbility;
 import BigBoss.Abilities.EmptyAbility;
+import BigBoss.Abilities.HealAbility;
+import BigBoss.Abilities.KickAbility;
 import BigBoss.Abilities.PunchAbility;
 import BigBoss.Mods.BulkMod;
 import BigBoss.Mods.MightMod;
@@ -13,6 +16,8 @@ import javafx.scene.image.Image;
 
 public class MrBasic extends AbstractCharecter{
 
+	private int dodgeAmount = 0;
+	
 	public MrBasic() {
 		super("Mr. Basic");
 		this.addStatsToList(
@@ -22,8 +27,14 @@ public class MrBasic extends AbstractCharecter{
 		this.addRollTokens(100);
 		this.addStatPoints(10);
 		AbstractAbility punch = new PunchAbility(this);
-		this.setPosibleAbilities(punch, new EmptyAbility(this), new EmptyAbility(this));
+		AbstractAbility kick = new KickAbility(this);
+		AbstractAbility avaid = new AvaidAbility(this);
+
+		this.setPosibleAbilities(punch, kick, avaid);
 		this.equipAbility(punch, 0);
+		this.equipAbility(kick, 1);
+		this.equipAbility(avaid, 2);
+
 		
 		OriginMod start = new OriginMod("Mr . Basic\nOrigin", null);
 		
@@ -63,10 +74,35 @@ public class MrBasic extends AbstractCharecter{
 		}
 		return super.getStat(ID) + (int)ret;
 	}
+	
+	@Override
+	public int damage (int amount, boolean physical) {
+		if (dodgeAmount < 0) {
+			dodgeAmount = 0;
+			return super.damage(0, physical);
+		}
+		amount -= dodgeAmount;
+		dodgeAmount = 0;
+		return super.damage(amount, physical);
+	}
+	
+	@Override
+	public void reset() {
+		super.reset();
+		this.dodgeAmount = 0;
+	}
 
 	@Override
 	protected Object clone() {
 		return new MrBasic();
+	}
+
+	public int getDodgeAmount() {
+		return dodgeAmount;
+	}
+
+	public void setDodgeAmount(int dodgeAmount) {
+		this.dodgeAmount = dodgeAmount;
 	}
 
 

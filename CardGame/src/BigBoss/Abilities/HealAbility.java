@@ -9,7 +9,7 @@ public class HealAbility extends AbstractAbility{
 	private int power;
 	
 	public HealAbility(AbstractCharecter owner, int power) {
-		super("Heal", AbilityType.BUFF, owner);
+		super("Heal", "Recover " + power + " HP.", AbilityType.BUFF, owner);
 		this.power = power;
 	}
 

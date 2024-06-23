@@ -16,9 +16,9 @@ public class AvaidAbility extends AbstractAbility{
 	public String use(AbstractCharecter target) {
 		if (BigBossGame1.randomNumber(0,1) == 0) {
 			((MrBasic) getOwner()).setDodgeAmount(-1);
-			return "The ability succeded";
+			return "The ability succeded! " + this.getOwner().getName() + " will dodge the next instance of damage.";
 		} else {
-			return "The ability failed";			
+			return "The ability failed! " + this.getOwner().getName() + " will not dodge the next instance of damage.";			
 		}
 		
 	}

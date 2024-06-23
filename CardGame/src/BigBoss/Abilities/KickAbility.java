@@ -7,7 +7,7 @@ import BigBoss.AbstractCharecter;
 public class KickAbility extends AbstractAbility{
 
 	public KickAbility(AbstractCharecter owner) {
-		super("Kick", "Deal danage equal to 2 X your ATK. \nCooldown: 1", AbilityType.ATTACK, owner);
+		super("Kick", "Deal danage equal to 2 X your ATK.\nCooldown 1", AbilityType.ATTACK_PHYSICAL, owner);
 		// TODO Auto-generated constructor stub
 	}
 

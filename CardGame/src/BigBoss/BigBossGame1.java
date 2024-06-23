@@ -979,8 +979,8 @@ public class BigBossGame1 extends Application {
 			TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
 			btnTrans.setFromY(-318);
 			btnTrans.setToY(-34);
-			btnTrans.setFromX(-374 + abilityOptions.indexOf(a) * 294);
-			btnTrans.setToX(-374 + abilityOptions.indexOf(a) * 294);
+			btnTrans.setFromX(-340 + abilityOptions.indexOf(a) * 294);
+			btnTrans.setToX(-340 + abilityOptions.indexOf(a) * 294);
 			btnTrans.setInterpolator(Interpolator.LINEAR);
 			btnTrans.setCycleCount(1);
 		    
@@ -1665,21 +1665,26 @@ public class BigBossGame1 extends Application {
 	}
 	
 	//returns an image corresponding to the intent type
-	public ImageView getIntentImage(AbilityType a) {
-		switch(a) {
-		case ATTACK:
-			return new ImageView(getClass().getResource("/images/RedFistSm.png").toString());
-		case BUFF:
-			return new ImageView(getClass().getResource("/images/GreenArrowSm.png").toString());
-		case DEBUFF:
-			return new ImageView(getClass().getResource("/images/PurpleArrowSm.png").toString());
-		case DEFEND:
-			return new ImageView(getClass().getResource("/images/BlueShieldSm.png").toString());
-		case UNKNOWN:
-			return new ImageView(getClass().getResource("/images/RedFistSm.png").toString());
-		default:
-			return new ImageView(getClass().getResource("/images/RedFistSm.png").toString());
+	public HBox getIntentImage(AbilityType a) {
+		String type = a.name();
+		HBox images = new HBox();
+		if (type.contains("ATTACK_PHYSICAL")) {
+			images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
+		} else if (type.contains("ATTACK_NON_PHYSICAL")) {
+			images.getChildren().add(new ImageView(getClass().getResource("/images/MagicStarSm.png").toString()));
+		} else if (type.contains("DEFEND")) {
+			images.getChildren().add(new ImageView(getClass().getResource("/images/BlueShieldSm.png").toString()));
+		} else if (type.contains("BUFF")) {
+			images.getChildren().add(new ImageView(getClass().getResource("/images/GreenArrowSm.png").toString()));
+		} else if (type.contains("DEBUFF")) {
+			images.getChildren().add(new ImageView(getClass().getResource("/images/PurpleArrowSm.png").toString()));
+		} else if (type.contains("UNKNOWN")) {
+			//TODO make acc images for this
+			images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
+		} else {
+			images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
 		}
+		return images;
 	}
 	
 	// From Karen Spindler's Grade 11 U computer science course

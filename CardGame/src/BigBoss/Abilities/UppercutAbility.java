@@ -1,0 +1,19 @@
+package BigBoss.Abilities;
+
+import BigBoss.AbilityType;
+import BigBoss.AbstractAbility;
+import BigBoss.AbstractCharecter;
+
+public class UppercutAbility extends AbstractAbility{
+
+	public UppercutAbility(AbstractCharecter owner) {
+		super("Uppercut",  "Deal danage equal to 3 X your ATK. Cooldown 2", AbilityType.ATTACK_PHYSICAL, owner);
+	}
+
+	@Override
+	public String use(AbstractCharecter target) {
+		this.setCooldown(2);
+		return this.getOwner().getName() + " dealt " + target.damage(this.getOwner().getStat("ATK") * 3, true) + " damage to " + target.getName();
+	}
+
+}

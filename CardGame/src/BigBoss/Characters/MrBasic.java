@@ -4,15 +4,10 @@ import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
 import BigBoss.AbstractModification;
 import BigBoss.Stat;
-import BigBoss.Abilities.AvaidAbility;
-import BigBoss.Abilities.EmptyAbility;
-import BigBoss.Abilities.HealAbility;
-import BigBoss.Abilities.KickAbility;
-import BigBoss.Abilities.PunchAbility;
+import BigBoss.Abilities.*;
 import BigBoss.Mods.BulkMod;
 import BigBoss.Mods.MightMod;
 import BigBoss.Mods.OriginMod;
-import javafx.scene.image.Image;
 
 public class MrBasic extends AbstractCharecter{
 
@@ -30,7 +25,7 @@ public class MrBasic extends AbstractCharecter{
 		AbstractAbility kick = new KickAbility(this);
 		AbstractAbility avaid = new AvaidAbility(this);
 
-		this.setPosibleAbilities(punch, kick, avaid);
+		this.setPosibleAbilities(punch, kick, avaid, new ParryAbility(this), new UppercutAbility(this));
 		this.equipAbility(punch, 0);
 		this.equipAbility(kick, 1);
 		this.equipAbility(avaid, 2);

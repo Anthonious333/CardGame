@@ -123,11 +123,11 @@ public abstract class AbstractAbility {
 	}
 	
 	public void reduceCooldown(int i) {
-		this.setCooldown(this.getCooldown() - i);
+		this.setCooldown(Math.abs(this.getCooldown()) - i);
 	}
 	
 	public boolean isOnCooldown () {
-		if (cooldown > 0) {
+		if (cooldown != 0) {
 			return true;
 		}
 		return false;

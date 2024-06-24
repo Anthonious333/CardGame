@@ -24,19 +24,19 @@ public class MrBasic extends AbstractCharecter{
 		AbstractAbility punch = new PunchAbility(this);
 		AbstractAbility kick = new KickAbility(this);
 		AbstractAbility avaid = new AvaidAbility(this);
-
+		AbstractAbility jab = new JabAbility(this);
 		this.setPosibleAbilities(
 				punch,
 				kick,
 				avaid,
 				new ParryAbility(this),
 				new UppercutAbility(this),
-				new JabAbility(this),
+				jab,
 				new EmptyAbility(this)
 				);
 		this.equipAbility(punch, 0);
 		this.equipAbility(kick, 1);
-		this.equipAbility(avaid, 2);
+		this.equipAbility(jab, 2);
 
 		
 		OriginMod start = new OriginMod("Mr . Basic\nOrigin", null);

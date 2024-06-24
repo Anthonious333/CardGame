@@ -43,6 +43,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -186,7 +187,7 @@ public class BigBossGame1 extends Application {
 				bossTheme.seek(Duration.ZERO);
 			}
 		});
-		
+		mainTheme.setStopTime(Duration.millis(11000));
 		mainTheme.setOnEndOfMedia(new Runnable() {
 			@Override
 			public void run() {
@@ -895,133 +896,113 @@ public class BigBossGame1 extends Application {
 			return;
 		}
 		//the picture of the slot machine with holes in it to allow for the buttons to show
-		ImageView imgSlotMachine = new ImageView(getClass().getResource("/images/SlotMachineTest2.png").toString());
-		
-		//a copy of the image to be placed under the one with holes to serve as a not avalable options
-		ImageView imgSlotMachineBase = new ImageView(getClass().getResource("/images/SlotMachine.png").toString());
+		ImageView imgSlotMachine = new ImageView(getClass().getResource("/images/SlotMachineTest3.png").toString());
 
 		//the stackpane everything else will sit on
-		StackPane stackPane = new StackPane(imgSlotMachineBase);
-		
-		//used to keep track of the object that need to be manipulated in some way after the Slot Machine has been pulled
-		//to keep trach of the transition that moves the ability / select button
-		ArrayList<TranslateTransition> btnTransList = new ArrayList<TranslateTransition>();
-		//used to keep track of the animation that makes the machine look like its spinning 
-		ArrayList<ParallelTransition> slotParallelTransList = new ArrayList<ParallelTransition>();
-		//used to keep track of the images that will be removed once the machine stops
-		ArrayList<ImageView> imgToRemove = new ArrayList<ImageView>();
-		
-		//used to keep track of the abilities that the user can choose from
-		ArrayList<AbstractAbility> abilityOptions = new ArrayList<AbstractAbility>();
-		
+		StackPane stackPane = new StackPane();
+
 		//picks 3 abilities that are locked and have not already been chosen
 		//if there are less than three it picks the remaining ones
-		while (abilityOptions.size() <charecter.numberOfLockedAbilities()) {
-			AbstractAbility a = charecter.getPosibleAbilities().get(randomNumber(0, charecter.getPosibleAbilities().size() - 1));
-			if (!a.isUnlocked() && !abilityOptions.contains(a)) {
-				abilityOptions.add(a);
-			}
-		}
-		
+		AbstractAbility a = getRandomLockedAbility(charecter);
+
 		//creates the animations and buttons for each of the selected abilities
-		for (AbstractAbility a : abilityOptions) {
-			//images for the spinging animation
-			ImageView img1 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
-			ImageView img2 = new ImageView(getClass().getResource("/images/FullSlot.jpg").toString());
+		//images for the spinging animation
+		ImageView img1 = new ImageView(getClass().getResource("/images/BigSlotFull.png").toString());
+		ImageView img2 = new ImageView(getClass().getResource("/images/BigSlotFull.png").toString());
 
-			//the spinging animations
-			TranslateTransition SlotTrans = new TranslateTransition(Duration.seconds(.1), img1);
-			SlotTrans.setFromY(-284);
-			SlotTrans.setToY(0);
-			SlotTrans.setFromX(-340 + abilityOptions.indexOf(a) * 294);
-			SlotTrans.setToX(-340 + abilityOptions.indexOf(a) * 294);
-			SlotTrans.setInterpolator(Interpolator.LINEAR);
-			SlotTrans.setCycleCount(1);
-		    TranslateTransition SlotTrans2 = new TranslateTransition(Duration.seconds(.1), img2);
-		    SlotTrans2.setFromY(0);
-		    SlotTrans2.setToY(284);
-		    SlotTrans2.setFromX(-340 + abilityOptions.indexOf(a) * 294);
-		    SlotTrans2.setToX(-340 + abilityOptions.indexOf(a) * 294);
-		    SlotTrans2.setCycleCount(1);
-		    SlotTrans2.setInterpolator(Interpolator.LINEAR);
-		    ParallelTransition slotParallelTrans = new ParallelTransition(SlotTrans, SlotTrans2);
-		    slotParallelTrans.setDelay(Duration.seconds(2 * this.animationSpeedMultiplyer));
-		    slotParallelTrans.setCycleCount(Animation.INDEFINITE);
-		    slotParallelTrans.play();
-		    
-		    //the "Button" that unlocks the ability being looked at 
-			StackPane btn = new StackPane();
-			ImageView iv = new ImageView(getClass().getResource("/images/Slot.jpg").toString());
-			Label lbl = new Label(a.getName());
-			System.out.print(a.getName());
+		//the spinging animations
+		TranslateTransition SlotTrans = new TranslateTransition(Duration.seconds(.1), img1);
+		SlotTrans.setFromY(-284);
+		SlotTrans.setToY(0);
+		SlotTrans.setFromX(-59);
+		SlotTrans.setToX(-59);
+		SlotTrans.setInterpolator(Interpolator.LINEAR);
+		SlotTrans.setCycleCount(1);
+		TranslateTransition SlotTrans2 = new TranslateTransition(Duration.seconds(.1), img2);
+		SlotTrans2.setFromY(0);
+		SlotTrans2.setToY(284);
+		SlotTrans2.setFromX(-59);
+		SlotTrans2.setToX(-59);
+		SlotTrans2.setCycleCount(1);
+		SlotTrans2.setInterpolator(Interpolator.LINEAR);
+		ParallelTransition slotParallelTrans = new ParallelTransition(SlotTrans, SlotTrans2);
+		slotParallelTrans.setDelay(Duration.seconds(2 * this.animationSpeedMultiplyer));
+		slotParallelTrans.setCycleCount(Animation.INDEFINITE);
+		slotParallelTrans.play();
 
-			lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
-			btn.setOnMouseClicked(event -> {
-				FXDialog.print("You have unlocked " + lbl.getText() + ".");
-				System.out.print(lbl.getText());
-				charecter.getAbility(lbl.getText()).setUnlocked(true);
-				charecter.addRollTokens(-1);
-				editAbilities(stackPane, charecter);
-			});
-			btn.setOnMouseEntered(event -> {
-				System.out.print(lbl.getText());
-			});
+		//the "Button" that unlocks the ability being looked at 
+		StackPane btn = new StackPane();
+		ImageView iv = new ImageView(getClass().getResource("/images/BigSlot.png").toString());
+		Label lbl = new Label(a.getName());
+		System.out.print(a.getName());
 
-			//the animation that plays so the button falls into place
-			TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
-			btnTrans.setFromY(-318);
-			btnTrans.setToY(-34);
-			btnTrans.setFromX(-340 + abilityOptions.indexOf(a) * 294);
-			btnTrans.setToX(-340 + abilityOptions.indexOf(a) * 294);
-			btnTrans.setInterpolator(Interpolator.LINEAR);
-			btnTrans.setCycleCount(1);
-		    
-			//adding everything to the tracking lists
-		    btnTransList.add(btnTrans);
-		    slotParallelTransList.add(slotParallelTrans);
-		    imgToRemove.add(img1);
-		    imgToRemove.add(img2);
-		    
-		    btn.setVisible(false);
-		    
-		    //adds everything to the screen
-			btn.getChildren().addAll(iv, lbl);
-			stackPane.getChildren().addAll(img1, img2);
-			stackPane.getChildren().addAll(btn);
+		lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
+		btn.setOnMouseClicked(event -> selectUnlockAbility(a, charecter, stackPane));
+		btn.setOnMouseEntered(event -> {
+			System.out.print(lbl.getText());
+		});
 
-			
-		}
-		
+		//the animation that plays so the button falls into place
+		TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
+		btnTrans.setFromY(-318);
+		btnTrans.setToY(-34);
+		btnTrans.setFromX(-59);
+		btnTrans.setToX(-59);
+		btnTrans.setInterpolator(Interpolator.LINEAR);
+		btnTrans.setCycleCount(1);
+
+		btn.setVisible(false);
+
+		//adds everything to the screen
+		btn.getChildren().addAll(iv, lbl);
+		stackPane.getChildren().addAll(img1, img2);
+		stackPane.getChildren().addAll(btn);
+
+
+
 		//plays the slot animation
 		imgSlotMachine.setOnMouseClicked(event -> {
-			for (TranslateTransition t : btnTransList) {
-				int index = btnTransList.indexOf(t);
-				imgSlotMachine.setOnMouseClicked(null);
-				//used to make the image visable at the start of the animation 
-				TranslateTransition timer = new TranslateTransition(Duration.ZERO);
-				timer.setOnFinished(event1 -> stackPane.getChildren().get((index) + 3).setVisible(true));
-				
-				//plays the timer and the animation at the same time, basically just makes the image visible at the start of the animation
-			    ParallelTransition tAndTimer = new ParallelTransition(t, timer);
-			    tAndTimer.setDelay(Duration.seconds(index * .5));
-				
-				//removes the images from the screen once the animation is finished playing over it 
-				t.setOnFinished(event1 -> {
-					slotParallelTransList.get(index).stop();
-					stackPane.getChildren().remove(imgToRemove.get(0));
-					imgToRemove.remove(0);
-					stackPane.getChildren().remove(imgToRemove.get(0));
-					imgToRemove.remove(0);
-				});
-				tAndTimer.play();
-			}
+
+			imgSlotMachine.setOnMouseClicked(null);
+			//used to make the image visable at the start of the animation 
+			TranslateTransition timer = new TranslateTransition(Duration.ZERO);
+			timer.setOnFinished(event1 -> stackPane.getChildren().get(2).setVisible(true));
+
+			//plays the timer and the animation at the same time, basically just makes the image visible at the start of the animation
+			ParallelTransition tAndTimer = new ParallelTransition(btnTrans, timer);
+			tAndTimer.setDelay(Duration.seconds(0));
+
+			//removes the images from the screen once the animation is finished playing over it 
+			btnTrans.setOnFinished(event2 -> {
+				slotParallelTrans.stop();
+				stackPane.getChildren().remove(img1);
+				stackPane.getChildren().remove(img2);
+			});
+			tAndTimer.play();
+
 
 		});
-		
+
 		stackPane.getChildren().add(imgSlotMachine);
 
 		root.getChildren().add(stackPane);
 		leaveTempScene(thisScene, stackPane);
+	}
+
+	public AbstractAbility getRandomLockedAbility(AbstractCharecter charecter) {
+		AbstractAbility a;
+		do {
+			a = charecter.getPosibleAbilities().get(randomNumber(0, charecter.getPosibleAbilities().size() - 1));
+		} while (a.isUnlocked());
+		return a;
+	}
+	
+	public void selectUnlockAbility (AbstractAbility a, AbstractCharecter charecter, Node thisScreen) {
+		FXDialog.print("You have unlocked " + a.getName() + ".");
+		System.out.print(a);
+		a.setUnlocked(true);
+		charecter.addRollTokens(-1);
+		editAbilities(thisScreen, charecter);
 	}
 	
 	//unequips all the charecters abilities, then equipes all the abilities represented by each label. NOTE it is important that no label be named the same as another
@@ -1451,50 +1432,44 @@ public class BigBossGame1 extends Application {
 		ImageView imgTextDisplayWithStats = new ImageView(getClass().getResource("/images/TextDisplayWithStats.jpg").toString());
 		
 		//holds the buttons containing the players options 
-		AnchorPane playerOptionsPane = new AnchorPane();
+		BorderPane playerOptionsPane = new BorderPane();
 		playerOptionsPane.setPrefSize(505, 134);
 		playerOptionsPane.setLayoutX(310);
 		
 		//the players first ability
 		Button ability1 = new Button(charecter.getAbility(0).getName());
 		if (charecter.getAbility(0).isOnCooldown()) {
-			ability1.setText(ability1.getText() + "\nOn Cooldown" + charecter.getAbility(0).getCooldown());
+			ability1.setText(ability1.getText() + (charecter.getAbility(0).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown" + charecter.getAbility(0).getCooldown()));
 			ability1.setDisable(true);
 		}
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		setUpToolTip(ability1, charecter.getAbility(0));
-		AnchorPane.setLeftAnchor(ability1, 10.0);
-		AnchorPane.setTopAnchor(ability1, 10.0);
 		ability1.setOnAction(event -> useAbility(thisScene, charecter.getAbility(0), boss));
-		
+
 		//the players second ability
 		Button ability2 = new Button(charecter.getAbility(1).getName());
 		if (charecter.getAbility(1).isOnCooldown()) {
-			ability2.setText(ability2.getText() + "\nOn Cooldown: " + charecter.getAbility(1).getCooldown());
+			ability2.setText(ability2.getText() + (charecter.getAbility(1).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown: " + charecter.getAbility(1).getCooldown()));
 			ability2.setDisable(true);
 		}
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		setUpToolTip(ability2, charecter.getAbility(1));
-		AnchorPane.setRightAnchor(ability2, 10.0);
-		AnchorPane.setTopAnchor(ability2, 10.0);
 		ability2.setOnAction(event -> useAbility(thisScene, charecter.getAbility(1), boss));
 		
 		//the players third ability (placed on another pane to fix position)
 		Button ability3 = new Button(charecter.getAbility(2).getName());
 		if (charecter.getAbility(2).isOnCooldown()) {
-			ability3.setText(ability3.getText() + "\nOn Cooldown" + charecter.getAbility(2).getCooldown());
+			ability3.setText(ability3.getText() + (charecter.getAbility(2).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown" + charecter.getAbility(2).getCooldown()));
 			ability3.setDisable(true);
 		}
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		setUpToolTip(ability3, charecter.getAbility(2));
-		HBox thirdOptionPane = new HBox(ability3);
-		thirdOptionPane.setAlignment(Pos.BOTTOM_CENTER);
-		AnchorPane.setBottomAnchor(thirdOptionPane, 10.0);
-		AnchorPane.setRightAnchor(thirdOptionPane, 10.0);
-		AnchorPane.setLeftAnchor(thirdOptionPane, 10.0);
 		ability3.setOnAction(event -> useAbility(thisScene, charecter.getAbility(2), boss));
 		
-		playerOptionsPane.getChildren().addAll(ability1, ability2, thirdOptionPane);
+		//TODO make these in a straight line and on a scrollpane
+		playerOptionsPane.setLeft(ability1);
+		playerOptionsPane.setCenter(ability2);
+		playerOptionsPane.setRight(ability3);
 		
 		//holds the labels of the players stats
 		VBox vbPlayerStats = new VBox();
@@ -1550,7 +1525,9 @@ public class BigBossGame1 extends Application {
 			animation.play();
 		}
 		//reduces any colldowns the player may have at the start of their turn (allows the buttons to be dissabled // allAbilitiesOnCooldown to happen first)
-		charecter.reduceCooldown();
+		if (charecter.hasLastAbility() && charecter.getLastAbility().getCooldown() >= 0) {
+			charecter.reduceCooldown();			
+		}
 		
 		fightDisplayPane.getChildren().addAll(imgTextDisplayWithStats, playerOptionsPane, playerStats, bossStats);
 
@@ -1573,13 +1550,12 @@ public class BigBossGame1 extends Application {
 	//uses and ability then speaks the result
 	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss) {
 		buttonClickSound.play();
+		ability.getOwner().setLastAbility(ability);
 		speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), ability.use(boss));
 	}
 	
 	//makes a game style text box that prints a string one at a time for every string in toSay
 	public void speak(EventHandler<ActionEvent> next, String... toSay) {
-		
-		
 		fightDisplayPane.getChildren().clear();
 		
 		//label the string will print to
@@ -1620,19 +1596,31 @@ public class BigBossGame1 extends Application {
 		btn.setOpacity(0);
 		btn.setPrefSize(IMAGE_WIDTH, 134);
 		fightDisplayPane.getChildren().addAll(display, lbl, displayArrow, btn);
-
 		//java docs code to print the message : https://javadoc.io/static/org.openjfx/javafx-media/17-ea+3/javafx.graphics/javafx/animation/Transition.html
 		final Animation animation = new Transition() {
 			{
 				setCycleDuration(Duration.seconds(1));
 			}
 			protected void interpolate(double frac) {
+				String preText = lbl.getText();
+				
 				final int length = toSay[0].length();
 				final int n = Math.round(length * (float) frac);
 				//only prints the first string in the array
 				lbl.setText(toSay[0].substring(0, n));
 			}
 		};
+		
+		
+		
+		//if there are more strings to print...
+		if (toSay.length > 1) {
+			//make the button call a new speak without the first string(index 0)
+			animation.setOnFinished(event -> btn.setOnAction(event2 -> speak(next, Arrays.copyOfRange(toSay, 1, toSay.length))));		
+		} else {
+			//make the button play the action to be performed after the speak
+			animation.setOnFinished(event -> btn.setOnAction(next));
+		}
 		
 		//makes the button force finish the animation
 		btn.setOnMouseClicked(event -> animation.jumpTo(Duration.INDEFINITE));
@@ -1641,10 +1629,8 @@ public class BigBossGame1 extends Application {
 		MediaPlayer clickSound = new MediaPlayer(new Media(getClass().getResource("/sounds/KeyBoardTypingSFX.mp3").toString()));
 		clickSound.setStopTime(Duration.seconds(1));
 		clickSound.play();
-
 		animation.play();
-
-
+		
 	}
 	
 	//returns an image corresponding to the intent type

@@ -69,7 +69,8 @@ public class BossEnemy extends AbstractCharecter{
 		this.nextMove = nextMove;
 	}
 	
-	public void cantrip() {
+	public void cantrip(AbstractAbility source) {
+		source.setCooldown(-1);
 		this.cantrip = true;
 	}
 	

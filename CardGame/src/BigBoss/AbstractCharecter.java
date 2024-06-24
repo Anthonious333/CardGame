@@ -20,6 +20,7 @@ public abstract class AbstractCharecter {
 	private ArrayList<AbstractAbility> abilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
+	private AbstractAbility lastAbility;
 
 	private String name;
 	private int statPoints;
@@ -300,7 +301,7 @@ public abstract class AbstractCharecter {
 			a.reduceCooldown(i);
 		}
 	}
-	
+
 	public void reduceCooldown() {
 		reduceCooldown(1);
 	}
@@ -347,5 +348,20 @@ public abstract class AbstractCharecter {
 	
 	@Override
 	protected abstract Object clone();
+
+	public AbstractAbility getLastAbility() {
+		return lastAbility;
+	}
+
+	public boolean hasLastAbility() {
+		if (lastAbility != null) {
+			return true;
+		} 
+		return false;
+	}
+	
+	public void setLastAbility(AbstractAbility lastAbility) {
+		this.lastAbility = lastAbility;
+	}
 
 }

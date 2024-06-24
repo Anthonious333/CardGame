@@ -13,7 +13,7 @@ public class JabAbility extends AbstractAbility{
 
 	@Override
 	public String use(AbstractCharecter target) {
-		((BossEnemy)target).cantrip();
+		((BossEnemy)target).cantrip(this);
 		return this.getOwner().getName() + " dealt " + target.damage(this.getOwner().getStat("ATK") / 2, true) + " damage to " + target.getName();
 	}
 

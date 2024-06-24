@@ -6,9 +6,7 @@ import BigBoss.Stat;
 
 public class BulkMod extends AbstractModification{
 
-	private int level;
 	private AbstractCharecter owner;
-	private double magicNumber;
 	private double threshhold;
 	public BulkMod(AbstractModification last, int level, double magicNumber, double threshhold, AbstractCharecter owner) {
 		this(last, level, magicNumber, threshhold, owner, true);
@@ -16,7 +14,6 @@ public class BulkMod extends AbstractModification{
 	
 	public BulkMod(AbstractModification last, int level, double magicNumber, double threshhold, AbstractCharecter owner, boolean locks) {
 		super("Bulk " + level, last, locks);
-		this.level = level;
 		this.setMagicNumber(magicNumber);
 		this.owner= owner;
 		this.threshhold = threshhold;
@@ -36,5 +33,9 @@ public class BulkMod extends AbstractModification{
 		hp.addTempValue((int) this.getMagicNumber());
 		hp.commitTempStat();
 		
+	}
+	@Override
+	public String getToolTip() {
+		return "Gain " + (int)this.getMagicNumber() + " HP upon unlocking" + (this.isUnlocked()? "" : "\n" + this.owner.getStat("HP") + "/" + (int)this.threshhold);
 	}
 }

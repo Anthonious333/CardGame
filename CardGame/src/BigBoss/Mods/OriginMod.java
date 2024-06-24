@@ -14,4 +14,9 @@ public class OriginMod extends AbstractModification{
 		return true;
 	}
 
+	@Override
+	public String getToolTip() {
+		return "The first step in the journy";
+	}
+	
 }

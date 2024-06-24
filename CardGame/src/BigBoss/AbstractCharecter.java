@@ -166,7 +166,9 @@ public abstract class AbstractCharecter {
 	}
 	
 	public void equipAbility(AbstractAbility a, int index) {
-		
+		if (index < 0) {
+			return;
+		}
 		a.setUnlocked(true);
 		a.setEquiped(true);
 		unequipAbility(index);
@@ -257,6 +259,32 @@ public abstract class AbstractCharecter {
 			}
 		}
 		return ret;
+	}
+	
+	public void atEndOfCombat() {
+		for (Stat s : this.getStats()) {
+			s.atEndOfCombat();
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			if (a.isEquiped()) {
+				a.atEndOfCombat();
+			}
+		}
+		for (AbstractModification m : this.getMods()) {
+			if (m.isUnlocked()) {
+				m.atEndOfCombat();
+			}
+		}
+	}
+	
+	public int indexOfAbility(AbstractAbility a ) {
+		//not returning theright number
+		for (int i = 0; i < this.abilities.size(); i++) {
+			if (abilities.get(i).getName().equals(a.getName())) {
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	public void unlockAbility(String name) {

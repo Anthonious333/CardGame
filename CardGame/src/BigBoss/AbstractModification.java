@@ -2,7 +2,7 @@ package BigBoss;
 
 import java.util.ArrayList;
 
-public abstract class AbstractModification {
+public abstract class AbstractModification extends SAM{
 
 	private String name;
 	private boolean unlockable;
@@ -11,6 +11,7 @@ public abstract class AbstractModification {
 	private AbstractModification last;
 	private double magicNumber;
 	private boolean locksOnLast;
+
 
 	public AbstractModification (String name, AbstractModification last) {
 		this(name, last, true);

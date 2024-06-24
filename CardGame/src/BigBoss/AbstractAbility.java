@@ -1,13 +1,12 @@
 package BigBoss;
 
 
-public abstract class AbstractAbility {
+public abstract class AbstractAbility extends SAM{
 	
 	private String name;
 	private AbstractCharecter owner;
 	private boolean unlocked;
 	private boolean equiped;
-	private String toolTip;
 	//intedded for boss and canselect
 	private int roleDifficulty;
 	private int roleNumber;
@@ -106,14 +105,6 @@ public abstract class AbstractAbility {
 		this.intent = intent;
 	}
 
-	public String getToolTip() {
-		return toolTip;
-	}
-
-	public void setToolTip(String toolTip) {
-		this.toolTip = toolTip;
-	}
-
 	public int getCooldown() {
 		return cooldown;
 	}
@@ -123,7 +114,9 @@ public abstract class AbstractAbility {
 	}
 	
 	public void reduceCooldown(int i) {
-		this.setCooldown(Math.abs(this.getCooldown()) - i);
+		if (this.getCooldown() > -2) {
+			this.setCooldown(Math.abs(this.getCooldown()) - i);			
+		}
 	}
 	
 	public boolean isOnCooldown () {
@@ -132,4 +125,5 @@ public abstract class AbstractAbility {
 		}
 		return false;
 	}
+	
 }

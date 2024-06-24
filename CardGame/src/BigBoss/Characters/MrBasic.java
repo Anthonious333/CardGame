@@ -7,6 +7,7 @@ import BigBoss.Stat;
 import BigBoss.Abilities.*;
 import BigBoss.Mods.BulkMod;
 import BigBoss.Mods.MightMod;
+import BigBoss.Mods.OnePunchMod;
 import BigBoss.Mods.OriginMod;
 
 public class MrBasic extends AbstractCharecter{
@@ -25,6 +26,8 @@ public class MrBasic extends AbstractCharecter{
 		AbstractAbility kick = new KickAbility(this);
 		AbstractAbility avaid = new AvaidAbility(this);
 		AbstractAbility jab = new JabAbility(this);
+		AbstractAbility one = new TheOnePunchAbility(this);
+
 		this.setPosibleAbilities(
 				punch,
 				kick,
@@ -32,11 +35,11 @@ public class MrBasic extends AbstractCharecter{
 				new ParryAbility(this),
 				new UppercutAbility(this),
 				jab,
-				new EmptyAbility(this)
+				one
 				);
 		this.equipAbility(punch, 0);
 		this.equipAbility(kick, 1);
-		this.equipAbility(jab, 2);
+		this.equipAbility(one, 2);
 
 		
 		OriginMod start = new OriginMod("Mr . Basic\nOrigin", null);
@@ -50,17 +53,19 @@ public class MrBasic extends AbstractCharecter{
 		MightMod might2 = new MightMod(might1, 2, .15, this);
 		MightMod might3 = new MightMod(might2, 3, .25, this);
 		MightMod might4 = new MightMod(might3, 4, .50, this);
+		OnePunchMod onePunch = new OnePunchMod(might4, this);
 
 		start.setNext(might1, bulk1);
 		might1.setNext(might2);
 		might2.setNext(might3);
 		might3.setNext(might4);
+		might4.setNext(onePunch);
 		
 		bulk1.setNext(bulk2);
 		bulk2.setNext(bulk3);
 		bulk3.setNext(bulk4);
 		 
-		this.setMods(start, might1, might2, might3, might4, bulk1, bulk2, bulk3, bulk4);
+		this.setMods(start, might1, might2, might3, might4, bulk1, bulk2, bulk3, bulk4, onePunch);
 		
 	}
 

@@ -1,6 +1,6 @@
 package BigBoss;
 
-public class Stat {
+public class Stat extends SAM{
 
 	private int value;
 	private String name;
@@ -8,7 +8,6 @@ public class Stat {
 	private int min, max;
 	private int tempValue = 0;
 	private boolean resets;
-	private String toolTip;
 	
 	public Stat (String name, int value) {
 		this(name, value, -1, -1, false);
@@ -126,12 +125,5 @@ public class Stat {
 		this.resets = resets;
 	}
 
-	public String getToolTip() {
-		return toolTip;
-	}
-
-	public void setToolTip(String toolTip) {
-		this.toolTip = toolTip;
-	}
 
 }

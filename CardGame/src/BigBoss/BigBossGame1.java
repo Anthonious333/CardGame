@@ -883,10 +883,12 @@ public class BigBossGame1 extends Application {
 	}
 	
 	//adds the tool tip from the ability that apears instantly
-	public void setUpToolTip (Control node, AbstractAbility a) {
+	public void setUpToolTip (Control node, SAM a) {
+		if (!a.getToolTip().equals("")) {
 			node.setTooltip(new Tooltip(a.getToolTip()));
 			node.getTooltip().setShowDelay(Duration.ZERO);
 			node.getTooltip().setFont(Font.font(FONT, TEXT_FONT_SIZE));
+		}
 	}
 	
 	//creates a screen with a slot machine and three abilitys to unlock
@@ -989,7 +991,7 @@ public class BigBossGame1 extends Application {
 		leaveTempScene(thisScene, stackPane);
 	}
 
-	public AbstractAbility getRandomLockedAbility(AbstractCharecter charecter) {
+	public static AbstractAbility getRandomLockedAbility(AbstractCharecter charecter) {
 		AbstractAbility a;
 		do {
 			a = charecter.getPosibleAbilities().get(randomNumber(0, charecter.getPosibleAbilities().size() - 1));
@@ -997,9 +999,16 @@ public class BigBossGame1 extends Application {
 		return a;
 	}
 	
+	public static AbstractAbility getRandomUnlockedAndUnequipedAbility(AbstractCharecter charecter) {
+		AbstractAbility a;
+		do {
+			a = charecter.getPosibleAbilities().get(randomNumber(0, charecter.getPosibleAbilities().size() - 1));
+		} while (!a.isUnlocked() || a.isEquiped());
+		return a;
+	}
+	
 	public void selectUnlockAbility (AbstractAbility a, AbstractCharecter charecter, Node thisScreen) {
 		FXDialog.print("You have unlocked " + a.getName() + ".");
-		System.out.print(a);
 		a.setUnlocked(true);
 		charecter.addRollTokens(-1);
 		editAbilities(thisScreen, charecter);
@@ -1189,6 +1198,7 @@ public class BigBossGame1 extends Application {
 				btn.setText(mod.getName() + (mod.isUnlocked()? "\nUNLOCKED" : "" ));
 			}
 		});
+		btn.setOnMouseEntered(event -> setUpToolTip(btn, mod));
 		btn.setLayoutX(xPos - (MOD_BUTTON_SIZE / 2));
 		btn.setLayoutY(yPos);
 		btn.setPrefSize(MOD_BUTTON_SIZE, MOD_BUTTON_SIZE);
@@ -1372,6 +1382,9 @@ public class BigBossGame1 extends Application {
 	//calculates the results of the combat
 	//then returns an array of strings describing the results of the combat.
 	public String[] postCombatResult(AbstractCharecter charecter, BossEnemy boss) {
+		
+		charecter.atEndOfCombat();
+		
 		// this number is the amount of point the player will earn by default and follows the formula:
 		//0-20(based on the percent missing health of the boss) + 1-5 (random)
 		int skillPoints = randomNumber( (int) (20.0 - (boss.getStat("HP") / boss.findStat("HP").getMax() * 20.0) + 1), (int) (20.0 - (boss.getStat("HP") / boss.findStat("HP").getMax() * 20.0) + 5.0));
@@ -1439,7 +1452,7 @@ public class BigBossGame1 extends Application {
 		//the players first ability
 		Button ability1 = new Button(charecter.getAbility(0).getName());
 		if (charecter.getAbility(0).isOnCooldown()) {
-			ability1.setText(ability1.getText() + (charecter.getAbility(0).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown" + charecter.getAbility(0).getCooldown()));
+			ability1.setText(ability1.getText() + (charecter.getAbility(0).getCooldown() == -1?"\nCantrip" : charecter.getAbility(0).getCooldown() == -2? "\nDisabled" : "\nOn Cooldown" + charecter.getAbility(0).getCooldown()));
 			ability1.setDisable(true);
 		}
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));

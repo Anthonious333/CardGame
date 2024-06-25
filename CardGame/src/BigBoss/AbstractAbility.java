@@ -1,5 +1,6 @@
 package BigBoss;
 
+import BigBoss.Animations.EmptyAnimation;
 
 public abstract class AbstractAbility extends SAM{
 	
@@ -13,6 +14,7 @@ public abstract class AbstractAbility extends SAM{
 	private AbilityType intent;
 	private int cooldown;
 	private int equipIndex;
+	private AbstractAbilityAnimation animation;
 	
 	public AbstractAbility(String name, String toolTip, AbilityType intent, AbstractCharecter owner) {
 		this.setName(name);
@@ -25,6 +27,7 @@ public abstract class AbstractAbility extends SAM{
 		this.setToolTip(toolTip);
 		this.setCooldown(0);
 		this.setEquipIndex(-1);
+		this.setAnimation(new EmptyAnimation());
 	}
 
 	public AbstractAbility(String name, AbilityType intent, AbstractCharecter owner) {
@@ -134,6 +137,14 @@ public abstract class AbstractAbility extends SAM{
 
 	public void setEquipIndex(int equipIndex) {
 		this.equipIndex = equipIndex;
+	}
+
+	public AbstractAbilityAnimation getAnimation() {
+		return animation;
+	}
+
+	public void setAnimation(AbstractAbilityAnimation animation) {
+		this.animation = animation;
 	}
 	
 }

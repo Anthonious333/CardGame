@@ -3,6 +3,7 @@ package BigBoss.Abilities;
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
+import BigBoss.Animations.HealAnimation;
 
 public class HealAbility extends AbstractAbility{
 
@@ -11,6 +12,7 @@ public class HealAbility extends AbstractAbility{
 	public HealAbility(AbstractCharecter owner, int power) {
 		super("Heal", "Recover " + power + " HP.", AbilityType.BUFF, owner);
 		this.power = power;
+		this.setAnimation(new HealAnimation());
 	}
 
 	@Override
@@ -26,5 +28,6 @@ public class HealAbility extends AbstractAbility{
 			return false;
 		}
 	}
+
 
 }

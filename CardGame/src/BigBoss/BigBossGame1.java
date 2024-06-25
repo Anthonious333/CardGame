@@ -77,7 +77,7 @@ public class BigBossGame1 extends Application {
 	 * 
 	 * add a button on top of the lever on the slot machine to pull slots - or an indicator 
 	 *  
-	 * add attack animations // maybe
+	 * add attack animations for remaining abilities
 	 * 
 	 * fix all menus look nicer - the player fight options need to be on a scroll pane / in a line again
 	 * 
@@ -119,6 +119,9 @@ public class BigBossGame1 extends Application {
 	MediaPlayer buttonClickSound = new MediaPlayer(new Media(getClass().getResource("/sounds/KeyBoardSFX1.mp3").toString()));
 	MediaPlayer bossTheme = new MediaPlayer(new Media(getClass().getResource("/sounds/BossTheme.mp3").toString()));
 	MediaPlayer mainTheme = new MediaPlayer(new Media(getClass().getResource("/sounds/MainTheme.mp3").toString()));
+	ImageView enemyHolder;
+	ImageView playerHolder;
+	Pane combatPane;
 
 	
 	//Visual finals
@@ -158,7 +161,8 @@ public class BigBossGame1 extends Application {
 	public final static String unlockID = "UNLOCKED";
 	public static final int IMAGE_WIDTH = 1126;
 	public static final int IMAGE_HEIGHT = 634;
-
+	public static final int HOLDER_WIDTH = 300;
+	public static final int HOLDER_HEIGHT = 525;
 	
 	@Override
 	public void start(Stage stage) throws Exception {		
@@ -1355,21 +1359,20 @@ public class BigBossGame1 extends Application {
 	//creates the screen for a new combat, with a new boss and changes to that screen
 	public void startNewCombat (Node thisScene, AbstractCharecter charecter) {
 		buttonClickSound.play();
-		Pane pane = new Pane();
+		combatPane = new Pane();
 		BossEnemy boss = new BossEnemy(charecter.getWins());
-		ImageView enemyHolder = new ImageView(boss.getImageLocation());
-		ImageView playerHolder = new ImageView(charecter.getImageLocation());
-		
+		enemyHolder = new ImageView(boss.getImageLocation());
+		playerHolder = new ImageView(charecter.getImageLocation());
 		enemyHolder.setLayoutX(IMAGE_WIDTH - 300);
 		
 		fightDisplayPane.setLayoutY(500);
 		
-		pane.getChildren().addAll(enemyHolder, playerHolder, fightDisplayPane);
-		pane.setVisible(false);
+		combatPane.getChildren().addAll(enemyHolder, playerHolder, fightDisplayPane);
+		combatPane.setVisible(false);
 		
-		root.getChildren().add(pane);
+		root.getChildren().add(combatPane);
 		
-		fadeToNext(thisScene, pane, FadeTransitionResult.FIGHT, charecter, boss);
+		fadeToNext(thisScene, combatPane, FadeTransitionResult.FIGHT, charecter, boss);
 		
 	}
 	
@@ -1548,21 +1551,45 @@ public class BigBossGame1 extends Application {
 			fadeToNext(thisScene, rect, FadeTransitionResult.BLACK, charecter, boss);
 			return;
 		}
-		//plays the boss move and then starts a new player turn
-		speak(event -> playerFightRound(thisScene, charecter, boss), boss.play(charecter));
+		AbstractAbility ability = boss.getNextMove();
+		ability.getAnimation().setSubject(enemyHolder);
+		for (Node n : ability.getAnimation().getParticals()) {
+			combatPane.getChildren().add(n);
+		}
+		ability.getAnimation().setOnFinished(finish -> {
+			for (Node n : ability.getAnimation().getParticals()) {
+				combatPane.getChildren().remove(n);
+			}
+			
+			//plays the boss move and then starts a new player turn
+			speak(event -> playerFightRound(thisScene, charecter, boss), boss.play(charecter));
+		});
+		ability.getAnimation().play();
+		
 	}
 	
 	//uses and ability then speaks the result
 	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss) {
 		buttonClickSound.play();
 		ability.getOwner().setLastAbility(ability);
-		//reduces any colldowns the player may have at the start of their turn (allows the buttons to be dissabled // allAbilitiesOnCooldown to happen first)
-		String string = ability.use(boss);
-		if (ability.getOwner().getLastAbility().getCooldown() != -1) {
-			ability.getOwner().reduceCooldown();			
+		ability.getAnimation().setSubject(playerHolder);
+		for (Node n : ability.getAnimation().getParticals()) {
+			combatPane.getChildren().add(n);
 		}
-
-		speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), string);
+		ability.getAnimation().setOnFinished(finish -> {
+			for (Node n : ability.getAnimation().getParticals()) {
+				combatPane.getChildren().remove(n);
+			}
+			
+			//reduces any colldowns the player may have at the start of their turn (allows the buttons to be dissabled // allAbilitiesOnCooldown to happen first)
+			String string = ability.use(boss);
+			if (ability.getOwner().getLastAbility().getCooldown() != -1) {
+				ability.getOwner().reduceCooldown();			
+			}
+			
+			speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), string);
+		});
+		ability.getAnimation().play();
 	}
 	
 	//makes a game style text box that prints a string one at a time for every string in toSay

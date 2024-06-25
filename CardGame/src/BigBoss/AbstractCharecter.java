@@ -11,6 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 
 public abstract class AbstractCharecter {
 	
@@ -21,6 +22,7 @@ public abstract class AbstractCharecter {
 	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
 	private AbstractAbility lastAbility;
+	private Pane selfImage;
 
 	private String name;
 	private int statPoints;
@@ -281,6 +283,70 @@ public abstract class AbstractCharecter {
 		}
 	}
 	
+	public void atEndOfTurn() {
+		for (Stat s : this.getStats()) {
+			s.atEndOfTurn();
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			if (a.isEquiped()) {
+				a.atEndOfTurn();
+			}
+		}
+		for (AbstractModification m : this.getMods()) {
+			if (m.isUnlocked()) {
+				m.atEndOfTurn();
+			}
+		}
+	}
+	
+	public void atEndOfPlayerTurn() {
+		for (Stat s : this.getStats()) {
+			s.atEndOfPlayerTurn();
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			if (a.isEquiped()) {
+				a.atEndOfPlayerTurn();
+			}
+		}
+		for (AbstractModification m : this.getMods()) {
+			if (m.isUnlocked()) {
+				m.atEndOfPlayerTurn();
+			}
+		}
+	}
+	
+	public void atEndOfEnemyTurn() {
+		for (Stat s : this.getStats()) {
+			s.atEndOfEnemyTurn();
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			if (a.isEquiped()) {
+				a.atEndOfEnemyTurn();
+			}
+		}
+		for (AbstractModification m : this.getMods()) {
+			if (m.isUnlocked()) {
+				m.atEndOfEnemyTurn();
+			}
+		}
+	}
+	
+	public void atStartOfCombat() {
+		for (Stat s : this.getStats()) {
+			s.atStartOfCombat();
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			if (a.isEquiped()) {
+				a.atStartOfCombat();
+			}
+		}
+		for (AbstractModification m : this.getMods()) {
+			if (m.isUnlocked()) {
+				m.atStartOfCombat();
+			}
+		}
+	}
+	
 	public void unlockAbility(String name) {
 		for (AbstractAbility a : this.getPosibleAbilities()) {
 			if (a.getName().equals(name)) {
@@ -386,6 +452,14 @@ public abstract class AbstractCharecter {
 	
 	public void setLastAbility(AbstractAbility lastAbility) {
 		this.lastAbility = lastAbility;
+	}
+
+	public Pane getSelfImage() {
+		return selfImage;
+	}
+
+	public void setSelfImage(Pane selfImage) {
+		this.selfImage = selfImage;
 	}
 
 }

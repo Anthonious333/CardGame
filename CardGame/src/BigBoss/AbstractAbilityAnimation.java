@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 import javafx.animation.Transition;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 public abstract class AbstractAbilityAnimation extends Transition{
 
 	private ArrayList<Node> particals = new ArrayList<Node>();
-	private Node subject;
+	private Pane subject;
 	private boolean boss;
 	
 	public ArrayList<Node> getParticals() {
@@ -29,7 +30,7 @@ public abstract class AbstractAbilityAnimation extends Transition{
 		return subject;
 	}
 
-	public void setSubject(Node subject) {
+	public void setSubject(Pane subject) {
 		this.subject = subject;
 	}
 

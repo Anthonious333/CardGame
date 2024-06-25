@@ -3,12 +3,18 @@ package BigBoss.Abilities;
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
+import BigBoss.Animations.AttackAnimation;
+import BigBoss.Characters.BossEnemy;
 
 public class KickAbility extends AbstractAbility{
 
 	public KickAbility(AbstractCharecter owner) {
 		super("Kick", "Deal danage equal to 2 X your ATK.\nCooldown 1", AbilityType.ATTACK_PHYSICAL, owner);
-		// TODO Auto-generated constructor stub
+		if (owner instanceof BossEnemy) {
+			this.setAnimation(new AttackAnimation(true, .75));
+		} else {
+			this.setAnimation(new AttackAnimation(false, .75));
+		}
 	}
 
 	@Override

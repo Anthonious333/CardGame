@@ -119,8 +119,8 @@ public class BigBossGame1 extends Application {
 	MediaPlayer buttonClickSound = new MediaPlayer(new Media(getClass().getResource("/sounds/KeyBoardSFX1.mp3").toString()));
 	MediaPlayer bossTheme = new MediaPlayer(new Media(getClass().getResource("/sounds/BossTheme.mp3").toString()));
 	MediaPlayer mainTheme = new MediaPlayer(new Media(getClass().getResource("/sounds/MainTheme.mp3").toString()));
-	ImageView enemyHolder;
-	ImageView playerHolder;
+	Pane enemyHolder;
+	Pane playerHolder;
 	Pane combatPane;
 
 	
@@ -1361,16 +1361,22 @@ public class BigBossGame1 extends Application {
 		buttonClickSound.play();
 		combatPane = new Pane();
 		BossEnemy boss = new BossEnemy(charecter.getWins());
-		enemyHolder = new ImageView(boss.getImageLocation());
-		playerHolder = new ImageView(charecter.getImageLocation());
-		enemyHolder.setLayoutX(IMAGE_WIDTH - 300);
-		
+		enemyHolder = new Pane(new ImageView(boss.getImageLocation()));
+		playerHolder =  new Pane(new ImageView(charecter.getImageLocation()));
+		enemyHolder.setPrefSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+		playerHolder.setPrefSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+		enemyHolder.getChildren().get(0).setLayoutX(IMAGE_WIDTH - 300);
+		charecter.setSelfImage(playerHolder);
+		boss.setSelfImage(enemyHolder);
 		fightDisplayPane.setLayoutY(500);
 		
 		combatPane.getChildren().addAll(enemyHolder, playerHolder, fightDisplayPane);
 		combatPane.setVisible(false);
 		
 		root.getChildren().add(combatPane);
+		
+		charecter.atStartOfCombat();
+		boss.atStartOfCombat();
 		
 		fadeToNext(thisScene, combatPane, FadeTransitionResult.FIGHT, charecter, boss);
 		
@@ -1435,6 +1441,8 @@ public class BigBossGame1 extends Application {
 		    return;
 		}
 		
+		
+		//TODO at start of player turn?
 		
 		//removes anything from the display pane
 		fightDisplayPane.getChildren().clear();
@@ -1560,9 +1568,15 @@ public class BigBossGame1 extends Application {
 			for (Node n : ability.getAnimation().getParticals()) {
 				combatPane.getChildren().remove(n);
 			}
+			String result = boss.play(charecter);
 			
+			charecter.atEndOfEnemyTurn();
+			charecter.atEndOfTurn();
+			boss.atEndOfEnemyTurn();
+			boss.atEndOfTurn();
+
 			//plays the boss move and then starts a new player turn
-			speak(event -> playerFightRound(thisScene, charecter, boss), boss.play(charecter));
+			speak(event -> playerFightRound(thisScene, charecter, boss), result);
 		});
 		ability.getAnimation().play();
 		
@@ -1586,6 +1600,11 @@ public class BigBossGame1 extends Application {
 			if (ability.getOwner().getLastAbility().getCooldown() != -1) {
 				ability.getOwner().reduceCooldown();			
 			}
+			
+			ability.getOwner().atEndOfPlayerTurn();
+			ability.getOwner().atEndOfTurn();
+			boss.atEndOfPlayerTurn();
+			boss.atEndOfTurn();
 			
 			speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), string);
 		});

@@ -4,11 +4,19 @@ import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
 import BigBoss.BigBossGame1;
+import BigBoss.Animations.AttackAnimation;
+import BigBoss.Characters.BossEnemy;
 
 public class TheOnePunchAbility extends AbstractAbility{
 
 	public TheOnePunchAbility(AbstractCharecter owner) {
 		super("The One Punch", "Deal damage equal to 1000* your ATK", AbilityType.ATTACK_PHYSICAL, owner);
+		//TODO make this cooler than just a long punch
+		if (owner instanceof BossEnemy) {
+			this.setAnimation(new AttackAnimation(true, 1));
+		} else {
+			this.setAnimation(new AttackAnimation(false, 1));
+		}
 	}
 
 	@Override

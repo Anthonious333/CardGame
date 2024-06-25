@@ -14,4 +14,20 @@ public abstract class SAM {
 	public void atEndOfCombat() {
 		
 	}
+	
+	public void atEndOfTurn() {
+		
+	}
+	
+	public void atEndOfPlayerTurn() {
+		
+	}
+	
+	public void atEndOfEnemyTurn() {
+		
+	}
+	
+	public void atStartOfCombat() {
+		
+	}
 }

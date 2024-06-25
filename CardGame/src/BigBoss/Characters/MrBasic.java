@@ -1,20 +1,24 @@
 package BigBoss.Characters;
 
 import BigBoss.AbstractAbility;
+import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
 import BigBoss.AbstractModification;
 import BigBoss.Stat;
 import BigBoss.Abilities.*;
+import BigBoss.Animations.AbleToParryAnimation;
 import BigBoss.Mods.BulkMod;
 import BigBoss.Mods.MightMod;
 import BigBoss.Mods.OnePunchMod;
 import BigBoss.Mods.OriginMod;
 import BigBoss.Mods.ReviveMod;
+import javafx.animation.Animation.Status;
 
 public class MrBasic extends AbstractCharecter{
 
 	private int dodgeAmount = 0;
 	private boolean revives = false;
+	private AbstractAbilityAnimation parrying;
 	
 	public MrBasic() {
 		super("Mr. Basic");
@@ -27,7 +31,7 @@ public class MrBasic extends AbstractCharecter{
 		AbstractAbility punch = new PunchAbility(this);
 		AbstractAbility kick = new KickAbility(this);
 		AbstractAbility avaid = new AvaidAbility(this);
-
+		
 		this.setPosibleAbilities(
 				punch,
 				kick,
@@ -67,6 +71,7 @@ public class MrBasic extends AbstractCharecter{
 		bulk4.setNext(revive);
 		 
 		this.setMods(start, might1, might2, might3, might4, bulk1, bulk2, bulk3, bulk4, onePunch, revive);
+		
 		
 	}
 
@@ -114,6 +119,21 @@ public class MrBasic extends AbstractCharecter{
 				this.setRevives(true);
 			}
 		}
+	}
+	
+	@Override
+	public void atEndOfTurn() {
+		super.atEndOfTurn();
+		if (this.dodgeAmount != 0) {
+			parrying.play();
+		} else if (parrying.getStatus() == Status.RUNNING){
+			parrying.stop();
+		}
+	}
+	
+	@Override
+	public void atStartOfCombat() {
+		parrying = new AbleToParryAnimation(this.getSelfImage());
 	}
 
 	@Override

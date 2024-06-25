@@ -3,6 +3,7 @@ package BigBoss.Abilities;
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
+import BigBoss.Animations.JumpAnimation;
 import BigBoss.Characters.BossEnemy;
 
 public class PowerUpAbility extends AbstractAbility{
@@ -14,6 +15,7 @@ public class PowerUpAbility extends AbstractAbility{
 		super("Power Up", "Icrease ATK by " + power + ".", AbilityType.BUFF, owner);
 		this.power = power;
 		setRoleDifficulty(1);
+		this.setAnimation(new JumpAnimation(3, .5));
 	}
 
 	@Override

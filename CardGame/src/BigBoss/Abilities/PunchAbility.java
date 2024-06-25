@@ -11,9 +11,9 @@ public class PunchAbility extends AbstractAbility{
 	public PunchAbility(AbstractCharecter owner) {
 		super("Punch", "Deal danage equal to your ATK.", AbilityType.ATTACK_PHYSICAL, owner);
 		if (owner instanceof BossEnemy) {
-			this.setAnimation(new AttackAnimation(true));
+			this.setAnimation(new AttackAnimation(true, .5));
 		} else {
-			this.setAnimation(new AttackAnimation(false));
+			this.setAnimation(new AttackAnimation(false, .5));
 		}
 	}
 

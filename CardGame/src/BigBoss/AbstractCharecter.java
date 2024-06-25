@@ -44,6 +44,7 @@ public abstract class AbstractCharecter {
 		a1.setEquiped(true);
 		a2.setEquiped(true);
 		a3.setEquiped(true);
+		this.setLastAbility(new EmptyAbility(this));
 		this.setPosibleAbilities(a1, a2, a3);
 	}
 	
@@ -112,10 +113,11 @@ public abstract class AbstractCharecter {
 	
 	//returns the amount reduced (positive)
 	public int reduceStat (String id, int amount) {
-		if (id.equals("HP") && (this.getStat(id) - amount) <= 0) {
+		int ret = this.findStat(id).addValue(-amount);
+		if (id.equals("HP") && (this.getStat(id)) <= 0) {
 			this.setDead(true);
 		}
-		return -this.findStat(id).addValue(-amount);
+		return -ret;
 	}
 
 	//returns the amount of damage taken (positive)
@@ -169,6 +171,7 @@ public abstract class AbstractCharecter {
 		if (index < 0) {
 			return;
 		}
+		a.setEquipIndex(index);
 		a.setUnlocked(true);
 		a.setEquiped(true);
 		unequipAbility(index);
@@ -179,6 +182,7 @@ public abstract class AbstractCharecter {
 		if (abilities.get(index).getClass() == EmptyAbility.class) {
 			this.getPosibleAbilities().remove(abilities.get(index));
 		}
+		abilities.get(index).setEquipIndex(-1);
 		abilities.get(index).setEquiped(false);
 		abilities.set(index, new EmptyAbility(this));
 	}
@@ -277,16 +281,6 @@ public abstract class AbstractCharecter {
 		}
 	}
 	
-	public int indexOfAbility(AbstractAbility a ) {
-		//not returning theright number
-		for (int i = 0; i < this.abilities.size(); i++) {
-			if (abilities.get(i).getName().equals(a.getName())) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
 	public void unlockAbility(String name) {
 		for (AbstractAbility a : this.getPosibleAbilities()) {
 			if (a.getName().equals(name)) {
@@ -326,7 +320,9 @@ public abstract class AbstractCharecter {
 	
 	public void reduceCooldown(int i) {
 		for (AbstractAbility a : abilities) {
-			a.reduceCooldown(i);
+			if (this.lastAbility.getCooldown() != -1 && !a.equals(this.lastAbility)) {
+				a.reduceCooldown(i);
+			}
 		}
 	}
 

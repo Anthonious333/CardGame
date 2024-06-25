@@ -67,17 +67,13 @@ public class BigBossGame1 extends Application {
 
 
 	/*
-	 * TODO fix slot machine not selecting the right ability
-	 * 
-	 * TODO finish Mr Basic
-	 * 
 	 * TODO add sounds - hit / block / effect
 	 *  
 	 * TODO add the thing that whrights to a save
 	 * 
-	 * add highlights to buttons when you have shit to spend
+	 * add highlights to buttons in prefight when you have shit to spend
 	 * 
-	 * add a button on top of the lever on the slot machine to pull slots
+	 * add a button on top of the lever on the slot machine to pull slots - or an indicator 
 	 *  
 	 * add attack animations // maybe
 	 * 
@@ -459,7 +455,7 @@ public class BigBossGame1 extends Application {
 	    
 	    Scene scene = new Scene(root);
 	    stage.setScene(scene);
-//	    stage.setResizable(false);
+	    stage.setResizable(false);
 	    stage.show();
 	}
 	
@@ -936,13 +932,9 @@ public class BigBossGame1 extends Application {
 		StackPane btn = new StackPane();
 		ImageView iv = new ImageView(getClass().getResource("/images/BigSlot.png").toString());
 		Label lbl = new Label(a.getName());
-		System.out.print(a.getName());
 
 		lbl.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		btn.setOnMouseClicked(event -> selectUnlockAbility(a, charecter, stackPane));
-		btn.setOnMouseEntered(event -> {
-			System.out.print(lbl.getText());
-		});
 
 		//the animation that plays so the button falls into place
 		TranslateTransition btnTrans = new TranslateTransition(Duration.seconds(.1), btn);
@@ -1438,6 +1430,7 @@ public class BigBossGame1 extends Application {
 		    return;
 		}
 		
+		
 		//removes anything from the display pane
 		fightDisplayPane.getChildren().clear();
 		
@@ -1452,7 +1445,7 @@ public class BigBossGame1 extends Application {
 		//the players first ability
 		Button ability1 = new Button(charecter.getAbility(0).getName());
 		if (charecter.getAbility(0).isOnCooldown()) {
-			ability1.setText(ability1.getText() + (charecter.getAbility(0).getCooldown() == -1?"\nCantrip" : charecter.getAbility(0).getCooldown() == -2? "\nDisabled" : "\nOn Cooldown" + charecter.getAbility(0).getCooldown()));
+			ability1.setText(ability1.getText() + (charecter.getAbility(0).getCooldown() == -1?"\nCantrip" : charecter.getAbility(0).getCooldown() == -2? "\nDisabled" : "\nOn Cooldown" + (charecter.getAbility(0).getCooldown())));
 			ability1.setDisable(true);
 		}
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -1462,7 +1455,7 @@ public class BigBossGame1 extends Application {
 		//the players second ability
 		Button ability2 = new Button(charecter.getAbility(1).getName());
 		if (charecter.getAbility(1).isOnCooldown()) {
-			ability2.setText(ability2.getText() + (charecter.getAbility(1).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown: " + charecter.getAbility(1).getCooldown()));
+			ability2.setText(ability2.getText() + (charecter.getAbility(1).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown: " + (charecter.getAbility(1).getCooldown())));
 			ability2.setDisable(true);
 		}
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -1472,7 +1465,7 @@ public class BigBossGame1 extends Application {
 		//the players third ability (placed on another pane to fix position)
 		Button ability3 = new Button(charecter.getAbility(2).getName());
 		if (charecter.getAbility(2).isOnCooldown()) {
-			ability3.setText(ability3.getText() + (charecter.getAbility(2).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown" + charecter.getAbility(2).getCooldown()));
+			ability3.setText(ability3.getText() + (charecter.getAbility(2).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown" + (charecter.getAbility(2).getCooldown())));
 			ability3.setDisable(true);
 		}
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -1537,10 +1530,7 @@ public class BigBossGame1 extends Application {
 			};
 			animation.play();
 		}
-		//reduces any colldowns the player may have at the start of their turn (allows the buttons to be dissabled // allAbilitiesOnCooldown to happen first)
-		if (charecter.hasLastAbility() && charecter.getLastAbility().getCooldown() >= 0) {
-			charecter.reduceCooldown();			
-		}
+
 		
 		fightDisplayPane.getChildren().addAll(imgTextDisplayWithStats, playerOptionsPane, playerStats, bossStats);
 
@@ -1564,7 +1554,13 @@ public class BigBossGame1 extends Application {
 	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss) {
 		buttonClickSound.play();
 		ability.getOwner().setLastAbility(ability);
-		speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), ability.use(boss));
+		//reduces any colldowns the player may have at the start of their turn (allows the buttons to be dissabled // allAbilitiesOnCooldown to happen first)
+		String string = ability.use(boss);
+		if (ability.getOwner().getLastAbility().getCooldown() != -1) {
+			ability.getOwner().reduceCooldown();			
+		}
+
+		speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), string);
 	}
 	
 	//makes a game style text box that prints a string one at a time for every string in toSay

@@ -19,13 +19,10 @@ public class TheOnePunchAbility extends AbstractAbility{
 
 	@Override 
 	public void atEndOfCombat() {
-		AbstractAbility a = BigBossGame1.getRandomUnlockedAndUnequipedAbility(getOwner());
-		System.out.print(a.getName() + this.getOwner().indexOfAbility(a));
-		this.getOwner().equipAbility(a, this.getOwner().indexOfAbility(a));
-		System.out.print(this.getOwner().getAbility(0).getName());
-		System.out.print(this.getOwner().getAbility(1).getName());
-		System.out.print(this.getOwner().getAbility(2).getName());
-
-		this.setUnlocked(false);
+		if (this.getCooldown() == -2) {
+			AbstractAbility a = BigBossGame1.getRandomUnlockedAndUnequipedAbility(getOwner());
+			this.getOwner().equipAbility(a, this.getEquipIndex());
+			this.setUnlocked(false);
+		}
 	}
 }

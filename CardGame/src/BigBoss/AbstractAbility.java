@@ -12,6 +12,7 @@ public abstract class AbstractAbility extends SAM{
 	private int roleNumber;
 	private AbilityType intent;
 	private int cooldown;
+	private int equipIndex;
 	
 	public AbstractAbility(String name, String toolTip, AbilityType intent, AbstractCharecter owner) {
 		this.setName(name);
@@ -23,6 +24,7 @@ public abstract class AbstractAbility extends SAM{
 		this.setIntent(intent);
 		this.setToolTip(toolTip);
 		this.setCooldown(0);
+		this.setEquipIndex(-1);
 	}
 
 	public AbstractAbility(String name, AbilityType intent, AbstractCharecter owner) {
@@ -114,7 +116,7 @@ public abstract class AbstractAbility extends SAM{
 	}
 	
 	public void reduceCooldown(int i) {
-		if (this.getCooldown() > -2) {
+		if (this.getCooldown() > -2 && this.isOnCooldown()) {
 			this.setCooldown(Math.abs(this.getCooldown()) - i);			
 		}
 	}
@@ -124,6 +126,14 @@ public abstract class AbstractAbility extends SAM{
 			return true;
 		}
 		return false;
+	}
+
+	public int getEquipIndex() {
+		return equipIndex;
+	}
+
+	public void setEquipIndex(int equipIndex) {
+		this.equipIndex = equipIndex;
 	}
 	
 }

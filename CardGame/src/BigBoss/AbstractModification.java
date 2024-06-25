@@ -11,18 +11,20 @@ public abstract class AbstractModification extends SAM{
 	private AbstractModification last;
 	private double magicNumber;
 	private boolean locksOnLast;
+	private AbstractCharecter owner;
 
 
-	public AbstractModification (String name, AbstractModification last) {
-		this(name, last, true);
+	public AbstractModification (String name, AbstractModification last, AbstractCharecter owner) {
+		this(name, last, owner, true);
 	}
 	
-	public AbstractModification (String name, AbstractModification last, boolean locks) {
+	public AbstractModification (String name, AbstractModification last, AbstractCharecter owner, boolean locks) {
 		this.setUnlockable(true);
 		this.setLast(last);
 		this.name = name;
 		unlocked = false;
 		setLocksOnLast(locks);
+		this.setOwner(owner);
 	}
 	
 
@@ -152,6 +154,14 @@ public abstract class AbstractModification extends SAM{
 
 	public void setLocksOnLast(boolean locksOnLast) {
 		this.locksOnLast = locksOnLast;
+	}
+
+	public AbstractCharecter getOwner() {
+		return owner;
+	}
+
+	public void setOwner(AbstractCharecter owner) {
+		this.owner = owner;
 	}
 	
 }

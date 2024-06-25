@@ -67,6 +67,8 @@ public class BigBossGame1 extends Application {
 
 
 	/*
+	 * TODO finish the -2 disabled feture
+	 * 
 	 * TODO add sounds - hit / block / effect
 	 *  
 	 * TODO add the thing that whrights to a save

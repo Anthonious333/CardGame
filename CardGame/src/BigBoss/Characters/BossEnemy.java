@@ -16,8 +16,8 @@ public class BossEnemy extends AbstractCharecter{
 	public BossEnemy(int level) {
 		super("The Boss");
 		this.addStatsToList(
-				new Stat("ATK", 50), 
-				new Stat("HP", 100, 0, 100, true)
+				new Stat("ATK", 5000), 
+				new Stat("HP", 10000, 0, 10000, true)
 				);
 		for (Stat s : this.getStats()) {
 			s.setValue((int) (s.getValue() * Math.pow(2, level)));

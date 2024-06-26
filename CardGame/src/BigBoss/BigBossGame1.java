@@ -129,13 +129,11 @@ public class BigBossGame1 extends Application {
 	final int TITLE_POS = 160;
 	final int TITLE_SIZE = 100;
 	final String GAME_NAME = "Big Boss";
-	final String FONT = "Comic Sans MS";
 	final int BTN_FONT_SIZE = 50;
 	final int BTN_WIDTH = 250;
 	final int BTN_HEIGHT = 50;
 	final int MENU_WIDTH = 400;
 	final int MENU_HEIGHT = 500;
-	final int MENU_FONT_SIZE = 30;
 	final int CHECK_BOX_SIZE = 50;
 	final int MENU_GAP = 10;
 	final int SELECT_BTN_WIDTH = 400;
@@ -163,6 +161,8 @@ public class BigBossGame1 extends Application {
 	public static final int IMAGE_HEIGHT = 634;
 	public static final int HOLDER_WIDTH = 300;
 	public static final int HOLDER_HEIGHT = 525;
+	public static final String FONT = "Comic Sans MS";
+	public static final int MENU_FONT_SIZE = 30;
 	
 	@Override
 	public void start(Stage stage) throws Exception {		
@@ -648,35 +648,47 @@ public class BigBossGame1 extends Application {
 	
 	//brings you to the edit mod screen(made here) 
 	public void editMods(Node thisScene, AbstractCharecter charecter) {
-		//the pane all of the scene will rest on 
-		StackPane stack = new StackPane();
-		stack.setPrefSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 		
-		//the group that the mod buttons will rest
-		Group group = new Group();
-		group.getChildren().addAll(findModLayout(charecter.getMods().get(0), (IMAGE_WIDTH / 2), 0));
-		
+		//The pane everything will sit on
+		HBox hbox = new HBox();
+
+		//the scrollpane used to let the user to get to all the mods even form off screen
+		ScrollPane scrollPane = new ScrollPane(hbox);
+		scrollPane.setPannable(true);
+		scrollPane.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+
 		//the button that returns you to the last screen
 		Button back = new Button("Back");
 		StackPane.setAlignment(back, Pos.TOP_LEFT);
 		back.setLayoutX(IMAGE_WIDTH / 2 - (MOD_BUTTON_SIZE / 2));
 		back.setFont(Font.font(FONT, MENU_FONT_SIZE));
-		back.setOnAction(event -> leaveTempScene(stack, thisScene)); // make animations finish before removing group - on finish aciton for transition 
-		
-		//the backing to group used to center the tree
-		Rectangle block = new Rectangle();
-		block.setOpacity(100);
-		group.getChildren().add(block);
-		
-		//the scrollpane used to let the user to get to all the mods even form off screen
-		ScrollPane scrollPane = new ScrollPane(group);
-		scrollPane.setPannable(true);
-		scrollPane.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+		back.setOnAction(event -> leaveTempScene(scrollPane, thisScene)); // make animations finish before removing group - on finish aciton for transition 
+		hbox.getChildren().add(back);
 
-		//adding all the loose bits to the stack(new screen) then to the root and changin to that screen
-		stack.getChildren().addAll(scrollPane, back);
-		root.getChildren().add(stack);
-		nextMenu(thisScene, stack);
+		//for every skill tree, make a new ...
+		for (ArrayList<AbstractModification> mods : charecter.getTrees()) {
+			//left gap to make it look nicer
+			Rectangle block1 = new Rectangle(100, 100);
+			block1.setOpacity(0);
+			
+			//right gap to make it look nicer
+			Rectangle block2 = new Rectangle(100, 100);
+			block2.setOpacity(0);
+			
+			//the pane the group will rest on to center 
+			StackPane stack = new StackPane();
+			
+			//the group that the mod buttons will rest
+			Group group = new Group();
+			group.getChildren().addAll(findModLayout(mods.get(0), (IMAGE_WIDTH / 2), 0));
+
+			//adding all the loose bits to the stack then to the hbox(new screen)
+			stack.getChildren().add(group);
+			hbox.getChildren().addAll(block1, stack, block2);
+		}
+		//adding the hbox to the root and moveing to the screen
+		root.getChildren().add(scrollPane);
+		nextMenu(thisScene, scrollPane);
 	}
 	
 	//makes then takes the user to the edit stats screen

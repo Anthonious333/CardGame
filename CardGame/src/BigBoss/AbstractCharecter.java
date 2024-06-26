@@ -21,6 +21,8 @@ public abstract class AbstractCharecter {
 	private ArrayList<AbstractAbility> abilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
+	private ArrayList<ArrayList<AbstractModification>> trees = new ArrayList<ArrayList<AbstractModification>>();
+
 	private AbstractAbility lastAbility;
 	private Pane selfImage;
 
@@ -460,6 +462,24 @@ public abstract class AbstractCharecter {
 
 	public void setSelfImage(Pane selfImage) {
 		this.selfImage = selfImage;
+	}
+
+	public ArrayList<ArrayList<AbstractModification>> getTrees() {
+		
+		return trees;
+	}
+	
+	public void addTree(AbstractModification... mods) {
+		ArrayList<AbstractModification> newTree = new ArrayList<AbstractModification>();
+		for (AbstractModification m : mods) {
+			newTree.add(m);
+			this.mods.add(m);
+		}
+		trees.add(newTree);
+	}
+
+	public void setTrees(ArrayList<ArrayList<AbstractModification>> trees) {
+		this.trees = trees;
 	}
 
 }

@@ -9,6 +9,7 @@ public class JumpAnimation extends AbstractAbilityAnimation{
 	public JumpAnimation (double height, double duration) {
 		this.height = height;
 		this.setCycleDuration(Duration.seconds(duration));
+		
 	}
 	@Override
 	protected void interpolate(double frac) {

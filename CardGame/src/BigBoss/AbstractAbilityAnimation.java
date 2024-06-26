@@ -26,7 +26,7 @@ public abstract class AbstractAbilityAnimation extends Transition{
 		}
 	}
 
-	public Node getSubject() {
+	public Pane getSubject() {
 		return subject;
 	}
 

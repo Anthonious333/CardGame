@@ -7,6 +7,7 @@ import BigBoss.AbstractModification;
 import BigBoss.Stat;
 import BigBoss.Abilities.*;
 import BigBoss.Animations.AbleToParryAnimation;
+import BigBoss.Animations.ReviveAnimation;
 import BigBoss.Mods.BulkMod;
 import BigBoss.Mods.MightMod;
 import BigBoss.Mods.OnePunchMod;
@@ -47,19 +48,19 @@ public class MrBasic extends AbstractCharecter{
 		
 		OriginMod start = new OriginMod("Mr . Basic\nOrigin", null, this);
 		
-		BulkMod bulk1 = new BulkMod(start, 1, 50, 100, this, false);
+		BulkMod bulk1 = new BulkMod(null, 1, 50, 100, this, false);
 		BulkMod bulk2 = new BulkMod(bulk1, 2, 100, 250, this);
 		BulkMod bulk3 = new BulkMod(bulk2, 3, 100, 500, this);
 		BulkMod bulk4 = new BulkMod(bulk3, 4, 250, 1000, this);
 		ReviveMod revive = new ReviveMod(bulk4, this);
 		
-		MightMod might1 = new MightMod(start, 1, .10, this, false);
+		MightMod might1 = new MightMod(null, 1, .10, this, false);
 		MightMod might2 = new MightMod(might1, 2, .15, this);
 		MightMod might3 = new MightMod(might2, 3, .25, this);
 		MightMod might4 = new MightMod(might3, 4, .50, this);
 		OnePunchMod onePunch = new OnePunchMod(might4, this);
 
-		start.setNext(might1, bulk1);
+//		start.setNext(might1, bulk1);
 		might1.setNext(might2);
 		might2.setNext(might3);
 		might3.setNext(might4);
@@ -70,9 +71,9 @@ public class MrBasic extends AbstractCharecter{
 		bulk3.setNext(bulk4);
 		bulk4.setNext(revive);
 		 
-		this.setMods(start, might1, might2, might3, might4, bulk1, bulk2, bulk3, bulk4, onePunch, revive);
-		
-		
+		this.addTree(might1, might2, might3, might4, onePunch);
+		this.addTree(bulk1, bulk2, bulk3, bulk4, revive);
+
 	}
 
 	@Override
@@ -100,11 +101,14 @@ public class MrBasic extends AbstractCharecter{
 		return super.damage(amount, physical);
 	}
 	
+	
+	//add revive animation
 	@Override
 	public void setDead(boolean b) {
 		if (b && this.revives) {
 			this.findStat("HP").reset();
 			revives = false;
+			new ReviveAnimation(this.getSelfImage()).play();
 			return;
 		}
 		super.setDead(b);

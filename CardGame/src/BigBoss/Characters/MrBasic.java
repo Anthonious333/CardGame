@@ -24,11 +24,9 @@ public class MrBasic extends AbstractCharecter{
 	public MrBasic() {
 		super("Mr. Basic");
 		this.addStatsToList(
-				new Stat("ATK", 1125), 
-				new Stat("HP", "Dont let it drop!", 750, 0, 750, true)
+				new Stat("ATK", 25), 
+				new Stat("HP", "Dont let it drop!", 50, 0, 50, true)
 				);
-		this.addRollTokens(100);
-		this.addStatPoints(10);
 		AbstractAbility punch = new PunchAbility(this);
 		AbstractAbility kick = new KickAbility(this);
 		AbstractAbility avaid = new AvaidAbility(this);
@@ -41,6 +39,7 @@ public class MrBasic extends AbstractCharecter{
 				new UppercutAbility(this),
 				new JabAbility(this)
 				);
+		
 		this.equipAbility(punch, 0);
 		this.equipAbility(kick, 1);
 		this.equipAbility(avaid, 2);

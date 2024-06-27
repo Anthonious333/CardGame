@@ -1,6 +1,8 @@
 package BigBoss;
 
 public abstract class SAM {
+	
+	private double magicNumber;
 	private String toolTip = "";
 
 	public String getToolTip() {
@@ -29,5 +31,13 @@ public abstract class SAM {
 	
 	public void atStartOfCombat() {
 		
+	}
+
+	public double getMagicNumber() {
+		return magicNumber;
+	}
+
+	public void setMagicNumber(double magicNumber) {
+		this.magicNumber = magicNumber;
 	}
 }

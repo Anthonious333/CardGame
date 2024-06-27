@@ -9,7 +9,6 @@ public abstract class AbstractModification extends SAM{
 	private boolean unlocked;
 	private ArrayList<AbstractModification> next = new ArrayList<AbstractModification>();
 	private AbstractModification last;
-	private double magicNumber;
 	private boolean locksOnLast;
 	private AbstractCharecter owner;
 
@@ -110,20 +109,6 @@ public abstract class AbstractModification extends SAM{
 			this.next.add(m);			
 		}
 	}
-
-
-
-	public double getMagicNumber() {
-		return magicNumber;
-	}
-
-
-
-	public void setMagicNumber(double magicNumber) {
-		this.magicNumber = magicNumber;
-	}
-
-
 
 	public AbstractModification getLast() {
 		return last;

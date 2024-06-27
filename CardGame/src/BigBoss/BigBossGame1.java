@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import BigBoss.Characters.BossEnemy;
-import BigBoss.Characters.MrBasic;
+import BigBoss.Characters.*;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -168,7 +167,7 @@ public class BigBossGame1 extends Application {
 	public void start(Stage stage) throws Exception {		
 		
 		//TODO add charecters here
-		final AbstractCharecter[] ALL_CHARECTERS = {new MrBasic(), new MrBasic()};
+		final AbstractCharecter[] ALL_CHARECTERS = {new MrBasic(), new Lich()};
 		
 		
 		root = new StackPane();
@@ -1738,6 +1737,19 @@ public class BigBossGame1 extends Application {
 		
 		//TODO add charecter save data and shi
 	}
+//	
+//	public void charecterWait(double time, EventHandler<ActionEvent> continue_) {
+//		final Animation bossThemeFadeOut = new Transition() {
+//			{
+//				setCycleDuration(Duration.seconds(time));
+//				setCycleCount(1);
+//				setOnFinished(continue_);
+//			}
+//			protected void interpolate(double frac) {
+//			}
+//		};
+//		bossThemeFadeOut.play();
+//	}
 
 	public static void main(String[] args) {
 		launch(args);

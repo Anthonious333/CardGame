@@ -30,7 +30,7 @@ public class AbleToParryAnimation extends AbstractAbilityAnimation{
 		super.stop();
 		this.setCycleCount(1);
 		super.play();
-		this.jumpTo(curTime);
+		
 	}
 	
 	@Override

@@ -8,13 +8,13 @@ public abstract class AbstractAbility extends SAM{
 	private AbstractCharecter owner;
 	private boolean unlocked;
 	private boolean equiped;
+	private int cooldown;
+	private int equipIndex;
+	private AbstractAbilityAnimation animation;
 	//intedded for boss and canselect
 	private int roleDifficulty;
 	private int roleNumber;
 	private AbilityType intent;
-	private int cooldown;
-	private int equipIndex;
-	private AbstractAbilityAnimation animation;
 	
 	public AbstractAbility(String name, String toolTip, AbilityType intent, AbstractCharecter owner) {
 		this.setName(name);

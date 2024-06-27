@@ -66,6 +66,10 @@ public class BigBossGame1 extends Application {
 
 
 	/*
+	 * TODO make the max width in eddit stats and add wrap text to compensate
+	 * 
+	 * TODO add SAM elements in prefight screen to scroll pane
+	 * 
 	 * TODO finish the -2 disabled feture
 	 * 
 	 * TODO add sounds - hit / block / effect

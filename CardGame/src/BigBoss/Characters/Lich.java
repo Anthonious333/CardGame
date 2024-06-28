@@ -31,20 +31,33 @@ public class Lich extends AbstractCharecter{
 	}
 
 	@Override
-	public void atStartOfCombat() {
+	public ArrayList<String> atStartOfCombat() {
 		startingSoulValue = this.findStat("SOULS").getValue();
+		return super.atStartOfCombat();
 	}
 	
 	@Override
-	public void atEndOfCombat() {
+	public ArrayList<String> atEndOfCombat() {
 		this.findStat("SOULS").setValue(startingSoulValue);
+		return super.atEndOfCombat();
 	}
 	
 	@Override
-	public void atEndOfPlayerTurn() {
+	public ArrayList<String> atEndOfPlayerTurn() {
+		ArrayList<String> ret = super.atEndOfPlayerTurn();
+		SequentialTransition secTrans = new SequentialTransition();
 		for (AbstractMinion m : this.minions) {
-			m.atEndOfPlayerTurn();
+			String string = m.atEndOfPlayerTurn();
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			if (!m.atEndOfTurnAnimation().equals(null)) {
+				secTrans.getChildren().add(m.atEndOfTurnAnimation());
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
+		secTrans.play();
+		return ret;
 	}
 	
 	@Override

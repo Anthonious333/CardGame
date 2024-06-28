@@ -22,7 +22,8 @@ public abstract class AbstractCharecter {
 	private ArrayList<AbstractAbility> posibleAbilities = new ArrayList<AbstractAbility>();
 	private ArrayList<AbstractModification> mods = new ArrayList<AbstractModification>();
 	private ArrayList<ArrayList<AbstractModification>> trees = new ArrayList<ArrayList<AbstractModification>>();
-
+	private ArrayList<String> textAtNextKeyTime = new ArrayList<String>();
+	
 	private AbstractAbility lastAbility;
 	private Pane selfImage;
 
@@ -31,6 +32,7 @@ public abstract class AbstractCharecter {
 	private boolean isDead;
 	private int rollTokens = 0;
 	private int wins = 0;
+	private double delayAtNextKeyTime;
 	
 	public AbstractCharecter (String name) {
 		this.setName(name);
@@ -269,84 +271,50 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public void atEndOfCombat() {
+	public ArrayList<String> getKeyTimingEvents() {
+		ArrayList<String> ret = this.getTextAtNextKeyTime();
 		for (Stat s : this.getStats()) {
-			s.atEndOfCombat();
+			String string = s.atEndOfCombat();
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
-			if (a.isEquiped()) {
-				a.atEndOfCombat();
+			String string = a.atEndOfCombat();
+			if (a.isEquiped() && !string.equals("")) {
+				ret.add(string);
 			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
-			if (m.isUnlocked()) {
-				m.atEndOfCombat();
+			String string = m.atEndOfCombat();
+			if (m.isUnlocked() && !string.equals("")) {
+				ret.add(string);
 			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
+		return ret;
 	}
 	
-	public void atEndOfTurn() {
-		for (Stat s : this.getStats()) {
-			s.atEndOfTurn();
-		} 
-		for (AbstractAbility a : this.getPosibleAbilities()) {
-			if (a.isEquiped()) {
-				a.atEndOfTurn();
-			}
-		}
-		for (AbstractModification m : this.getMods()) {
-			if (m.isUnlocked()) {
-				m.atEndOfTurn();
-			}
-		}
+	public ArrayList<String> atEndOfCombat() {
+		return getKeyTimingEvents();
 	}
 	
-	public void atEndOfPlayerTurn() {
-		for (Stat s : this.getStats()) {
-			s.atEndOfPlayerTurn();
-		} 
-		for (AbstractAbility a : this.getPosibleAbilities()) {
-			if (a.isEquiped()) {
-				a.atEndOfPlayerTurn();
-			}
-		}
-		for (AbstractModification m : this.getMods()) {
-			if (m.isUnlocked()) {
-				m.atEndOfPlayerTurn();
-			}
-		}
+	public ArrayList<String> atEndOfTurn() {
+		return getKeyTimingEvents();
 	}
 	
-	public void atEndOfEnemyTurn() {
-		for (Stat s : this.getStats()) {
-			s.atEndOfEnemyTurn();
-		} 
-		for (AbstractAbility a : this.getPosibleAbilities()) {
-			if (a.isEquiped()) {
-				a.atEndOfEnemyTurn();
-			}
-		}
-		for (AbstractModification m : this.getMods()) {
-			if (m.isUnlocked()) {
-				m.atEndOfEnemyTurn();
-			}
-		}
+	public ArrayList<String> atEndOfPlayerTurn() {
+		return getKeyTimingEvents();
 	}
 	
-	public void atStartOfCombat() {
-		for (Stat s : this.getStats()) {
-			s.atStartOfCombat();
-		} 
-		for (AbstractAbility a : this.getPosibleAbilities()) {
-			if (a.isEquiped()) {
-				a.atStartOfCombat();
-			}
-		}
-		for (AbstractModification m : this.getMods()) {
-			if (m.isUnlocked()) {
-				m.atStartOfCombat();
-			}
-		}
+	public ArrayList<String> atEndOfEnemyTurn() {
+		return getKeyTimingEvents();
+	}
+	
+	public ArrayList<String> atStartOfCombat() {
+		return getKeyTimingEvents();
 	}
 	
 	public void unlockAbility(String name) {
@@ -482,4 +450,34 @@ public abstract class AbstractCharecter {
 		this.trees = trees;
 	}
 
+	public double getDelayAtNextKeyTime() {
+		double ret = delayAtNextKeyTime;
+		delayAtNextKeyTime = 0;
+		return ret;
+	}
+
+	public void setDelayAtNextKeyTime(double delayAtNextKeyTime) {
+		this.delayAtNextKeyTime = delayAtNextKeyTime;
+	}
+
+	public void addDelayAtNextKeyTime(double delayAtNextKeyTime) {
+		this.delayAtNextKeyTime += delayAtNextKeyTime;
+	}
+
+	public ArrayList<String> getTextAtNextKeyTime() {
+		ArrayList<String> ret = new ArrayList<String>();
+		for (String s : textAtNextKeyTime) {
+			ret.add(s);
+		}
+		textAtNextKeyTime.clear();
+		return ret;
+	}
+
+	public void setTextAtNextKeyTime(ArrayList<String> textAtNextKeyTime) {
+		this.textAtNextKeyTime = textAtNextKeyTime;
+	}
+	
+	public void addTextAtNextKeyTime(String textAtNextKeyTime) {
+		this.textAtNextKeyTime.add(textAtNextKeyTime);
+	}
 }

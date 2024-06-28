@@ -1583,15 +1583,23 @@ public class BigBossGame1 extends Application {
 			for (Node n : ability.getAnimation().getParticals()) {
 				combatPane.getChildren().remove(n);
 			}
-			String result = boss.play(charecter);
 			
-			charecter.atEndOfEnemyTurn();
-			charecter.atEndOfTurn();
-			boss.atEndOfEnemyTurn();
-			boss.atEndOfTurn();
+			ArrayList<String> resultList = new ArrayList<String>();
+			
+			resultList.add(boss.play(charecter));
+			
+			resultList.addAll(charecter.atEndOfEnemyTurn());
+			resultList.addAll(charecter.atEndOfTurn());
+			resultList.addAll(boss.atEndOfEnemyTurn());
+			resultList.addAll(boss.atEndOfTurn());
+			
+			String[] resultArray = new String[resultList.size()];
+			for (int i = 0; i < resultList.size(); i++) {
+				resultArray[i] = resultList.get(i);
+			}
 
 			//plays the boss move and then starts a new player turn
-			speak(event -> playerFightRound(thisScene, charecter, boss), result);
+			charecterWait (charecter.getDelayAtNextKeyTime(), continue_ -> speak(event -> playerFightRound(thisScene, charecter, boss), resultArray));
 		});
 		ability.getAnimation().play();
 		
@@ -1606,22 +1614,32 @@ public class BigBossGame1 extends Application {
 			combatPane.getChildren().add(n);
 		}
 		ability.getAnimation().setOnFinished(finish -> {
+			//TODO add key point after player move
 			for (Node n : ability.getAnimation().getParticals()) {
 				combatPane.getChildren().remove(n);
 			}
 			
 			//reduces any colldowns the player may have at the start of their turn (allows the buttons to be dissabled // allAbilitiesOnCooldown to happen first)
-			String string = ability.use(boss);
+			String result = ability.use(boss);
 			if (ability.getOwner().getLastAbility().getCooldown() != -1) {
 				ability.getOwner().reduceCooldown();			
 			}
 			
-			ability.getOwner().atEndOfPlayerTurn();
-			ability.getOwner().atEndOfTurn();
-			boss.atEndOfPlayerTurn();
-			boss.atEndOfTurn();
+			ArrayList<String> resultList = new ArrayList<String>();
 			
-			speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), string);
+			resultList.add(result);
+			
+			resultList.addAll(ability.getOwner().atEndOfPlayerTurn());
+			resultList.addAll(ability.getOwner().atEndOfTurn());
+			resultList.addAll(boss.atEndOfPlayerTurn());
+			resultList.addAll(boss.atEndOfTurn());
+			
+			String[] resultArray = new String[resultList.size()];
+			for (int i = 0; i < resultList.size(); i++) {
+				resultArray[i] = resultList.get(i);
+			}
+			
+			charecterWait(ability.getOwner().getDelayAtNextKeyTime(), continue_ -> speak(event -> bossFightRound(thisScene, ability.getOwner(), boss), resultArray));
 		});
 		ability.getAnimation().play();
 	}
@@ -1629,7 +1647,7 @@ public class BigBossGame1 extends Application {
 	//makes a game style text box that prints a string one at a time for every string in toSay
 	public void speak(EventHandler<ActionEvent> next, String... toSay) {
 		fightDisplayPane.getChildren().clear();
-		
+		//TODO account that toSay COULD be null/empty
 		//label the string will print to
 		Label lbl = new Label();
 		lbl.setWrapText(true);
@@ -1741,19 +1759,19 @@ public class BigBossGame1 extends Application {
 		
 		//TODO add charecter save data and shi
 	}
-//	
-//	public void charecterWait(double time, EventHandler<ActionEvent> continue_) {
-//		final Animation bossThemeFadeOut = new Transition() {
-//			{
-//				setCycleDuration(Duration.seconds(time));
-//				setCycleCount(1);
-//				setOnFinished(continue_);
-//			}
-//			protected void interpolate(double frac) {
-//			}
-//		};
-//		bossThemeFadeOut.play();
-//	}
+	
+	public void charecterWait(double time, EventHandler<ActionEvent> continue_) {
+		final Animation waitAnimation = new Transition() {
+			{
+				setCycleDuration(Duration.seconds(time));
+				setCycleCount(1);
+				setOnFinished(continue_);
+			}
+			protected void interpolate(double frac) {
+			}
+		};
+		waitAnimation.play();
+	}
 
 	public static void main(String[] args) {
 		launch(args);

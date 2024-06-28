@@ -1,5 +1,7 @@
 package BigBoss.Characters;
 
+import java.util.ArrayList;
+
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
@@ -20,6 +22,7 @@ public class MrBasic extends AbstractCharecter{
 	private int dodgeAmount = 0;
 	private boolean revives = false;
 	private AbstractAbilityAnimation parrying;
+
 	
 	public MrBasic() {
 		super("Mr. Basic");
@@ -107,7 +110,10 @@ public class MrBasic extends AbstractCharecter{
 		if (b && this.revives) {
 			this.findStat("HP").reset();
 			revives = false;
-			new ReviveAnimation(this.getSelfImage()).play();
+			AbstractAbilityAnimation animation = new ReviveAnimation(this.getSelfImage());
+			animation.play();
+			this.setDelayAtNextKeyTime(animation.getTotalDuration().toSeconds());
+			this.addTextAtNextKeyTime(this.getName() + " revived!");
 			return;
 		}
 		super.setDead(b);
@@ -125,18 +131,20 @@ public class MrBasic extends AbstractCharecter{
 	}
 	
 	@Override
-	public void atEndOfTurn() {
+	public ArrayList<String> atEndOfTurn() {
 		super.atEndOfTurn();
 		if (this.dodgeAmount != 0) {
 			parrying.play();
 		} else if (parrying.getStatus() == Status.RUNNING){
 			parrying.stop();
 		}
+		return super.atStartOfCombat();
 	}
 	
 	@Override
-	public void atStartOfCombat() {
+	public ArrayList<String> atStartOfCombat() {
 		parrying = new AbleToParryAnimation(this.getSelfImage());
+		return super.atStartOfCombat();
 	}
 
 	@Override

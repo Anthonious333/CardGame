@@ -1,5 +1,6 @@
 package BigBoss.Minions;
 
+import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
 import BigBoss.Animations.AttackAnimation;
 import javafx.scene.image.*;
@@ -19,12 +20,18 @@ public class SpiritSoldierMinion extends AbstractMinion{
 	}
 
 	@Override
-	public void atEndOfPlayerTurn() {
+	public String atEndOfPlayerTurn() {
 		this.getSelfImage().toFront();
-		this.getAnimation().play();
 		this.getTarget().damage((int) this.getMagicNumber(), false);
+		this.setDelayAtNextKeyTime(this.getAnimation().getTotalDuration().toSeconds());
+		return this.getName() + " did " + (int)this.getMagicNumber() + " damage to " + this.getTarget().getName() + ".";
 	}
 
+	@Override
+	public AbstractAbilityAnimation atEndOfTurnAnimation() {
+		return this.getAnimation();
+	}
+	
 	public AbstractCharecter getTarget() {
 		return target;
 	}

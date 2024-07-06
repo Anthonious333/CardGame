@@ -25,7 +25,7 @@ public class Lich extends AbstractCharecter{
 		this.setPosibleAbilities(
 				SummonSpiritSoldierAbility
 				);
-		
+		this.addStatPoints(10000);
 		this.equipAbility(SummonSpiritSoldierAbility, 0);
 
 	}

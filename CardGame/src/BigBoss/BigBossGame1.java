@@ -31,6 +31,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -66,12 +67,6 @@ public class BigBossGame1 extends Application {
 
 
 	/*
-	 * TODO make the max width in eddit stats and add wrap text to compensate
-	 * 
-	 * TODO add SAM elements in prefight screen to scroll pane
-	 * 
-	 * TODO finish the -2 disabled feture
-	 * 
 	 * TODO add sounds - hit / block / effect
 	 *  
 	 * TODO add the thing that whrights to a save
@@ -349,36 +344,61 @@ public class BigBossGame1 extends Application {
 	    btnEditStats.setOnAction(event -> editStats(preFightScreen, selectedSave.getCharecter())); 
 	    
 	    //the scrollPane that displays the stats under the button
+	    lblDisplayStats = new Label();
+	    lblDisplayStats.setMaxWidth((IMAGE_WIDTH / 2) - 50);
+	    lblDisplayStats.setWrapText(true);
+	    lblDisplayStats.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    ScrollPane spDisplayStats = new ScrollPane(lblDisplayStats);
 	    spDisplayStats.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 	    spDisplayStats.setPannable(true);
-	    lblDisplayStats = new Label();
-	    lblDisplayStats.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
+	    spDisplayStats.setMinHeight(100);
+	    spDisplayStats.setHbarPolicy(ScrollBarPolicy.NEVER);
+	    spDisplayStats.setVbarPolicy(ScrollBarPolicy.NEVER);
+	    lblDisplayStats.setTextFill(Color.BLACK);
 	    
 	    //ability(bottom left) corner of the prefight menu
 	    VBox abilitySection = new VBox();
 	    Button btnEditAbility = new Button("Ability"); // just able to view and move them, and see their description
 	    btnEditAbility.setFont(Font.font(FONT, BTN_FONT_SIZE));
 	    btnEditAbility.setOnAction(event -> editAbilities(preFightScreen, selectedSave.getCharecter())); 
-	    //displays the current abilities of the selected charecter
-	    lblDisplayAbilities = new Label();
-	    lblDisplayAbilities.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
 	    
+	    //the scrollPane that displays the current abilities under the button
+	    lblDisplayAbilities = new Label();
+	    lblDisplayAbilities.setMaxWidth((IMAGE_WIDTH / 2) - 50);
+	    lblDisplayAbilities.setWrapText(true);
+	    lblDisplayAbilities.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
+	    ScrollPane spDisplayAbilities = new ScrollPane(lblDisplayAbilities);
+	    spDisplayAbilities.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+	    spDisplayAbilities.setPannable(true);
+	    spDisplayAbilities.setMinHeight(100);
+	    spDisplayAbilities.setHbarPolicy(ScrollBarPolicy.NEVER);
+	    spDisplayAbilities.setVbarPolicy(ScrollBarPolicy.NEVER);
+	    lblDisplayAbilities.setTextFill(Color.BLACK);
+
 	    //mod(bottom right) corner of the prefight menu
 	    VBox modSection = new VBox();
 	    Button btnEditMod = new Button("Mods"); // just able to view and move them, and see their description
 	    btnEditMod.setFont(Font.font(FONT, BTN_FONT_SIZE));
 	    btnEditMod.setOnAction(event -> editMods(preFightScreen, selectedSave.getCharecter()));
 	    
-	    //displays the last mod unlocked of the selected charecter
+	    //the scrollPane that displays the last mod unlocked under the button
 	    lblDisplayMods = new Label();
+	    lblDisplayMods.setMaxWidth((IMAGE_WIDTH / 2) - 50);
+	    lblDisplayMods.setWrapText(true);
 	    lblDisplayMods.setFont(Font.font(FONT, PREFIGHT_TEXT_SIZE));
-	    
+	    ScrollPane spDisplayMods = new ScrollPane(lblDisplayMods);
+	    spDisplayMods.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
+	    spDisplayMods.setPannable(true);
+	    spDisplayMods.setMinHeight(100);
+	    spDisplayMods.setHbarPolicy(ScrollBarPolicy.NEVER);
+	    spDisplayMods.setVbarPolicy(ScrollBarPolicy.NEVER);
+	    lblDisplayMods.setTextFill(Color.BLACK);
+
 	    //adds all the pecies of the menu to each "section"
 	    fightSection.getChildren().addAll(btnFight, btnPreFightBack);
-	    statsSection.getChildren().addAll(btnEditStats, lblDisplayStats);
-	    abilitySection.getChildren().addAll(btnEditAbility, lblDisplayAbilities);
-	    modSection.getChildren().addAll(btnEditMod, lblDisplayMods);
+	    statsSection.getChildren().addAll(btnEditStats, spDisplayStats);
+	    abilitySection.getChildren().addAll(btnEditAbility, spDisplayAbilities);
+	    modSection.getChildren().addAll(btnEditMod, spDisplayMods);
 	    
 	    //sets every section to the right (or left) side of the screen 
 	    AnchorPane.setTopAnchor(fightSection, MENU_GAP + .0);
@@ -702,9 +722,11 @@ public class BigBossGame1 extends Application {
 		gpStats.setVgap(TITLE_GAP);
 		gpStats.setHgap(TITLE_GAP);
 		gpStats.setHgap(MENU_GAP);
+		gpStats.setMaxWidth(IMAGE_WIDTH);
 		
 		//the scroll pane that the grid pane will rest on to allow scrolling
 		ScrollPane sp = new ScrollPane(gpStats);
+		sp.setPannable(true);
 		sp.setStyle("-fx-background:transparent;-fx-background-color:transparent;");
 		
 		//the button that takes you back to the last screen
@@ -1156,6 +1178,8 @@ public class BigBossGame1 extends Application {
 		}
 		change.setText(s.getTempValue() + "");
 		stat.setText("New Total: " + charecter.getStatAsString(s.getName()) + "\n" + s.getToolTip());
+		stat.setWrapText(true);
+		stat.setMaxWidth(300);
 		lblTotalPoints.setText("Stat Points Avalable: " + charecter.getStatPoints() + "");
 	}
 	
@@ -1483,7 +1507,7 @@ public class BigBossGame1 extends Application {
 		//the players second ability
 		Button ability2 = new Button(charecter.getAbility(1).getName());
 		if (charecter.getAbility(1).isOnCooldown()) {
-			ability2.setText(ability2.getText() + (charecter.getAbility(1).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown: " + (charecter.getAbility(1).getCooldown())));
+			ability2.setText(ability2.getText() + (charecter.getAbility(1).getCooldown() == -1?"\nCantrip" : charecter.getAbility(1).getCooldown() == -2? "\nDisabled" : "\nOn Cooldown: " + (charecter.getAbility(1).getCooldown())));
 			ability2.setDisable(true);
 		}
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -1493,7 +1517,7 @@ public class BigBossGame1 extends Application {
 		//the players third ability (placed on another pane to fix position)
 		Button ability3 = new Button(charecter.getAbility(2).getName());
 		if (charecter.getAbility(2).isOnCooldown()) {
-			ability3.setText(ability3.getText() + (charecter.getAbility(2).getCooldown() == -1?"\nCantrip" : "\nOn Cooldown" + (charecter.getAbility(2).getCooldown())));
+			ability3.setText(ability3.getText() + (charecter.getAbility(2).getCooldown() == -1?"\nCantrip" : charecter.getAbility(2).getCooldown() == -2? "\nDisabled" : "\nOn Cooldown" + (charecter.getAbility(2).getCooldown())));
 			ability3.setDisable(true);
 		}
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));

@@ -11,7 +11,7 @@ import BigBoss.Characters.MrBasic;
 public class ParryAbility extends AbstractAbility{
 
 	public ParryAbility(AbstractCharecter owner) {
-		super("Parry", "If the target intends to attack, dodge the next instance of damage and deal half your ATK back.\nCooldown 2", AbilityType.ATTACK_PHYSICAL_DEFEND, owner);
+		super("Parry", "If the target intends to attack, dodge the next instance of physical damage and if you did, deal half your ATK back.\nCooldown 2.", AbilityType.ATTACK_PHYSICAL_DEFEND, owner);
 		if (owner instanceof BossEnemy) {
 			this.setAnimation(new AttackAnimation(true, .5));
 		} else {

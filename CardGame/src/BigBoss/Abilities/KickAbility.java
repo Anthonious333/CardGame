@@ -9,7 +9,7 @@ import BigBoss.Characters.BossEnemy;
 public class KickAbility extends AbstractAbility{
 
 	public KickAbility(AbstractCharecter owner) {
-		super("Kick", "Deal danage equal to 2 X your ATK.\nCooldown 1", AbilityType.ATTACK_PHYSICAL, owner);
+		super("Kick", "Deal danage equal to 2X your ATK.\nCooldown 1", AbilityType.ATTACK_PHYSICAL, owner);
 		if (owner instanceof BossEnemy) {
 			this.setAnimation(new AttackAnimation(true, .75));
 		} else {

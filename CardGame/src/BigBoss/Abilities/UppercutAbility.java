@@ -9,7 +9,7 @@ import BigBoss.Characters.BossEnemy;
 public class UppercutAbility extends AbstractAbility{
 
 	public UppercutAbility(AbstractCharecter owner) {
-		super("Uppercut",  "Deal danage equal to 3 X your ATK. Cooldown 2", AbilityType.ATTACK_PHYSICAL, owner);
+		super("Uppercut",  "Deal danage equal to 3X your ATK. Cooldown 2", AbilityType.ATTACK_PHYSICAL, owner);
 		if (owner instanceof BossEnemy) {
 			this.setAnimation(new AttackAnimation(true, .75));
 		} else {

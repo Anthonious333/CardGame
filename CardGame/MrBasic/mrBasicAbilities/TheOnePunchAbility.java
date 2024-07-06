@@ -1,11 +1,11 @@
-package BigBoss.Abilities;
+package mrBasicAbilities;
 
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
 import BigBoss.BigBossGame1;
 import BigBoss.Animations.AttackAnimation;
-import BigBoss.Characters.BossEnemy;
+import theBossCharecter.BossEnemy;
 
 public class TheOnePunchAbility extends AbstractAbility{
 

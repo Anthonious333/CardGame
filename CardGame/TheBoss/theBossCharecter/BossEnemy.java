@@ -1,4 +1,4 @@
-package BigBoss.Characters;
+package theBossCharecter;
 
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
@@ -6,6 +6,9 @@ import BigBoss.AbstractCharecter;
 import BigBoss.BigBossGame1;
 import BigBoss.Stat;
 import BigBoss.Abilities.*;
+import theBossAbilities.HealAbility;
+import theBossAbilities.PowerUpAbility;
+import theBossAbilities.PunchAbility;
 
 public class BossEnemy extends AbstractCharecter{
 
@@ -16,7 +19,7 @@ public class BossEnemy extends AbstractCharecter{
 	public BossEnemy(int level) {
 		super("The Boss");
 		this.addStatsToList(
-				new Stat("ATK", 0), 
+				new Stat("ATK", 1), 
 				new Stat("HP", 100, 0, 100, true)
 				);
 		for (Stat s : this.getStats()) {

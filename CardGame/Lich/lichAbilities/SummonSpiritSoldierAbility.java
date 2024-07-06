@@ -1,22 +1,25 @@
-package BigBoss.Abilities;
+package lichAbilities;
 
 import BigBoss.AbilityType;
 import BigBoss.AbstractCharecter;
-import BigBoss.Characters.BossEnemy;
-import BigBoss.Minions.AbstractMinion;
-import BigBoss.Minions.SpiritSoldierMinion;
+import lichMinions.AbstractMinion;
+import lichMinions.SpiritSoldierMinion;
+import lichMisc.AbstractLichAbility;
+import theBossCharecter.BossEnemy;
 
 public class SummonSpiritSoldierAbility extends AbstractLichAbility{
 
 	public SummonSpiritSoldierAbility(AbstractCharecter owner) {
 		super("Summon Spirit Soldier", "Summon 5, Summon Spirit Soldier", AbilityType.UNKNOWN, owner);
+		this.setSummonCost(5);
+		this.setMagicNumber(5);
 	}
 
 	@Override
 	public String use(AbstractCharecter target) {
 		((BossEnemy)target).cantrip(this);
-		this.getOwner().addMinion(new SpiritSoldierMinion(this.getOwner(), target, 5));
-		return this.getOwner().getName() + " Summoned a Spirit Soldier";
+		this.getOwner().addMinion(new SpiritSoldierMinion(this.getOwner(), target, (int) this.getMagicNumber()));
+		return this.getOwner().getName() + " payed " + paySouls(this.getSummonCost()) + " souls to summon a Spirit Sheildmen.";
 	}
 	
 	@Override
@@ -27,7 +30,7 @@ public class SummonSpiritSoldierAbility extends AbstractLichAbility{
 				amountOfThis ++;
 			}
 		}
-		return "Summon 5, Summon a Spirit Soldier." + (amountOfThis > 0? " Current: " + amountOfThis : "");
+		return "Summon " + this.getSummonCost() + ", Summon a Spirit Sheildmen." + (amountOfThis > 0? " Current: " + amountOfThis : "");
 	}
 
 }

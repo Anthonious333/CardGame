@@ -1,4 +1,4 @@
-package BigBoss.Characters;
+package mrBasicCharecter;
 
 import java.util.ArrayList;
 
@@ -7,15 +7,19 @@ import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
 import BigBoss.AbstractModification;
 import BigBoss.Stat;
-import BigBoss.Abilities.*;
 import BigBoss.Animations.AbleToParryAnimation;
 import BigBoss.Animations.ReviveAnimation;
-import BigBoss.Mods.BulkMod;
-import BigBoss.Mods.MightMod;
-import BigBoss.Mods.OnePunchMod;
-import BigBoss.Mods.OriginMod;
-import BigBoss.Mods.ReviveMod;
 import javafx.animation.Animation.Status;
+import mrBasicAbilities.AvaidAbility;
+import mrBasicAbilities.JabAbility;
+import mrBasicAbilities.KickAbility;
+import mrBasicAbilities.ParryAbility;
+import mrBasicAbilities.PunchAbility;
+import mrBasicAbilities.UppercutAbility;
+import mrBasicModifications.BulkMod;
+import mrBasicModifications.MightMod;
+import mrBasicModifications.OnePunchMod;
+import mrBasicModifications.ReviveMod;
 
 public class MrBasic extends AbstractCharecter{
 
@@ -47,8 +51,6 @@ public class MrBasic extends AbstractCharecter{
 		this.equipAbility(kick, 1);
 		this.equipAbility(avaid, 2);
 
-		
-		OriginMod start = new OriginMod("Mr . Basic\nOrigin", null, this);
 		
 		BulkMod bulk1 = new BulkMod(null, 1, 50, 100, this, false);
 		BulkMod bulk2 = new BulkMod(bulk1, 2, 100, 250, this);

@@ -3,7 +3,7 @@ package BigBoss.Abilities;
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
-import BigBoss.Characters.BossEnemy;
+import theBossCharecter.BossEnemy;
 
 public class EmptyAbility extends AbstractAbility{
 

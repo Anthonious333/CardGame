@@ -2,7 +2,7 @@ package BigBoss;
 
 import BigBoss.Animations.EmptyAnimation;
 
-public abstract class AbstractAbility extends SAM{
+public abstract class AbstractAbility extends SAM {
 	
 	private String name;
 	private AbstractCharecter owner;
@@ -15,6 +15,8 @@ public abstract class AbstractAbility extends SAM{
 	private int roleDifficulty;
 	private int roleNumber;
 	private AbilityType intent;
+	private boolean canPlay = true;
+	private String cantPlayMessage = "";
 	
 	public AbstractAbility(String name, String toolTip, AbilityType intent, AbstractCharecter owner) {
 		this.setName(name);
@@ -145,6 +147,34 @@ public abstract class AbstractAbility extends SAM{
 
 	public void setAnimation(AbstractAbilityAnimation animation) {
 		this.animation = animation;
+	}
+
+	public boolean canPlay() {
+		if (this.isOnCooldown()) {
+			return false;
+		}
+		return canPlay;
+	}
+	
+	public void setCanPlay(boolean canPlay) {
+		this.canPlay = canPlay;
+	}
+
+	public String getCantPlayMessage() {
+		if (this.getCooldown() == -1) {
+			return "\nCantrip.";
+		}
+		if (this.getCooldown() == -2) {
+			return "\nDisabled.";
+		}
+		if (this.getCooldown() > 0) {
+			return "\nOn Cooldown: " + this.getCooldown();
+		}
+		return cantPlayMessage;
+	}
+
+	public void setCantPlayMessage(String cantPlayMessage) {
+		this.cantPlayMessage = cantPlayMessage;
 	}
 	
 }

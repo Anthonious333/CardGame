@@ -1,8 +1,8 @@
-package BigBoss.Mods;
+package mrBasicModifications;
 
 import BigBoss.AbstractCharecter;
 import BigBoss.AbstractModification;
-import BigBoss.Characters.MrBasic;
+import mrBasicCharecter.MrBasic;
 
 public class ReviveMod extends AbstractModification{
 

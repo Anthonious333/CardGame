@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import BigBoss.Characters.*;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -61,12 +60,17 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lichCharecter.Lich;
+import mrBasicCharecter.MrBasic;
 import simpleIO.FXDialog;
+import theBossCharecter.BossEnemy;
 
 public class BigBossGame1 extends Application {
 
 
-	/*
+	/*TODO comment on objects
+	 * 
+	 * 
 	 * TODO add sounds - hit / block / effect
 	 *  
 	 * TODO add the thing that whrights to a save
@@ -1495,9 +1499,8 @@ public class BigBossGame1 extends Application {
 		playerOptionsPane.setLayoutX(310);
 		
 		//the players first ability
-		Button ability1 = new Button(charecter.getAbility(0).getName());
-		if (charecter.getAbility(0).isOnCooldown()) {
-			ability1.setText(ability1.getText() + (charecter.getAbility(0).getCooldown() == -1?"\nCantrip" : charecter.getAbility(0).getCooldown() == -2? "\nDisabled" : "\nOn Cooldown" + (charecter.getAbility(0).getCooldown())));
+		Button ability1 = new Button(charecter.getAbility(0).getName() + charecter.getAbility(0).getCantPlayMessage());
+		if (!charecter.getAbility(0).canPlay()) {
 			ability1.setDisable(true);
 		}
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -1505,9 +1508,8 @@ public class BigBossGame1 extends Application {
 		ability1.setOnAction(event -> useAbility(thisScene, charecter.getAbility(0), boss));
 
 		//the players second ability
-		Button ability2 = new Button(charecter.getAbility(1).getName());
-		if (charecter.getAbility(1).isOnCooldown()) {
-			ability2.setText(ability2.getText() + (charecter.getAbility(1).getCooldown() == -1?"\nCantrip" : charecter.getAbility(1).getCooldown() == -2? "\nDisabled" : "\nOn Cooldown: " + (charecter.getAbility(1).getCooldown())));
+		Button ability2 = new Button(charecter.getAbility(1).getName() + charecter.getAbility(1).getCantPlayMessage());
+		if (!charecter.getAbility(1).canPlay()) {
 			ability2.setDisable(true);
 		}
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -1515,9 +1517,8 @@ public class BigBossGame1 extends Application {
 		ability2.setOnAction(event -> useAbility(thisScene, charecter.getAbility(1), boss));
 		
 		//the players third ability (placed on another pane to fix position)
-		Button ability3 = new Button(charecter.getAbility(2).getName());
-		if (charecter.getAbility(2).isOnCooldown()) {
-			ability3.setText(ability3.getText() + (charecter.getAbility(2).getCooldown() == -1?"\nCantrip" : charecter.getAbility(2).getCooldown() == -2? "\nDisabled" : "\nOn Cooldown" + (charecter.getAbility(2).getCooldown())));
+		Button ability3 = new Button(charecter.getAbility(2).getName() + charecter.getAbility(2).getCantPlayMessage());
+		if (!charecter.getAbility(2).canPlay()) {
 			ability3.setDisable(true);
 		}
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
@@ -1575,7 +1576,7 @@ public class BigBossGame1 extends Application {
 			final Animation animation = new Transition() {
 				{
 					setCycleDuration(Duration.seconds(3));
-					setOnFinished(finish -> speak(event -> bossFightRound(thisScene, charecter, boss), charecter.getName() + " is on cooldown."));
+					setOnFinished(finish -> speak(event -> bossFightRound(thisScene, charecter, boss), charecter.getName() + " can not play."));
 				}
 				@Override
 				protected void interpolate(double frac) {}
@@ -1632,6 +1633,7 @@ public class BigBossGame1 extends Application {
 	//uses and ability then speaks the result
 	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss) {
 		buttonClickSound.play();
+		fightDisplayPane.setVisible(false);
 		ability.getOwner().setLastAbility(ability);
 		ability.getAnimation().setSubject(playerHolder);
 		for (Node n : ability.getAnimation().getParticals()) {
@@ -1670,6 +1672,7 @@ public class BigBossGame1 extends Application {
 	
 	//makes a game style text box that prints a string one at a time for every string in toSay
 	public void speak(EventHandler<ActionEvent> next, String... toSay) {
+		fightDisplayPane.setVisible(true);
 		fightDisplayPane.getChildren().clear();
 		//TODO account that toSay COULD be null/empty
 		//label the string will print to

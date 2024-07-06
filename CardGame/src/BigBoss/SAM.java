@@ -36,6 +36,10 @@ public abstract class SAM {
 		return "";
 	}
 
+	public String onOwnerTakeDamage(int amount, boolean physical) {
+		return "";
+	}
+	
 	public double getMagicNumber() {
 		return magicNumber;
 	}

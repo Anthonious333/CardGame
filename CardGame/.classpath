@@ -7,5 +7,8 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="src" path="MrBasic"/>
+	<classpathentry kind="src" path="Lich"/>
+	<classpathentry kind="src" path="TheBoss"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

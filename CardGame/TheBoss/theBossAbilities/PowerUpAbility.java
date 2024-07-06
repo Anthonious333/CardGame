@@ -1,10 +1,10 @@
-package BigBoss.Abilities;
+package theBossAbilities;
 
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
 import BigBoss.Animations.JumpAnimation;
-import BigBoss.Characters.BossEnemy;
+import theBossCharecter.BossEnemy;
 
 public class PowerUpAbility extends AbstractAbility{
 

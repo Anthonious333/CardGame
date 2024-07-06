@@ -1,10 +1,10 @@
-package BigBoss.Abilities;
+package mrBasicAbilities;
 
-import BigBoss.Characters.MrBasic;
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
 import BigBoss.BigBossGame1;
+import mrBasicCharecter.MrBasic;
 
 public class AvaidAbility extends AbstractAbility{
 

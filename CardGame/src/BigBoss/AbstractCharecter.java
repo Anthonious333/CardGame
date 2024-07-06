@@ -128,6 +128,7 @@ public abstract class AbstractCharecter {
 
 	//returns the amount of damage taken (positive)
 	public int damage (int amount, boolean physical) {
+		onOwnerTakeDamage(amount, physical);
 		return this.reduceStat("HP", amount);
 	}
 	
@@ -271,7 +272,8 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public ArrayList<String> getKeyTimingEvents() {
+	
+	public ArrayList<String> atEndOfCombat() {
 		ArrayList<String> ret = this.getTextAtNextKeyTime();
 		for (Stat s : this.getStats()) {
 			String string = s.atEndOfCombat();
@@ -297,24 +299,132 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public ArrayList<String> atEndOfCombat() {
-		return getKeyTimingEvents();
-	}
-	
 	public ArrayList<String> atEndOfTurn() {
-		return getKeyTimingEvents();
+		ArrayList<String> ret = this.getTextAtNextKeyTime();
+		for (Stat s : this.getStats()) {
+			String string = s.atEndOfTurn();
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.atEndOfTurn();
+			if (a.isEquiped() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.atEndOfTurn();
+			if (m.isUnlocked() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+		return ret;
 	}
 	
 	public ArrayList<String> atEndOfPlayerTurn() {
-		return getKeyTimingEvents();
+		ArrayList<String> ret = this.getTextAtNextKeyTime();
+		for (Stat s : this.getStats()) {
+			String string = s.atEndOfPlayerTurn();
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.atEndOfPlayerTurn();
+			if (a.isEquiped() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.atEndOfPlayerTurn();
+			if (m.isUnlocked() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+		return ret;
 	}
 	
 	public ArrayList<String> atEndOfEnemyTurn() {
-		return getKeyTimingEvents();
+		ArrayList<String> ret = this.getTextAtNextKeyTime();
+		for (Stat s : this.getStats()) {
+			String string = s.atEndOfEnemyTurn();
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.atEndOfEnemyTurn();
+			if (a.isEquiped() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.atEndOfEnemyTurn();
+			if (m.isUnlocked() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+		return ret;
 	}
 	
 	public ArrayList<String> atStartOfCombat() {
-		return getKeyTimingEvents();
+		ArrayList<String> ret = this.getTextAtNextKeyTime();
+		for (Stat s : this.getStats()) {
+			String string = s.atStartOfCombat();
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.atStartOfCombat();
+			if (a.isEquiped() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.atStartOfCombat();
+			if (m.isUnlocked() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+		return ret;
+	}
+
+	public void onOwnerTakeDamage(int amount, boolean physical) {
+		for (Stat s : this.getStats()) {
+			String string = s.onOwnerTakeDamage(amount, physical);
+			if (!string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.onOwnerTakeDamage(amount, physical);
+			if (a.isEquiped() && !string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.onOwnerTakeDamage(amount, physical);
+			if (m.isUnlocked() && !string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
 	}
 	
 	public void unlockAbility(String name) {

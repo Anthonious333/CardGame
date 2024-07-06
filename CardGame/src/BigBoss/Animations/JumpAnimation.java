@@ -15,10 +15,10 @@ public class JumpAnimation extends AbstractAbilityAnimation{
 	protected void interpolate(double frac) {
 		double amount = -height;
 		
-		if (this.getCurrentTime().lessThanOrEqualTo(this.getTotalDuration().divide(2))) {
+		if (this.getCurrentTime().lessThan(this.getTotalDuration().divide(2))) {
 			this.getSubject().setLayoutY(this.getSubject().getLayoutY() + amount);
 		}
-		if (this.getCurrentTime().greaterThanOrEqualTo(this.getTotalDuration().divide(2))) {
+		if (this.getCurrentTime().greaterThan(this.getTotalDuration().divide(2))) {
 			this.getSubject().setLayoutY(this.getSubject().getLayoutY() - amount);
 		}
 		

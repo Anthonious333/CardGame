@@ -1,4 +1,4 @@
-package BigBoss.Mods;
+package mrBasicModifications;
 
 import BigBoss.AbstractCharecter;
 import BigBoss.AbstractModification;

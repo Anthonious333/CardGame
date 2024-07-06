@@ -1,9 +1,9 @@
-package BigBoss.Mods;
+package mrBasicModifications;
 
 import BigBoss.AbstractCharecter;
 import BigBoss.AbstractModification;
 import BigBoss.Stat;
-import BigBoss.Abilities.TheOnePunchAbility;
+import mrBasicAbilities.TheOnePunchAbility;
 
 public class OnePunchMod extends AbstractModification{
 

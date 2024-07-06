@@ -1,4 +1,4 @@
-package BigBoss.Minions;
+package lichMinions;
 
 import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
@@ -23,13 +23,9 @@ public class SpiritSoldierMinion extends AbstractMinion{
 	public String atEndOfPlayerTurn() {
 		this.getSelfImage().toFront();
 		this.getTarget().damage((int) this.getMagicNumber(), false);
+		this.setAnimationAtNextKeyTime(this.getAnimation());
 		this.setDelayAtNextKeyTime(this.getAnimation().getTotalDuration().toSeconds());
 		return this.getName() + " did " + (int)this.getMagicNumber() + " damage to " + this.getTarget().getName() + ".";
-	}
-
-	@Override
-	public AbstractAbilityAnimation atEndOfTurnAnimation() {
-		return this.getAnimation();
 	}
 	
 	public AbstractCharecter getTarget() {

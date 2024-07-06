@@ -1,4 +1,4 @@
-package BigBoss.Minions;
+package lichMinions;
 
 import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
@@ -11,6 +11,7 @@ public abstract class AbstractMinion extends SAM{
 	private Pane selfImage;
 	private AbstractCharecter owner;
 	private AbstractAbilityAnimation animation;
+	private AbstractAbilityAnimation animationAtNextKeyTime = null;
 	
 	public AbstractMinion(String name, AbstractCharecter owner) {
 		this.setName(name);
@@ -42,5 +43,20 @@ public abstract class AbstractMinion extends SAM{
 	}
 	public AbstractAbilityAnimation atEndOfTurnAnimation() {
 		return null;
+	}
+	public AbstractAbilityAnimation onOwnerTakeDamageAnimation() {
+		return null;
+	}
+	
+	@Override
+	public String atEndOfTurn() {
+		this.getSelfImage().setLayoutX(0);
+		return super.atEndOfTurn();
+	}
+	public AbstractAbilityAnimation getAnimationAtNextKeyTime() {
+		return animationAtNextKeyTime;
+	}
+	public void setAnimationAtNextKeyTime(AbstractAbilityAnimation animationAtNextKeyTime) {
+		this.animationAtNextKeyTime = animationAtNextKeyTime;
 	}
 }

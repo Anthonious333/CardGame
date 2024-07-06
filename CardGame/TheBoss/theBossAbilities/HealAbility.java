@@ -1,4 +1,4 @@
-package BigBoss.Abilities;
+package theBossAbilities;
 
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;

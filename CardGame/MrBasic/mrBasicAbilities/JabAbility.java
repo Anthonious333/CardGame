@@ -1,10 +1,10 @@
-package BigBoss.Abilities;
+package mrBasicAbilities;
 
 import BigBoss.AbilityType;
 import BigBoss.AbstractAbility;
 import BigBoss.AbstractCharecter;
 import BigBoss.Animations.AttackAnimation;
-import BigBoss.Characters.*;
+import theBossCharecter.BossEnemy;
 
 public class JabAbility extends AbstractAbility{
 

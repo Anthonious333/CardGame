@@ -26,4 +26,5 @@ public class AttackAnimation extends AbstractAbilityAnimation{
 		}
 		
 	}
+	
 }

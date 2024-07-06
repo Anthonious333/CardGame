@@ -476,8 +476,8 @@ public abstract class AbstractCharecter {
 		reduceCooldown(1);
 	}
 	
-	public boolean allAbilitiesOnCooldown() {
-		return getAbility(0).isOnCooldown() && getAbility(1).isOnCooldown() && getAbility(2).isOnCooldown();
+	public boolean allAbilitiesUnplayable() {
+		return !getAbility(0).canPlay() && !getAbility(1).canPlay() && !getAbility(2).canPlay();
 	}
 
 	public int getStatPoints() {

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import BigBoss.Abilities.CantPlayAbility;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -70,6 +71,7 @@ public class BigBossGame1 extends Application {
 
 	/*TODO comment on objects
 	 * 
+	 * TODO add click to coomit all and remove random click from fade transition
 	 * 
 	 * TODO add sounds - hit / block / effect
 	 *  
@@ -1572,11 +1574,11 @@ public class BigBossGame1 extends Application {
 		vbBossStats.setPrefSize(295, 134);
 		bossStats.setLayoutX(825);
 		
-		if (charecter.allAbilitiesOnCooldown()) {
+		if (charecter.allAbilitiesUnplayable()) {
 			final Animation animation = new Transition() {
 				{
 					setCycleDuration(Duration.seconds(3));
-					setOnFinished(finish -> speak(event -> bossFightRound(thisScene, charecter, boss), charecter.getName() + " can not play."));
+					setOnFinished(finish -> useAbility(thisScene, new CantPlayAbility(charecter), boss));
 				}
 				@Override
 				protected void interpolate(double frac) {}

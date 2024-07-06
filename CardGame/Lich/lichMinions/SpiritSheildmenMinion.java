@@ -15,12 +15,11 @@ public class SpiritSheildmenMinion extends AbstractMinion {
 		this.setSelfImage(new Pane(new ImageView(new Image(getClass().getResource("/images/SpiritSheildsmen.png").toString()))));
 		this.setMagicNumber(power);
 		this.setAnimation(new JumpAnimation(6, .5));
-		this.getAnimation().setSubject(getSelfImage());
 	}
 	@Override
 	public String onOwnerTakeDamage(int amount, boolean physical) {
 		if (physical) {
-			int amountBlocked = amount - ((Lich)this.getOwner()).getReduceNextDamageTaken();
+			int amountBlocked = amount - (int) (amount - ((Lich)this.getOwner()).getReduceNextDamageTaken() + this.getMagicNumber());
 			if (amountBlocked < 0) {
 				amountBlocked = 0;
 			} else if (amountBlocked > this.getMagicNumber()) {

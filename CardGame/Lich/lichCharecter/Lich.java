@@ -8,6 +8,7 @@ import BigBoss.Stat;
 import javafx.animation.SequentialTransition;
 import lichAbilities.SummonSpiritSheildmenAbility;
 import lichAbilities.SummonSpiritSoldierAbility;
+import lichAbilities.SummonSpiritWarriorAbility;
 import lichMinions.*;
 import lichMisc.AbstractLichAbility;
 import BigBoss.Abilities.*;
@@ -28,14 +29,18 @@ public class Lich extends AbstractCharecter{
 				);
 		AbstractLichAbility SummonSpiritSoldierAbility = new SummonSpiritSoldierAbility(this);
 		AbstractLichAbility SummonSpiritShelidmenAbility = new SummonSpiritSheildmenAbility(this);
+		AbstractLichAbility SummonSpiritWarriorAbility = new SummonSpiritWarriorAbility(this);
 
+		
 		this.setPosibleAbilities(
 				SummonSpiritSoldierAbility,
-				SummonSpiritShelidmenAbility
+				SummonSpiritShelidmenAbility,
+				SummonSpiritWarriorAbility
 				);
 		
 		this.equipAbility(SummonSpiritSoldierAbility, 0);
 		this.equipAbility(SummonSpiritShelidmenAbility, 1);
+		this.equipAbility(SummonSpiritWarriorAbility, 2);
 
 		
 		this.addStatPoints(10000);

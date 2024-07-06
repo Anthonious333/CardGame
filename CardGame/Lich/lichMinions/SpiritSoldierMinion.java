@@ -16,7 +16,6 @@ public class SpiritSoldierMinion extends AbstractMinion{
 		this.setSelfImage(new Pane(new ImageView(new Image(getClass().getResource("/images/SpiritSoldier.png").toString()))));
 		this.setMagicNumber(power);
 		this.setAnimation(new AttackAnimation(false, .5));
-		this.getAnimation().setSubject(getSelfImage());
 	}
 
 	@Override

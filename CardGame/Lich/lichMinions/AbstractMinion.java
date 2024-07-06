@@ -40,6 +40,7 @@ public abstract class AbstractMinion extends SAM{
 	}
 	public void setAnimation(AbstractAbilityAnimation animation) {
 		this.animation = animation;
+		animation.setSubject(selfImage);
 	}
 	public AbstractAbilityAnimation atEndOfTurnAnimation() {
 		return null;

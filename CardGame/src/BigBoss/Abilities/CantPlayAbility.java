@@ -14,7 +14,7 @@ public class CantPlayAbility extends AbstractAbility{
 
 	@Override
 	public String use(AbstractCharecter target) {
-		return this.getOwner().toString() + " can not play.";
+		return this.getOwner().getName() + " can not play.";
 	}
 	
 	@Override

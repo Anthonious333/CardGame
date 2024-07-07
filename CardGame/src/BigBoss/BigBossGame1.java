@@ -1601,6 +1601,8 @@ public class BigBossGame1 extends Application {
 			fadeToNext(thisScene, rect, FadeTransitionResult.BLACK, charecter, boss);
 			return;
 		}
+		fightDisplayPane.setVisible(false);
+
 		AbstractAbility ability = boss.getNextMove();
 		ability.getAnimation().setSubject(enemyHolder);
 		for (Node n : ability.getAnimation().getParticals()) {

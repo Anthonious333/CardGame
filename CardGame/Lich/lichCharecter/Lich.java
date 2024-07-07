@@ -6,6 +6,7 @@ import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
 import BigBoss.Stat;
 import javafx.animation.SequentialTransition;
+import lichAbilities.SummonSpiritFamiliarAbility;
 import lichAbilities.SummonSpiritSheildmenAbility;
 import lichAbilities.SummonSpiritSoldierAbility;
 import lichAbilities.SummonSpiritWarriorAbility;
@@ -35,14 +36,15 @@ public class Lich extends AbstractCharecter{
 		this.setPosibleAbilities(
 				SummonSpiritSoldierAbility,
 				SummonSpiritShelidmenAbility,
-				SummonSpiritWarriorAbility
+				SummonSpiritWarriorAbility,
+				new SummonSpiritFamiliarAbility(this)
 				);
 		
 		this.equipAbility(SummonSpiritSoldierAbility, 0);
 		this.equipAbility(SummonSpiritShelidmenAbility, 1);
 		this.equipAbility(SummonSpiritWarriorAbility, 2);
 
-		
+		this.addRollTokens(100);
 		this.addStatPoints(10000);
 	}
 
@@ -86,7 +88,6 @@ public class Lich extends AbstractCharecter{
 			String string = m.onOwnerTakeDamage(amount, physical);
 			if (!string.equals("")) {
 				ret.add(string);
-				System.out.print(string);
 			}
 			if (m.getAnimationAtNextKeyTime() != null) {
 				secTrans.getChildren().add(m.getAnimationAtNextKeyTime());
@@ -123,10 +124,19 @@ public class Lich extends AbstractCharecter{
 	@Override
 	public int damage(int amount, boolean physical) {
 		int newAmount = amount - this.reduceNextDamageTaken;
+		if (newAmount < 0) {
+			newAmount = 0;
+		}
 		reduceNextDamageTaken = 0;
 		return super.damage(newAmount, physical);
 	}
 
+	@Override
+	public void reset() {
+		this.getMinions().clear();
+		super.reset();
+	}
+	
 	public int getReduceNextDamageTaken() {
 		return reduceNextDamageTaken;
 	}

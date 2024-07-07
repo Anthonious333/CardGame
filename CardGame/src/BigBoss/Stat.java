@@ -48,10 +48,11 @@ public class Stat extends SAM{
 	//returns the actual change in stat (positive for adding / negative for subtracting)
 	public int addValue(int value) {
 		int pre = this.value;
-		if (limited && this.value + value > max) {
-			this.value = max;
-		} else if (limited && this.value + value < min) {
-			this.value = min;
+		
+		if (limited && this.value + value > max + tempValue) {
+			this.value = max + tempValue;
+		} else if (limited && this.value + value < min - tempValue) {
+			this.value = min - tempValue;
 		} else {
 			this.value += value;
 		}
@@ -96,6 +97,7 @@ public class Stat extends SAM{
 		if (this.resets()) {
 			this.value = max;
 		}
+		this.tempValue = 0;
 	}
 	
 	public void setValue(int value) {

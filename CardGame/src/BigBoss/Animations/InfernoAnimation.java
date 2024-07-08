@@ -1,10 +1,8 @@
 package BigBoss.Animations;
 
 import BigBoss.AbstractAbilityAnimation;
-import BigBoss.AbstractCharecter;
 import BigBoss.BigBossGame1;
 import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 

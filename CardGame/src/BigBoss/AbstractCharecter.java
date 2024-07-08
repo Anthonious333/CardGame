@@ -114,7 +114,12 @@ public abstract class AbstractCharecter {
 	
 	//retruns the amoutn of stat added(positive
 	public int addStat (String id, int amount) {
-		return this.findStat(id).addValue(amount);
+		if (this.hasStat(id)) {
+			return this.findStat(id).addValue(amount);
+		} else {
+			this.addStatsToList(new Stat(id, amount));
+			return amount;
+		}
 	}
 	
 	//returns the amount reduced (positive)

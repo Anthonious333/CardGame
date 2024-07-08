@@ -20,6 +20,9 @@ import BigBoss.Abilities.*;
 
 public class Lich extends AbstractCharecter{
 
+	public static final int MINION_WIDTH = 200;
+	public static final int MINION_HEIGHT = 350;
+
 	private int startingSoulValue;
 	private ArrayList<AbstractMinion> minions = new  ArrayList<AbstractMinion>();
 	private int reduceNextDamageTaken;

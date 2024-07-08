@@ -1605,13 +1605,15 @@ public class BigBossGame1 extends Application {
 
 		AbstractAbility ability = boss.getNextMove();
 		ability.getAnimation().setSubject(enemyHolder);
-		for (Node n : ability.getAnimation().getParticals()) {
-			combatPane.getChildren().add(n);
-		}
+		
+		boss.onEnemyUseAbility(boss, charecter);
+		boss.onUseAbility(boss, charecter);
+		charecter.onEnemyUseAbility(boss, charecter);
+		charecter.onUseAbility(boss, charecter);
+		
 		ability.getAnimation().setOnFinished(finish -> {
-			for (Node n : ability.getAnimation().getParticals()) {
-				combatPane.getChildren().remove(n);
-			}
+			
+			ability.getAnimation().stop();
 			
 			ArrayList<String> resultList = new ArrayList<String>();
 			
@@ -1640,14 +1642,16 @@ public class BigBossGame1 extends Application {
 		fightDisplayPane.setVisible(false);
 		ability.getOwner().setLastAbility(ability);
 		ability.getAnimation().setSubject(playerHolder);
-		for (Node n : ability.getAnimation().getParticals()) {
-			combatPane.getChildren().add(n);
-		}
+		
+		boss.onPlayerUseAbility(ability.getOwner(), boss);
+		boss.onUseAbility(ability.getOwner(), boss);
+		ability.getOwner().onPlayerUseAbility(ability.getOwner(), boss);
+		ability.getOwner().onUseAbility(ability.getOwner(), boss);
+		
 		ability.getAnimation().setOnFinished(finish -> {
 			//TODO add key point after player move
-			for (Node n : ability.getAnimation().getParticals()) {
-				combatPane.getChildren().remove(n);
-			}
+
+			ability.getAnimation().stop();
 			
 			//reduces any colldowns the player may have at the start of their turn (allows the buttons to be dissabled // allAbilitiesOnCooldown to happen first)
 			String result = ability.use(boss);

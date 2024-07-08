@@ -8,6 +8,7 @@ public class Stat extends SAM{
 	private int min, max;
 	private int tempValue = 0;
 	private boolean resets;
+	private boolean tempoary = false;
 	
 	public Stat (String name, int value) {
 		this(name, value, -1, -1, false);
@@ -125,6 +126,14 @@ public class Stat extends SAM{
 
 	public void setResets(boolean resets) {
 		this.resets = resets;
+	}
+
+	public boolean isTempoary() {
+		return tempoary;
+	}
+
+	public void setTempoary(boolean tempoary) {
+		this.tempoary = tempoary;
 	}
 
 

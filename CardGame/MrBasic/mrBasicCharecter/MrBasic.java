@@ -20,6 +20,7 @@ import mrBasicModifications.BulkMod;
 import mrBasicModifications.MightMod;
 import mrBasicModifications.OnePunchMod;
 import mrBasicModifications.ReviveMod;
+import theBossAbilities.HealAbility;
 
 public class MrBasic extends AbstractCharecter{
 
@@ -37,6 +38,8 @@ public class MrBasic extends AbstractCharecter{
 		AbstractAbility punch = new PunchAbility(this);
 		AbstractAbility kick = new KickAbility(this);
 		AbstractAbility avaid = new AvaidAbility(this);
+		AbstractAbility heal = new HealAbility(this, 10);
+
 		
 		this.setPosibleAbilities(
 				punch,
@@ -44,10 +47,11 @@ public class MrBasic extends AbstractCharecter{
 				avaid,
 				new ParryAbility(this),
 				new UppercutAbility(this),
-				new JabAbility(this)
+				new JabAbility(this),
+				heal
 				);
 		
-		this.equipAbility(punch, 0);
+		this.equipAbility(heal, 0);
 		this.equipAbility(kick, 1);
 		this.equipAbility(avaid, 2);
 

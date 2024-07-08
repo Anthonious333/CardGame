@@ -254,6 +254,9 @@ public abstract class AbstractCharecter {
 		this.setDead(false);
 		for (Stat s : this.getStats()) {
 			s.reset();
+			if (s.isTempoary()) {
+				this.getStats().remove(s);
+			}
 		}
 		for (AbstractAbility a : abilities) {
 			a.setCooldown(0);
@@ -420,6 +423,78 @@ public abstract class AbstractCharecter {
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.onOwnerTakeDamage(amount, physical);
+			if (m.isUnlocked() && !string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+	}
+	
+	public void onPlayerUseAbility(AbstractCharecter owner, AbstractCharecter target) {
+		for (Stat s : this.getStats()) {
+			String string = s.onPlayerUseAbility(owner, target);
+			if (!string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.onPlayerUseAbility(owner, target);
+			if (a.isEquiped() && !string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.onPlayerUseAbility(owner, target);
+			if (m.isUnlocked() && !string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+	}
+	
+	public void onEnemyUseAbility(AbstractCharecter owner, AbstractCharecter target) {
+		for (Stat s : this.getStats()) {
+			String string = s.onEnemyUseAbility(owner, target);
+			if (!string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.onEnemyUseAbility(owner, target);
+			if (a.isEquiped() && !string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.onEnemyUseAbility(owner, target);
+			if (m.isUnlocked() && !string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+	}
+	
+	public void onUseAbility(AbstractCharecter owner, AbstractCharecter target) {
+		for (Stat s : this.getStats()) {
+			String string = s.onUseAbility(owner, target);
+			if (!string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.onUseAbility(owner, target);
+			if (a.isEquiped() && !string.equals("")) {
+				this.addTextAtNextKeyTime(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.onUseAbility(owner, target);
 			if (m.isUnlocked() && !string.equals("")) {
 				this.addTextAtNextKeyTime(string);
 			}

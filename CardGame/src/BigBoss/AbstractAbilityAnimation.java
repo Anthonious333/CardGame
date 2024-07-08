@@ -26,6 +26,22 @@ public abstract class AbstractAbilityAnimation extends Transition{
 		}
 	}
 
+	@Override
+	public void play() {
+		super.play();
+		for (Node n : particals) {
+			this.getSubject().getChildren().add(n);
+		}
+	}
+	
+	@Override
+	public void stop() {
+		super.stop();
+		for (Node n : particals) {
+			this.getSubject().getChildren().remove(n);
+		}
+	}
+	
 	public Pane getSubject() {
 		return subject;
 	}

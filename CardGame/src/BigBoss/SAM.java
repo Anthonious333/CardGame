@@ -40,6 +40,18 @@ public abstract class SAM {
 		return "";
 	}
 	
+	public String onPlayerUseAbility(AbstractCharecter owner, AbstractCharecter target) {
+		return "";
+	}
+	
+	public String onEnemyUseAbility(AbstractCharecter owner, AbstractCharecter target) {
+		return "";
+	}
+	
+	public String onUseAbility(AbstractCharecter owner, AbstractCharecter target) {
+		return "";
+	}
+	
 	public double getMagicNumber() {
 		return magicNumber;
 	}

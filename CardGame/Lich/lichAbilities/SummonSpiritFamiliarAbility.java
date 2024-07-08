@@ -2,6 +2,7 @@ package lichAbilities;
 
 import BigBoss.AbilityType;
 import BigBoss.AbstractCharecter;
+import BigBoss.Animations.InfernoAnimation;
 import lichMisc.AbstractLichAbility;
 
 public class SummonSpiritFamiliarAbility extends AbstractLichAbility{

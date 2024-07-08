@@ -6,6 +6,7 @@ import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
 import BigBoss.Stat;
 import javafx.animation.SequentialTransition;
+import lichAbilities.PunchAbility;
 import lichAbilities.SummonSpiritFamiliarAbility;
 import lichAbilities.SummonSpiritSheildmenAbility;
 import lichAbilities.SummonSpiritSoldierAbility;
@@ -31,16 +32,18 @@ public class Lich extends AbstractCharecter{
 		AbstractLichAbility SummonSpiritSoldierAbility = new SummonSpiritSoldierAbility(this);
 		AbstractLichAbility SummonSpiritShelidmenAbility = new SummonSpiritSheildmenAbility(this);
 		AbstractLichAbility SummonSpiritWarriorAbility = new SummonSpiritWarriorAbility(this);
+		PunchAbility punch = new PunchAbility(this);
 
 		
 		this.setPosibleAbilities(
 				SummonSpiritSoldierAbility,
 				SummonSpiritShelidmenAbility,
 				SummonSpiritWarriorAbility,
-				new SummonSpiritFamiliarAbility(this)
+				new SummonSpiritFamiliarAbility(this),
+				punch
 				);
 		
-		this.equipAbility(SummonSpiritSoldierAbility, 0);
+		this.equipAbility(punch, 0);
 		this.equipAbility(SummonSpiritShelidmenAbility, 1);
 		this.equipAbility(SummonSpiritWarriorAbility, 2);
 

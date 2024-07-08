@@ -8,11 +8,13 @@ import BigBoss.Stat;
 import javafx.animation.SequentialTransition;
 import lichAbilities.PunchAbility;
 import lichAbilities.SummonSpiritFamiliarAbility;
+import lichAbilities.SummonSpiritMageAbility;
 import lichAbilities.SummonSpiritSheildmenAbility;
 import lichAbilities.SummonSpiritSoldierAbility;
 import lichAbilities.SummonSpiritWarriorAbility;
 import lichMinions.*;
 import lichMisc.AbstractLichAbility;
+import lichMisc.SortOfSecTrans;
 import BigBoss.Abilities.*;
 
 
@@ -32,7 +34,7 @@ public class Lich extends AbstractCharecter{
 		AbstractLichAbility SummonSpiritSoldierAbility = new SummonSpiritSoldierAbility(this);
 		AbstractLichAbility SummonSpiritShelidmenAbility = new SummonSpiritSheildmenAbility(this);
 		AbstractLichAbility SummonSpiritWarriorAbility = new SummonSpiritWarriorAbility(this);
-		PunchAbility punch = new PunchAbility(this);
+		AbstractLichAbility test = new SummonSpiritMageAbility(this);
 
 		
 		this.setPosibleAbilities(
@@ -40,10 +42,10 @@ public class Lich extends AbstractCharecter{
 				SummonSpiritShelidmenAbility,
 				SummonSpiritWarriorAbility,
 				new SummonSpiritFamiliarAbility(this),
-				punch
+				test
 				);
 		
-		this.equipAbility(punch, 0);
+		this.equipAbility(test, 0);
 		this.equipAbility(SummonSpiritShelidmenAbility, 1);
 		this.equipAbility(SummonSpiritWarriorAbility, 2);
 
@@ -66,17 +68,17 @@ public class Lich extends AbstractCharecter{
 	@Override
 	public ArrayList<String> atEndOfPlayerTurn() {
 		ArrayList<String> ret = super.atEndOfPlayerTurn();
-		SequentialTransition secTrans = new SequentialTransition();
+		SortOfSecTrans secTrans = new SortOfSecTrans();
+		
 		for (AbstractMinion m : this.minions) {
 			String string = m.atEndOfPlayerTurn();
 			if (!string.equals("")) {
 				ret.add(string);
 			}
 			if (m.getAnimationAtNextKeyTime() != null) {
-				secTrans.getChildren().add(m.getAnimationAtNextKeyTime());
+				secTrans.add(m.getAnimationAtNextKeyTime());
 				m.setAnimationAtNextKeyTime(null);
 			}
-			
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
 		secTrans.play();
@@ -86,14 +88,15 @@ public class Lich extends AbstractCharecter{
 	@Override
 	public void onOwnerTakeDamage(int amount, boolean physical) {
 		ArrayList<String> ret = this.getTextAtNextKeyTime();
-		SequentialTransition secTrans = new SequentialTransition();
+		SortOfSecTrans secTrans = new SortOfSecTrans();
+		
 		for (AbstractMinion m : this.minions) {
 			String string = m.onOwnerTakeDamage(amount, physical);
 			if (!string.equals("")) {
 				ret.add(string);
 			}
 			if (m.getAnimationAtNextKeyTime() != null) {
-				secTrans.getChildren().add(m.getAnimationAtNextKeyTime());
+				secTrans.add(m.getAnimationAtNextKeyTime());
 				m.setAnimationAtNextKeyTime(null);
 			}
 			

@@ -24,6 +24,7 @@ public class InfernoAnimation extends AbstractAbilityAnimation{
 	@Override
 	public void play() {
 		super.play();
+		inferno.setLayoutY(-200);
 		move.setFromX(BigBossGame1.IMAGE_WIDTH - 350);
 		move.setToX(BigBossGame1.IMAGE_WIDTH - 250);
 		move.play();

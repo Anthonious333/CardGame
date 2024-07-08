@@ -31,6 +31,7 @@ public abstract class AbstractAbilityAnimation extends Transition{
 		super.play();
 		for (Node n : particals) {
 			this.getSubject().getChildren().add(n);
+
 		}
 	}
 	

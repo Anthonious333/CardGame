@@ -8,12 +8,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public class SpiritFireMage extends AbstractMinion{
+public class SpiritMageMinion extends AbstractMinion{
 
 	private AbstractCharecter target;
 
 	
-	public SpiritFireMage(AbstractCharecter owner, AbstractCharecter target) {
+	public SpiritMageMinion(AbstractCharecter owner, AbstractCharecter target) {
 		super("Spirit Mage", owner);
 		this.setTarget(target);
 		this.setSelfImage(new Pane(new ImageView(new Image(getClass().getResource("/images/SpiritSoldier.png").toString())))); //TODO
@@ -22,19 +22,19 @@ public class SpiritFireMage extends AbstractMinion{
 	@Override
 	public String atEndOfPlayerTurn() {
 		this.getSelfImage().toFront();
-		int chance = BigBossGame1.randomNumber(0, 10);
-		if (chance >= 1) {
+		int chance = BigBossGame1.randomNumber(1, 10);
+		if (true) {
 			this.setAnimation(new InfernoAnimation());
 			this.setAnimationAtNextKeyTime(this.getAnimation());
 			this.setDelayAtNextKeyTime(this.getAnimation().getTotalDuration().toSeconds());
 			this.getTarget().damage(20, false);
-			if (this.getTarget().getStat("BURNING") != -1) {
-				this.getTarget().addStatsToList(new Stat("BURNING", 10));
-			} else {
+			if (this.getTarget().hasStat("BURNING")) {
 				this.getTarget().addStat("BURNING", 10);
+			} else {
+				this.getTarget().addStatsToList(new Stat("BURNING", 10));
 			}
 			return this.getOwner().getName() + " cast INFERNO, dealing " + 20 + " damage and applying " + 10 + " BURNING to " + this.getTarget().getName(); //inferno
-		} else if (chance >= 3) {
+		} else if (chance <= 3) {
 			//lighning
 		} else {
 			//gust

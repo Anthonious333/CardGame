@@ -125,6 +125,15 @@ public abstract class AbstractCharecter {
 		}
 		return -ret;
 	}
+	
+	public boolean hasStat(String ID) {
+		for (Stat s : stats) {
+			if (s.getName().equals(ID)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	//returns the amount of damage taken (positive)
 	public int damage (int amount, boolean physical) {

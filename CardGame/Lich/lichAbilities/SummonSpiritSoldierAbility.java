@@ -19,7 +19,7 @@ public class SummonSpiritSoldierAbility extends AbstractLichAbility{
 	public String use(AbstractCharecter target) {
 		((BossEnemy)target).cantrip(this);
 		this.getOwner().addMinion(new SpiritSoldierMinion(this.getOwner(), target, (int) this.getMagicNumber()));
-		return this.getOwner().getName() + " payed " + paySouls(this.getSummonCost()) + " souls to summon a Spirit Sheildmen.";
+		return this.getOwner().getName() + " payed " + paySouls(this.getSummonCost()) + " souls to summon a Spirit Soldier.";
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class SummonSpiritSoldierAbility extends AbstractLichAbility{
 				amountOfThis ++;
 			}
 		}
-		return "Summon " + this.getSummonCost() + ", Summon a Spirit Sheildmen." + (amountOfThis > 0? " Current: " + amountOfThis : "");
+		return "Summon " + this.getSummonCost() + ", Summon a Spirit Soldier." + (amountOfThis > 0? " Current: " + amountOfThis : "");
 	}
 
 }

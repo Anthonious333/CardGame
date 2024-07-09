@@ -69,7 +69,9 @@ import theBossCharecter.BossEnemy;
 public class BigBossGame1 extends Application {
 
 
-	/*TODO comment on objects
+	/* TODO fix the fighting menu to have scroll panes and no max size or smt
+	 * 
+	 * TODO comment on objects
 	 * 
 	 * TODO add click to coomit all and remove random click from fade transition
 	 * 
@@ -1420,8 +1422,8 @@ public class BigBossGame1 extends Application {
 		
 		root.getChildren().add(combatPane);
 		
-		charecter.atStartOfCombat();
-		boss.atStartOfCombat();
+		charecter.atStartOfCombat(charecter, boss);
+		boss.atStartOfCombat(charecter, boss);
 		
 		fadeToNext(thisScene, combatPane, FadeTransitionResult.FIGHT, charecter, boss);
 		
@@ -1431,7 +1433,8 @@ public class BigBossGame1 extends Application {
 	//then returns an array of strings describing the results of the combat.
 	public String[] postCombatResult(AbstractCharecter charecter, BossEnemy boss) {
 		
-		charecter.atEndOfCombat();
+		charecter.atEndOfCombat(charecter, boss);
+		boss.atEndOfCombat(charecter, boss);
 		
 		// this number is the amount of point the player will earn by default and follows the formula:
 		//0-20(based on the percent missing health of the boss) + 1-5 (random)
@@ -1486,8 +1489,12 @@ public class BigBossGame1 extends Application {
 		    return;
 		}
 		
+		ArrayList<String> resultList = new ArrayList<String>();
 		
-		//TODO at start of player turn?
+		resultList.addAll(charecter.atStartOfPlayerTurn(charecter, boss));
+		resultList.addAll(charecter.atStartOfTurn(charecter, boss));
+		resultList.addAll(boss.atStartOfPlayerTurn(charecter, boss));
+		resultList.addAll(boss.atStartOfTurn(charecter, boss));
 		
 		//removes anything from the display pane
 		fightDisplayPane.getChildren().clear();
@@ -1507,7 +1514,7 @@ public class BigBossGame1 extends Application {
 		}
 		ability1.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		setUpToolTip(ability1, charecter.getAbility(0));
-		ability1.setOnAction(event -> useAbility(thisScene, charecter.getAbility(0), boss));
+		ability1.setOnAction(event -> useAbility(thisScene, charecter.getAbility(0), boss, resultList));
 
 		//the players second ability
 		Button ability2 = new Button(charecter.getAbility(1).getName() + charecter.getAbility(1).getCantPlayMessage());
@@ -1516,7 +1523,7 @@ public class BigBossGame1 extends Application {
 		}
 		ability2.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		setUpToolTip(ability2, charecter.getAbility(1));
-		ability2.setOnAction(event -> useAbility(thisScene, charecter.getAbility(1), boss));
+		ability2.setOnAction(event -> useAbility(thisScene, charecter.getAbility(1), boss, resultList));
 		
 		//the players third ability (placed on another pane to fix position)
 		Button ability3 = new Button(charecter.getAbility(2).getName() + charecter.getAbility(2).getCantPlayMessage());
@@ -1525,7 +1532,7 @@ public class BigBossGame1 extends Application {
 		}
 		ability3.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		setUpToolTip(ability3, charecter.getAbility(2));
-		ability3.setOnAction(event -> useAbility(thisScene, charecter.getAbility(2), boss));
+		ability3.setOnAction(event -> useAbility(thisScene, charecter.getAbility(2), boss, resultList));
 		
 		//TODO make these in a straight line and on a scrollpane
 		playerOptionsPane.setLeft(ability1);
@@ -1552,9 +1559,9 @@ public class BigBossGame1 extends Application {
 		VBox vbBossStats = new VBox();
 		
 		//intent label 
-		Label lblIntent = new Label("Intent: " + boss.getIntent().name());
+		Label lblIntent = new Label("Intent: " + boss.getIntentName());
 		//intent label and the image beside it 
-		HBox intentPlusImg = new HBox(lblIntent, getIntentImage(boss.getIntent()));
+		HBox intentPlusImg = new HBox(lblIntent, boss.getNextMove().getIntentImage(boss.getIntent()));
 		lblIntent.setFont(Font.font(FONT, MENU_FONT_SIZE));
 		lblIntent.setTextFill(Color.BLACK);
 		vbBossStats.getChildren().add(intentPlusImg);
@@ -1578,7 +1585,7 @@ public class BigBossGame1 extends Application {
 			final Animation animation = new Transition() {
 				{
 					setCycleDuration(Duration.seconds(3));
-					setOnFinished(finish -> useAbility(thisScene, new CantPlayAbility(charecter), boss));
+					setOnFinished(finish -> useAbility(thisScene, new CantPlayAbility(charecter), boss, resultList));
 				}
 				@Override
 				protected void interpolate(double frac) {}
@@ -1603,6 +1610,11 @@ public class BigBossGame1 extends Application {
 		}
 		fightDisplayPane.setVisible(false);
 
+		boss.atStartOfEnemyTurn(charecter, boss);
+		boss.atStartOfTurn(charecter, boss);
+		charecter.atStartOfEnemyTurn(charecter, boss);
+		charecter.atStartOfTurn(charecter, boss);
+		
 		AbstractAbility ability = boss.getNextMove();
 		ability.getAnimation().setSubject(enemyHolder);
 		
@@ -1619,10 +1631,10 @@ public class BigBossGame1 extends Application {
 			
 			resultList.add(boss.play(charecter));
 			
-			resultList.addAll(charecter.atEndOfEnemyTurn());
-			resultList.addAll(charecter.atEndOfTurn());
-			resultList.addAll(boss.atEndOfEnemyTurn());
-			resultList.addAll(boss.atEndOfTurn());
+			resultList.addAll(charecter.atEndOfEnemyTurn(charecter, boss));
+			resultList.addAll(charecter.atEndOfTurn(charecter, boss));
+			resultList.addAll(boss.atEndOfEnemyTurn(charecter, boss));
+			resultList.addAll(boss.atEndOfTurn(charecter, boss));
 			
 			String[] resultArray = new String[resultList.size()];
 			for (int i = 0; i < resultList.size(); i++) {
@@ -1637,7 +1649,7 @@ public class BigBossGame1 extends Application {
 	}
 	
 	//uses and ability then speaks the result
-	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss) {
+	public void useAbility(Node thisScene, AbstractAbility ability, BossEnemy boss, ArrayList<String> resultList) {
 		buttonClickSound.play();
 		fightDisplayPane.setVisible(false);
 		ability.getOwner().setLastAbility(ability);
@@ -1659,14 +1671,12 @@ public class BigBossGame1 extends Application {
 				ability.getOwner().reduceCooldown();			
 			}
 			
-			ArrayList<String> resultList = new ArrayList<String>();
-			
 			resultList.add(result);
 			
-			resultList.addAll(ability.getOwner().atEndOfPlayerTurn());
-			resultList.addAll(ability.getOwner().atEndOfTurn());
-			resultList.addAll(boss.atEndOfPlayerTurn());
-			resultList.addAll(boss.atEndOfTurn());
+			resultList.addAll(ability.getOwner().atEndOfPlayerTurn(ability.getOwner(), boss));
+			resultList.addAll(ability.getOwner().atEndOfTurn(ability.getOwner(), boss));
+			resultList.addAll(boss.atEndOfPlayerTurn(ability.getOwner(), boss));
+			resultList.addAll(boss.atEndOfTurn(ability.getOwner(), boss));
 			
 			String[] resultArray = new String[resultList.size()];
 			for (int i = 0; i < resultList.size(); i++) {
@@ -1756,29 +1766,6 @@ public class BigBossGame1 extends Application {
 		clickSound.play();
 		animation.play();
 		
-	}
-	
-	//returns an image corresponding to the intent type
-	public HBox getIntentImage(AbilityType a) {
-		String type = a.name();
-		HBox images = new HBox();
-		if (type.contains("ATTACK_PHYSICAL")) {
-			images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
-		} else if (type.contains("ATTACK_NON_PHYSICAL")) {
-			images.getChildren().add(new ImageView(getClass().getResource("/images/MagicStarSm.png").toString()));
-		} else if (type.contains("DEFEND")) {
-			images.getChildren().add(new ImageView(getClass().getResource("/images/BlueShieldSm.png").toString()));
-		} else if (type.contains("BUFF")) {
-			images.getChildren().add(new ImageView(getClass().getResource("/images/GreenArrowSm.png").toString()));
-		} else if (type.contains("DEBUFF")) {
-			images.getChildren().add(new ImageView(getClass().getResource("/images/PurpleArrowSm.png").toString()));
-		} else if (type.contains("UNKNOWN")) {
-			//TODO make acc images for this
-			images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
-		} else {
-			images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
-		}
-		return images;
 	}
 	
 	// From Karen Spindler's Grade 11 U computer science course

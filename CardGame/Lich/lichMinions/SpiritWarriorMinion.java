@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import lichCharecter.Lich;
+import theBossCharecter.BossEnemy;
 
 public class SpiritWarriorMinion extends AbstractMinion{
 
@@ -21,7 +22,7 @@ public class SpiritWarriorMinion extends AbstractMinion{
 	}
 	
 	@Override
-	public String atEndOfPlayerTurn() {
+	public String atEndOfPlayerTurn(AbstractCharecter charecter, BossEnemy boss) {
 		this.setAnimation(new AttackAnimation(false, .5));
 		this.getSelfImage().toFront();
 		this.getTarget().damage((int) this.getMagicNumber(), false);

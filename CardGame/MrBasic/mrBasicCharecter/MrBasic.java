@@ -21,6 +21,7 @@ import mrBasicModifications.MightMod;
 import mrBasicModifications.OnePunchMod;
 import mrBasicModifications.ReviveMod;
 import theBossAbilities.HealAbility;
+import theBossCharecter.BossEnemy;
 
 public class MrBasic extends AbstractCharecter{
 
@@ -137,20 +138,19 @@ public class MrBasic extends AbstractCharecter{
 	}
 	
 	@Override
-	public ArrayList<String> atEndOfTurn() {
-		super.atEndOfTurn();
+	public ArrayList<String> atEndOfTurn(AbstractCharecter charecter, BossEnemy boss) {
 		if (this.dodgeAmount != 0) {
 			parrying.play();
 		} else if (parrying.getStatus() == Status.RUNNING){
 			parrying.stop();
 		}
-		return super.atStartOfCombat();
+		return super.atEndOfTurn(charecter, boss);
 	}
 	
 	@Override
-	public ArrayList<String> atStartOfCombat() {
+	public ArrayList<String> atStartOfCombat(AbstractCharecter charecter, BossEnemy boss) {
 		parrying = new AbleToParryAnimation(this.getSelfImage());
-		return super.atStartOfCombat();
+		return super.atStartOfCombat(charecter, boss);
 	}
 
 	@Override

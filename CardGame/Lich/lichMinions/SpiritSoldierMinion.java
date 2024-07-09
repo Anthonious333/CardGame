@@ -5,6 +5,7 @@ import BigBoss.AbstractCharecter;
 import BigBoss.Animations.AttackAnimation;
 import javafx.scene.image.*;
 import javafx.scene.layout.Pane;
+import theBossCharecter.BossEnemy;
 
 public class SpiritSoldierMinion extends AbstractMinion{
 
@@ -19,7 +20,7 @@ public class SpiritSoldierMinion extends AbstractMinion{
 	}
 
 	@Override
-	public String atEndOfPlayerTurn() {
+	public String atEndOfPlayerTurn(AbstractCharecter charecter, BossEnemy boss) {
 		this.getSelfImage().toFront();
 		this.getTarget().damage((int) this.getMagicNumber(), false);
 		this.setAnimationAtNextKeyTime(this.getAnimation());

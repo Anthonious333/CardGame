@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import theBossCharecter.BossEnemy;
 
 public abstract class AbstractCharecter {
 	
@@ -122,9 +123,23 @@ public abstract class AbstractCharecter {
 		}
 	}
 	
+	//retruns the amoutn of stat added(positive
+		public int addStat (String id, int amount, boolean temporaty) {
+			if (this.hasStat(id)) {
+				return this.findStat(id).addValue(amount);
+			} else {
+				this.addStatsToList(new Stat(id, amount));
+				this.findStat(id).setTempoary(temporaty);
+				return amount;
+			}
+		}
+	
 	//returns the amount reduced (positive)
 	public int reduceStat (String id, int amount) {
 		int ret = this.findStat(id).addValue(-amount);
+		if (this.findStat(id).isTempoary() &&this.getStat(id) <= 0) {
+			this.removeStatsFromList(this.findStat(id));
+		}
 		if (id.equals("HP") && (this.getStat(id)) <= 0) {
 			this.setDead(true);
 		}
@@ -290,24 +305,24 @@ public abstract class AbstractCharecter {
 	}
 	
 	
-	public ArrayList<String> atEndOfCombat() {
+	public ArrayList<String> atEndOfCombat(AbstractCharecter charecter, BossEnemy boss) {
 		ArrayList<String> ret = this.getTextAtNextKeyTime();
 		for (Stat s : this.getStats()) {
-			String string = s.atEndOfCombat();
+			String string = s.atEndOfCombat(charecter, boss);
 			if (!string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
-			String string = a.atEndOfCombat();
+			String string = a.atEndOfCombat(charecter, boss);
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
-			String string = m.atEndOfCombat();
+			String string = m.atEndOfCombat(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
 			}
@@ -316,24 +331,24 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public ArrayList<String> atEndOfTurn() {
+	public ArrayList<String> atEndOfTurn(AbstractCharecter charecter, BossEnemy boss) {
 		ArrayList<String> ret = this.getTextAtNextKeyTime();
 		for (Stat s : this.getStats()) {
-			String string = s.atEndOfTurn();
+			String string = s.atEndOfTurn(charecter, boss);
 			if (!string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
-			String string = a.atEndOfTurn();
+			String string = a.atEndOfTurn(charecter, boss);
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
-			String string = m.atEndOfTurn();
+			String string = m.atEndOfTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
 			}
@@ -342,24 +357,24 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public ArrayList<String> atEndOfPlayerTurn() {
+	public ArrayList<String> atStartOfPlayerTurn(AbstractCharecter charecter, BossEnemy boss) {
 		ArrayList<String> ret = this.getTextAtNextKeyTime();
 		for (Stat s : this.getStats()) {
-			String string = s.atEndOfPlayerTurn();
+			String string = s.atStartOfPlayerTurn(charecter, boss);
 			if (!string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
-			String string = a.atEndOfPlayerTurn();
+			String string = a.atStartOfPlayerTurn(charecter, boss);
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
-			String string = m.atEndOfPlayerTurn();
+			String string = m.atStartOfPlayerTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
 			}
@@ -368,24 +383,24 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public ArrayList<String> atEndOfEnemyTurn() {
+	public ArrayList<String> atStartOfEnemyTurn(AbstractCharecter charecter, BossEnemy boss) {
 		ArrayList<String> ret = this.getTextAtNextKeyTime();
 		for (Stat s : this.getStats()) {
-			String string = s.atEndOfEnemyTurn();
+			String string = s.atStartOfEnemyTurn(charecter, boss);
 			if (!string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
-			String string = a.atEndOfEnemyTurn();
+			String string = a.atStartOfEnemyTurn(charecter, boss);
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
-			String string = m.atEndOfEnemyTurn();
+			String string = m.atStartOfEnemyTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
 			}
@@ -394,24 +409,102 @@ public abstract class AbstractCharecter {
 		return ret;
 	}
 	
-	public ArrayList<String> atStartOfCombat() {
+	public ArrayList<String> atStartOfTurn(AbstractCharecter charecter, BossEnemy boss) {
 		ArrayList<String> ret = this.getTextAtNextKeyTime();
 		for (Stat s : this.getStats()) {
-			String string = s.atStartOfCombat();
+			String string = s.atStartOfTurn(charecter, boss);
 			if (!string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
-			String string = a.atStartOfCombat();
+			String string = a.atStartOfTurn(charecter, boss);
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
-			String string = m.atStartOfCombat();
+			String string = m.atStartOfTurn(charecter, boss);
+			if (m.isUnlocked() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+		return ret;
+	}
+	
+	public ArrayList<String> atEndOfPlayerTurn(AbstractCharecter charecter, BossEnemy boss) {
+		ArrayList<String> ret = this.getTextAtNextKeyTime();
+		for (Stat s : this.getStats()) {
+			String string = s.atEndOfPlayerTurn(charecter, boss);
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.atEndOfPlayerTurn(charecter, boss);
+			if (a.isEquiped() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.atEndOfPlayerTurn(charecter, boss);
+			if (m.isUnlocked() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+		return ret;
+	}
+	
+	public ArrayList<String> atEndOfEnemyTurn(AbstractCharecter charecter, BossEnemy boss) {
+		ArrayList<String> ret = this.getTextAtNextKeyTime();
+		for (Stat s : this.getStats()) {
+			String string = s.atEndOfEnemyTurn(charecter, boss);
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.atEndOfEnemyTurn(charecter, boss);
+			if (a.isEquiped() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.atEndOfEnemyTurn(charecter, boss);
+			if (m.isUnlocked() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
+		}
+		return ret;
+	}
+	
+	public ArrayList<String> atStartOfCombat(AbstractCharecter charecter, BossEnemy boss) {
+		ArrayList<String> ret = this.getTextAtNextKeyTime();
+		for (Stat s : this.getStats()) {
+			String string = s.atStartOfCombat(charecter, boss);
+			if (!string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
+		} 
+		for (AbstractAbility a : this.getPosibleAbilities()) {
+			String string = a.atStartOfCombat(charecter, boss);
+			if (a.isEquiped() && !string.equals("")) {
+				ret.add(string);
+			}
+			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
+		}
+		for (AbstractModification m : this.getMods()) {
+			String string = m.atStartOfCombat(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
 			}

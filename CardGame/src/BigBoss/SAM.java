@@ -1,5 +1,7 @@
 package BigBoss;
 
+import theBossCharecter.BossEnemy;
+
 public abstract class SAM {
 	
 	private double magicNumber;
@@ -15,24 +17,37 @@ public abstract class SAM {
 		this.toolTip = toolTip;
 	}
 	
-	public String atEndOfCombat() {
+	public String atEndOfCombat(AbstractCharecter charecter, BossEnemy boss) {
 		return "";
 	}
 	
-	public String atEndOfTurn() {
+	public String atEndOfTurn(AbstractCharecter charecter, BossEnemy boss) {
 		return "";
 	}
 	
-	public String atEndOfPlayerTurn() {
+	public String atEndOfPlayerTurn(AbstractCharecter charecter, BossEnemy boss) {
 		return "";
 	}
 	
-	public String atEndOfEnemyTurn() {
+	public String atEndOfEnemyTurn(AbstractCharecter charecter, BossEnemy boss) {
 		return "";
 
 	}
 	
-	public String atStartOfCombat() {
+	public String atStartOfTurn(AbstractCharecter charecter, BossEnemy boss) {
+		return "";
+	}
+	
+	public String atStartOfPlayerTurn(AbstractCharecter charecter, BossEnemy boss) {
+		return "";
+	}
+	
+	public String atStartOfEnemyTurn(AbstractCharecter charecter, BossEnemy boss) {
+		return "";
+
+	}
+	
+	public String atStartOfCombat(AbstractCharecter charecter, BossEnemy boss) {
 		return "";
 	}
 

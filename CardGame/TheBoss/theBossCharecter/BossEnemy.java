@@ -82,6 +82,10 @@ public class BossEnemy extends AbstractCharecter{
 		return new BossEnemy(this.level);
 	}
 
+	public String getIntentName() {
+		return this.getNextMove().getIntentName();
+	}
+
 	
 	
 }

@@ -15,6 +15,7 @@ import lichAbilities.SummonSpiritWarriorAbility;
 import lichMinions.*;
 import lichMisc.AbstractLichAbility;
 import lichMisc.SortOfSecTrans;
+import theBossCharecter.BossEnemy;
 import BigBoss.Abilities.*;
 
 
@@ -57,24 +58,24 @@ public class Lich extends AbstractCharecter{
 	}
 
 	@Override
-	public ArrayList<String> atStartOfCombat() {
+	public ArrayList<String> atStartOfCombat(AbstractCharecter charecter, BossEnemy boss) {
 		startingSoulValue = this.findStat("SOULS").getValue();
-		return super.atStartOfCombat();
+		return super.atStartOfCombat(charecter, boss);
 	}
 	
 	@Override
-	public ArrayList<String> atEndOfCombat() {
+	public ArrayList<String> atEndOfCombat(AbstractCharecter charecter, BossEnemy boss) {
 		this.findStat("SOULS").setValue(startingSoulValue);
-		return super.atEndOfCombat();
+		return super.atEndOfCombat(charecter, boss);
 	}
 	
 	@Override
-	public ArrayList<String> atEndOfPlayerTurn() {
-		ArrayList<String> ret = super.atEndOfPlayerTurn();
+	public ArrayList<String> atEndOfPlayerTurn(AbstractCharecter charecter, BossEnemy boss) {
+		ArrayList<String> ret = super.atEndOfPlayerTurn(charecter, boss);
 		SortOfSecTrans secTrans = new SortOfSecTrans();
 		
 		for (AbstractMinion m : this.minions) {
-			String string = m.atEndOfPlayerTurn();
+			String string = m.atEndOfPlayerTurn(charecter, boss);
 			if (!string.equals("")) {
 				ret.add(string);
 			}
@@ -86,6 +87,27 @@ public class Lich extends AbstractCharecter{
 		}
 		secTrans.play();
 		return ret;
+	}
+	
+	@Override
+	public ArrayList<String> atEndOfEnemyTurn(AbstractCharecter charecter, BossEnemy boss) {
+		ArrayList<String> ret = super.atEndOfEnemyTurn(charecter, boss);
+		if (boss.hasStat("BURNING")) {
+			ret.add(boss.getName() + " took " + boss.damage(boss.getStat("BURNING"), false) + " damage from BURNING.");
+		}
+		if (boss.hasStat("STUN")) {
+			boss.setNextMove(new StunnedAbility(boss));
+		}
+		return ret;
+	}
+	
+	@Override
+	public ArrayList<String> atStartOfEnemyTurn(AbstractCharecter charecter, BossEnemy boss) {
+		if (boss.hasStat("STUN")) {
+			boss.setNextMove(new StunnedAbility(boss));
+			boss.reduceStat("STUN", 1);
+		}
+		return super.atStartOfEnemyTurn(charecter, boss);
 	}
 	
 	@Override

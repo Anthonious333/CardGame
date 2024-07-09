@@ -5,6 +5,7 @@ import BigBoss.AbstractCharecter;
 import BigBoss.SAM;
 import javafx.animation.Animation;
 import javafx.scene.layout.Pane;
+import theBossCharecter.BossEnemy;
 
 public abstract class AbstractMinion extends SAM{
 	private String name;
@@ -50,9 +51,9 @@ public abstract class AbstractMinion extends SAM{
 	}
 	
 	@Override
-	public String atEndOfTurn() {
+	public String atEndOfTurn(AbstractCharecter charecter, BossEnemy boss) {
 		this.getSelfImage().setLayoutX(0);
-		return super.atEndOfTurn();
+		return super.atEndOfTurn(charecter, boss);
 	}
 	public AbstractAbilityAnimation getAnimationAtNextKeyTime() {
 		return animationAtNextKeyTime;

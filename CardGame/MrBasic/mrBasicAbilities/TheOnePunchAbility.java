@@ -26,12 +26,12 @@ public class TheOnePunchAbility extends AbstractAbility{
 	}
 
 	@Override 
-	public String atEndOfCombat() {
+	public String atEndOfCombat(AbstractCharecter charecter, BossEnemy boss) {
 		if (this.getCooldown() == -2) {
 			AbstractAbility a = BigBossGame1.getRandomUnlockedAndUnequipedAbility(getOwner());
 			this.getOwner().equipAbility(a, this.getEquipIndex());
 			this.setUnlocked(false);
 		}
-		return super.atEndOfCombat();
+		return super.atEndOfCombat(charecter, boss);
 	}
 }

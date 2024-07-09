@@ -1,6 +1,8 @@
 package BigBoss;
 
 import BigBoss.Animations.EmptyAnimation;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
 public abstract class AbstractAbility extends SAM {
 	
@@ -176,5 +178,32 @@ public abstract class AbstractAbility extends SAM {
 	public void setCantPlayMessage(String cantPlayMessage) {
 		this.cantPlayMessage = cantPlayMessage;
 	}
+	
+	//returns an image corresponding to the intent type
+		public HBox getIntentImage(AbilityType a) {
+			String type = a.name();
+			HBox images = new HBox();
+			if (type.contains("ATTACK_PHYSICAL")) {
+				images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
+			} else if (type.contains("ATTACK_NON_PHYSICAL")) {
+				images.getChildren().add(new ImageView(getClass().getResource("/images/MagicStarSm.png").toString()));
+			} else if (type.contains("DEFEND")) {
+				images.getChildren().add(new ImageView(getClass().getResource("/images/BlueShieldSm.png").toString()));
+			} else if (type.contains("BUFF")) {
+				images.getChildren().add(new ImageView(getClass().getResource("/images/GreenArrowSm.png").toString()));
+			} else if (type.contains("DEBUFF")) {
+				images.getChildren().add(new ImageView(getClass().getResource("/images/PurpleArrowSm.png").toString()));
+			} else if (type.contains("UNKNOWN")) {
+				//TODO make acc images for this
+				images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
+			} else {
+				images.getChildren().add(new ImageView(getClass().getResource("/images/RedFistSm.png").toString()));
+			}
+			return images;
+		}
+
+		public String getIntentName() {
+			return this.getIntent().name();
+		}
 	
 }

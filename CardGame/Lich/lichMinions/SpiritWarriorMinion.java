@@ -35,9 +35,9 @@ public class SpiritWarriorMinion extends AbstractMinion{
 	public String onOwnerTakeDamage(int amount, boolean physical) {
 		if (physical) {
 			this.setAnimation(new JumpAnimation(6, .5));
-			int amountBlocked = (int) (amount - ((Lich)this.getOwner()).getReduceNextDamageTaken() + this.getMagicNumber());
+			int amountBlocked = (int) (amount - ((Lich)this.getOwner()).getReduceNextDamageTaken() + this.getMagicNumber()); //TODO this hardly shows tyhe right numbers every time 
 			if (amountBlocked < 0) {
-				amountBlocked = 0;
+				amountBlocked = amount;
 			} else if (amountBlocked > this.getMagicNumber()) {
 				amountBlocked = (int) this.getMagicNumber();
 			}

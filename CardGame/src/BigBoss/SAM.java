@@ -1,5 +1,7 @@
 package BigBoss;
 
+import java.util.ArrayList;
+
 import theBossCharecter.BossEnemy;
 
 public abstract class SAM {
@@ -7,7 +9,7 @@ public abstract class SAM {
 	private double magicNumber;
 	private String toolTip = "";
 	private double delayAtNextKeyTime = 0;
-	private String textAtNextKeyTime = "";
+	private ArrayList<String> textAtNextKeyTime = new ArrayList<String>();
 
 	public String getToolTip() {
 		return toolTip;
@@ -85,13 +87,18 @@ public abstract class SAM {
 		this.delayAtNextKeyTime = delayAtNextKeyTime;
 	}
 
-	public String getTextAtNextKeyTime() {
-		String ret = textAtNextKeyTime;
-		textAtNextKeyTime = "";
+	public ArrayList<String> getTextAtNextKeyTime() {
+		ArrayList<String> ret = new ArrayList<String>();
+		for(String s : textAtNextKeyTime) {
+			ret.add(s);
+		}
+		textAtNextKeyTime.clear();
 		return ret;
 	}
 
-	public void setTextAtNextKeyTime(String textAtNextKeyTime) {
+	public void setTextAtNextKeyTime(ArrayList<String> textAtNextKeyTime) {
 		this.textAtNextKeyTime = textAtNextKeyTime;
 	}
+
+	
 }

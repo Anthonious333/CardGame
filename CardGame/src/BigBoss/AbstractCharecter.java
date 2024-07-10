@@ -137,7 +137,7 @@ public abstract class AbstractCharecter {
 	//returns the amount reduced (positive)
 	public int reduceStat (String id, int amount) {
 		int ret = this.findStat(id).addValue(-amount);
-		if (this.findStat(id).isTempoary() &&this.getStat(id) <= 0) {
+		if (this.findStat(id).isTempoary() && this.getStat(id) <= 0) {
 			this.removeStatsFromList(this.findStat(id));
 		}
 		if (id.equals("HP") && (this.getStat(id)) <= 0) {
@@ -312,6 +312,10 @@ public abstract class AbstractCharecter {
 			if (!string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = s.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
@@ -319,12 +323,20 @@ public abstract class AbstractCharecter {
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = a.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.atEndOfCombat(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
+			}
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
@@ -338,6 +350,10 @@ public abstract class AbstractCharecter {
 			if (!string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = s.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
@@ -345,12 +361,20 @@ public abstract class AbstractCharecter {
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = a.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.atEndOfTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
+			}
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
@@ -364,6 +388,10 @@ public abstract class AbstractCharecter {
 			if (!string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = s.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
@@ -371,12 +399,20 @@ public abstract class AbstractCharecter {
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = a.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.atStartOfPlayerTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
+			}
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
@@ -390,6 +426,10 @@ public abstract class AbstractCharecter {
 			if (!string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = s.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
@@ -397,12 +437,20 @@ public abstract class AbstractCharecter {
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = a.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.atStartOfEnemyTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
+			}
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
@@ -416,6 +464,10 @@ public abstract class AbstractCharecter {
 			if (!string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = s.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
@@ -423,12 +475,20 @@ public abstract class AbstractCharecter {
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = a.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.atStartOfTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
+			}
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
@@ -442,6 +502,10 @@ public abstract class AbstractCharecter {
 			if (!string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = s.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
@@ -449,12 +513,20 @@ public abstract class AbstractCharecter {
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = a.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.atEndOfPlayerTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
+			}
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
@@ -468,6 +540,10 @@ public abstract class AbstractCharecter {
 			if (!string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = s.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
@@ -475,12 +551,20 @@ public abstract class AbstractCharecter {
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = a.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.atEndOfEnemyTurn(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
+			}
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}
@@ -494,6 +578,10 @@ public abstract class AbstractCharecter {
 			if (!string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = s.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(s.getDelayAtNextKeyTime());
 		} 
 		for (AbstractAbility a : this.getPosibleAbilities()) {
@@ -501,12 +589,20 @@ public abstract class AbstractCharecter {
 			if (a.isEquiped() && !string.equals("")) {
 				ret.add(string);
 			}
+			ArrayList<String> nextKeyTime = a.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
+			}
 			this.addDelayAtNextKeyTime(a.getDelayAtNextKeyTime());
 		}
 		for (AbstractModification m : this.getMods()) {
 			String string = m.atStartOfCombat(charecter, boss);
 			if (m.isUnlocked() && !string.equals("")) {
 				ret.add(string);
+			}
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}

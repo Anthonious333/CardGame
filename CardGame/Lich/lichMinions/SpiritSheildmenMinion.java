@@ -19,9 +19,9 @@ public class SpiritSheildmenMinion extends AbstractMinion {
 	@Override
 	public String onOwnerTakeDamage(int amount, boolean physical) {
 		if (physical) {
-			int amountBlocked = amount - (int) (amount - ((Lich)this.getOwner()).getReduceNextDamageTaken() + this.getMagicNumber());
+			int amountBlocked = (int) (amount - ((Lich)this.getOwner()).getReduceNextDamageTaken() + this.getMagicNumber());
 			if (amountBlocked < 0) {
-				amountBlocked = 0;
+				amountBlocked = amount;
 			} else if (amountBlocked > this.getMagicNumber()) {
 				amountBlocked = (int) this.getMagicNumber();
 			}

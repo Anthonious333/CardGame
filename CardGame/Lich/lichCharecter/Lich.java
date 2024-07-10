@@ -2,19 +2,11 @@ package lichCharecter;
 
 import java.util.ArrayList;
 
-import BigBoss.AbstractAbilityAnimation;
 import BigBoss.AbstractCharecter;
 import BigBoss.Stat;
-import javafx.animation.SequentialTransition;
-import lichAbilities.PunchAbility;
-import lichAbilities.SummonSpiritFamiliarAbility;
-import lichAbilities.SummonSpiritMageAbility;
-import lichAbilities.SummonSpiritSheildmenAbility;
-import lichAbilities.SummonSpiritSoldierAbility;
-import lichAbilities.SummonSpiritWarriorAbility;
+import lichAbilities.*;
 import lichMinions.*;
-import lichMisc.AbstractLichAbility;
-import lichMisc.SortOfSecTrans;
+import lichMisc.*;
 import theBossCharecter.BossEnemy;
 import BigBoss.Abilities.*;
 
@@ -38,14 +30,15 @@ public class Lich extends AbstractCharecter{
 		AbstractLichAbility SummonSpiritSoldierAbility = new SummonSpiritSoldierAbility(this);
 		AbstractLichAbility SummonSpiritShelidmenAbility = new SummonSpiritSheildmenAbility(this);
 		AbstractLichAbility SummonSpiritWarriorAbility = new SummonSpiritWarriorAbility(this);
-		AbstractLichAbility test = new SummonSpiritMageAbility(this);
-
+		AbstractLichAbility test = new SummonSquadAbility(this);
+//TODO new SummonSpiritCollectorAbility(this);
 		
 		this.setPosibleAbilities(
 				SummonSpiritSoldierAbility,
 				SummonSpiritShelidmenAbility,
 				SummonSpiritWarriorAbility,
 				new SummonSpiritFamiliarAbility(this),
+				new SummonSpiritMageAbility(this),
 				test
 				);
 		
@@ -82,6 +75,11 @@ public class Lich extends AbstractCharecter{
 			if (m.getAnimationAtNextKeyTime() != null) {
 				secTrans.add(m.getAnimationAtNextKeyTime());
 				m.setAnimationAtNextKeyTime(null);
+			}
+			
+			ArrayList<String> nextKeyTime = m.getTextAtNextKeyTime();
+			if (!nextKeyTime.isEmpty()) {
+				ret.addAll(nextKeyTime);
 			}
 			this.addDelayAtNextKeyTime(m.getDelayAtNextKeyTime());
 		}

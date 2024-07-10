@@ -69,7 +69,9 @@ import theBossCharecter.BossEnemy;
 public class BigBossGame1 extends Application {
 
 
-	/* TODO fix the fighting menu to have scroll panes and no max size or smt
+	/* TODO add some way to skip turns
+	 * 
+	 * TODO fix the fighting menu to have scroll panes and no max size or smt
 	 * 
 	 * TODO comment on objects
 	 * 

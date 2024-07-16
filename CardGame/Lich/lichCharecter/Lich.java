@@ -19,6 +19,7 @@ public class Lich extends AbstractCharecter{
 	private int startingSoulValue;
 	private ArrayList<AbstractMinion> minions = new  ArrayList<AbstractMinion>();
 	private int reduceNextDamageTaken;
+	private int preReducedDamage = 0;
 	
 	public Lich() {
 		super("Lich");
@@ -30,7 +31,7 @@ public class Lich extends AbstractCharecter{
 		AbstractLichAbility SummonSpiritSoldierAbility = new SummonSpiritSoldierAbility(this);
 		AbstractLichAbility SummonSpiritShelidmenAbility = new SummonSpiritSheildmenAbility(this);
 		AbstractLichAbility SummonSpiritWarriorAbility = new SummonSpiritWarriorAbility(this);
-		AbstractLichAbility test = new SummonSquadAbility(this);
+		AbstractLichAbility test = new SummonArmyAbility(this);
 //TODO new SummonSpiritCollectorAbility(this);
 		
 		this.setPosibleAbilities(
@@ -39,6 +40,7 @@ public class Lich extends AbstractCharecter{
 				SummonSpiritWarriorAbility,
 				new SummonSpiritFamiliarAbility(this),
 				new SummonSpiritMageAbility(this),
+				new SummonSquadAbility(this),
 				test
 				);
 		
@@ -152,6 +154,7 @@ public class Lich extends AbstractCharecter{
 	
 	@Override
 	public int damage(int amount, boolean physical) {
+		this.setPreReducedDamage(amount);
 		int newAmount = amount - this.reduceNextDamageTaken;
 		if (newAmount < 0) {
 			newAmount = 0;
@@ -176,5 +179,26 @@ public class Lich extends AbstractCharecter{
 
 	public void setReduceNextDamageTaken(int reduceNextDamageTaken) {
 		this.reduceNextDamageTaken = reduceNextDamageTaken;
+	}
+
+	public int getPreReducedDamage() {
+		return preReducedDamage;
+	}
+	
+	public void setPreReducedDamage(int preReducedDamage) {
+		this.preReducedDamage = preReducedDamage;
+	}
+
+	public int reducePreReducedDamage(int reduceAmount) {
+		int pre = preReducedDamage;
+		this.preReducedDamage -= reduceAmount;
+		if (preReducedDamage < 0) {
+			preReducedDamage = 0;
+		}
+		int post = pre - preReducedDamage;
+		if (post > pre) {
+			post = pre;
+		}
+		return post;
 	}
 }
